@@ -13,4 +13,10 @@ public class Lists {
 		return firstList;
 	}
 	
+	public static <T> List<T> cloneCopy(List<T> list) {
+		List<T> newList = new ArrayList<>(list.size());
+		newList.addAll(list);
+		return newList;
+	}
+	
 }

@@ -33,25 +33,4 @@ public abstract class QuittableThread extends Thread {
 		return !stop;
 	}
 	
-	protected boolean canTick0() {
-		return !stop && canTick();
-	}
-	
-	protected abstract void begin();
-	
-	protected abstract boolean canTick();
-	
-	protected abstract void tick();
-	
-	protected abstract void end();
-	
-	@Override
-	public void run() {
-		begin();
-		while(canTick0()) {
-			tick();
-		}
-		end();
-	}
-	
 }

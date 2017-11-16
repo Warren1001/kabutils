@@ -20,6 +20,10 @@ public class Randoms {
 		return getRandom(reducedList);
 	}
 	
+	public static <T> T getRandomAndRemove(List<T> list) {
+		return list.remove(random.nextInt(list.size()));
+	}
+	
 	public static <T> List<T> getRandomAmount(List<T> list, int amount) {
 		List<T> newList = new ArrayList<>(amount);
 		for(int i = 0; i < amount; i++) {
