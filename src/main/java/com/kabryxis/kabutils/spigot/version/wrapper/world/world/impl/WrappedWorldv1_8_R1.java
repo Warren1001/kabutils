@@ -108,7 +108,6 @@ public class WrappedWorldv1_8_R1 extends WrappedWorld<World> {
 				int y = data.getY();
 				Material type = data.getType();
 				if(y > largestY) largestY = y;
-				//System.out.println("x: " + data.getX() + ", y: " + data.getY() + ", z: " + data.getZ() + ", type: " + data.getType().toString() + ", data: " + data.getData());
 				chunk.a(new BlockPosition(data.getX(), y, data.getZ()), type == Material.AIR ? AIR : CraftMagicNumbers.getBlock(type).fromLegacyData(data.getData()));
 			}
 			refreshChunk(chunk.locX, chunk.locZ);
