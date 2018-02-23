@@ -1,14 +1,14 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.DumperOptions.FlowStyle;
+import org.yaml.snakeyaml.Yaml;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
-
-import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
-import org.yaml.snakeyaml.Yaml;
 
 public class Config extends ConfigSection {
 	
@@ -55,10 +55,8 @@ public class Config extends ConfigSection {
 				e1.printStackTrace();
 			}
 		}
-		try {
-			FileWriter writer = new FileWriter(file);
+		try(FileWriter writer = new FileWriter(file)) {
 			yaml.dump(saveToMap(), writer);
-			writer.close();
 		}
 		catch(IOException e) {
 			e.printStackTrace();

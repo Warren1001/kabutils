@@ -1,58 +1,60 @@
 package com.kabryxis.kabutils.time;
 
-import java.util.function.Consumer;
-
 import com.kabryxis.kabutils.Worker;
 import com.kabryxis.kabutils.concurrent.Threads;
 
+import java.util.function.IntConsumer;
+
 public class Countdown {
 	
-	private CountdownManager cm;
+	private String name;
 	private long interval;
 	private boolean repeat;
-	private Consumer<Integer> timerAction;
+	private IntConsumer timerAction;
 	private Worker zeroAction;
 	
+	private Thread currThread;
 	private int time = -1;
 	private boolean wait = false, stop = false;
 	
-	public Countdown(CountdownManager cm, long interval, boolean repeat, Consumer<Integer> timerAction, Worker zeroAction) {
-		this.cm = cm;
+	public Countdown(String name, long interval, boolean repeat, IntConsumer timerAction, Worker zeroAction) {
+		this.name = name;
 		this.interval = interval;
 		this.repeat = repeat;
 		this.timerAction = timerAction;
 		this.zeroAction = zeroAction;
 	}
 	
+	public String getName() {
+		return name;
+	}
+	
 	public void count(int t) {
-		if(isCounting()) return;
-		this.time = t;
-		for(; time > 0; time--) {
+		if(isActive()) return;
+		currThread = Thread.currentThread();
+		setTime(t);
+		for(; time > 0 && !stop; time--) {
 			waitCheck();
-			if(stop) break;
 			timerAction.accept(time);
 			Threads.sleep(interval);
 		}
 		if(!stop && zeroAction != null) zeroAction.work();
+		currThread = null;
 		time = -1;
 		stop = false;
-		cm.finished(this);
 	}
 	
 	private void waitCheck() {
-		if(stop) return;
 		if(wait) {
 			if(repeat) {
 				while(wait) {
-					if(stop) break;
 					timerAction.accept(time);
-					Threads.sleep(50);
+					Threads.sleep(interval);
 				}
 			}
 			else {
 				synchronized(this) {
 					while(wait) {
-						if(stop) break;
 						Threads.wait(this);
 					}
 				}
@@ -64,8 +66,12 @@ public class Countdown {
 		this.time = t;
 	}
 	
+	public Thread getCurrentlyActiveThread() {
+		return currThread;
+	}
+	
 	public void pause() {
-		if(!wait) wait = true;
+		if(!wait && isActive()) wait = true;
 	}
 	
 	public void unpause() {
@@ -87,8 +93,13 @@ public class Countdown {
 		return wait;
 	}
 	
-	public boolean isCounting() {
-		return time != -1;
+	public boolean isActive() {
+		return currThread != null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Countdown && ((Countdown)obj).getName().equals(name);
 	}
 	
 }

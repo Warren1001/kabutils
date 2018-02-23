@@ -13,7 +13,7 @@ public class Version {
 	public final static Version v1_9_R2 = new Version(4, "v1_9_R2", "1.9.4");
 	public final static Version v1_10_R1 = new Version(5, "v1_10_R1", "1.10");
 	public final static Version v1_11_R1 = new Version(6, "v1_11_R1", "1.11");
-	public final static Version v1_12_R1 = new Version(7, "v1_10_R1", "1.12");
+	public final static Version v1_12_R1 = new Version(7, "v1_12_R1", "1.12");
 	
 	public final static Version VERSION;
 	

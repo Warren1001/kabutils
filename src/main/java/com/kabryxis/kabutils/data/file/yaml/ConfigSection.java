@@ -29,7 +29,7 @@ public class ConfigSection {
 	protected void load(Map<?, ?> map) {
 		data.clear();
 		children.clear();
-		map.entrySet().forEach(e -> set(e.getKey().toString(), e.getValue()));
+		map.forEach((key, value) -> set(key.toString(), value));
 	}
 	
 	public String getName() {
@@ -37,7 +37,7 @@ public class ConfigSection {
 	}
 	
 	public ConfigSection getChild(String name, boolean create) {
-		return create ? children.computeIfAbsent(name, s -> new ConfigSection(s)) : children.get(name);
+		return create ? children.computeIfAbsent(name, ConfigSection::new) : children.get(name);
 	}
 	
 	public ConfigSection getChild(String name) {
@@ -132,8 +132,8 @@ public class ConfigSection {
 	
 	protected Map<String, Object> saveToMap() {
 		Map<String, Object> map = new HashMap<>();
-		data.entrySet().forEach(e -> map.put(e.getKey(), e.getValue()));
-		children.entrySet().forEach(e -> map.put(e.getKey(), e.getValue().saveToMap()));
+		data.forEach(map::put);
+		children.forEach((key, value) -> map.put(key, value.saveToMap()));
 		return map;
 	}
 	

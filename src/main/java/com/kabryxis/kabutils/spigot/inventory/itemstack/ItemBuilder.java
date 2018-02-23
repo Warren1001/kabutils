@@ -1,15 +1,15 @@
 package com.kabryxis.kabutils.spigot.inventory.itemstack;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class ItemBuilder {
 	
@@ -74,7 +74,7 @@ public class ItemBuilder {
 			ItemMeta meta = item.getItemMeta();
 			if(name != null) meta.setDisplayName(name);
 			if(enchants != null) {
-				enchants.entrySet().forEach(entry -> meta.addEnchant(entry.getKey(), entry.getValue().intValue(), true));
+				enchants.forEach((key, value) -> meta.addEnchant(key, value, true));
 				enchants.clear();
 			}
 			if(flags != null) {

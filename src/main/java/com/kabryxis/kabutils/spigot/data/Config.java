@@ -1,15 +1,14 @@
 package com.kabryxis.kabutils.spigot.data;
 
+import com.kabryxis.kabutils.data.Data;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.YamlConfiguration;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
-
-import com.kabryxis.kabutils.data.Data;
 
 public class Config extends YamlConfiguration {
 	
@@ -33,9 +32,7 @@ public class Config extends YamlConfiguration {
 	}
 	
 	public void load() {
-		if(file.exists()) Data.queue(() -> {
-			load0();
-		});
+		if(file.exists()) Data.queue(this::load0);
 	}
 	
 	public void load(Consumer<Config> callable) {
@@ -46,9 +43,7 @@ public class Config extends YamlConfiguration {
 	}
 	
 	public void save() {
-		Data.queue(() -> {
-			save0();
-		});
+		Data.queue(this::save0);
 	}
 	
 	private void load0() {

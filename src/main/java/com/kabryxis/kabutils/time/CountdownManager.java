@@ -2,7 +2,7 @@ package com.kabryxis.kabutils.time;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 
 import com.kabryxis.kabutils.Worker;
 
@@ -10,20 +10,21 @@ public class CountdownManager {
 	
 	private final Map<String, Countdown> countdowns = new HashMap<>();
 	private final Map<Thread, Countdown> currentlyActive = new HashMap<>();
+	private Countdown lastActivated = null;
 	
-	public Countdown constructNewCountdown(String name, long interval, boolean repeat, Consumer<Integer> timerAction, Worker zeroAction) {
-		return countdowns.computeIfAbsent(name, s -> new Countdown(this, interval, repeat, timerAction, zeroAction));
+	public Countdown constructNewCountdown(String name, long interval, boolean repeat, IntConsumer timerAction, Worker zeroAction) {
+		return countdowns.computeIfAbsent(name, s -> new Countdown(s, interval, repeat, timerAction, zeroAction));
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, boolean repeat, Consumer<Integer> timerAction) {
+	public Countdown constructNewCountdown(String name, long interval, boolean repeat, IntConsumer timerAction) {
 		return constructNewCountdown(name, interval, repeat, timerAction, null);
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, Consumer<Integer> timerAction, Worker zeroAction) {
+	public Countdown constructNewCountdown(String name, long interval, IntConsumer timerAction, Worker zeroAction) {
 		return constructNewCountdown(name, interval, false, timerAction, zeroAction);
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, Consumer<Integer> timerAction) {
+	public Countdown constructNewCountdown(String name, long interval, IntConsumer timerAction) {
 		return constructNewCountdown(name, interval, timerAction, null);
 	}
 	
@@ -35,16 +36,19 @@ public class CountdownManager {
 		return currentlyActive.get(thread);
 	}
 	
-	public void count(String name, int time) {
-		Countdown cd = countdowns.get(name);
-		if(cd != null && !cd.isCounting()) {
-			currentlyActive.put(Thread.currentThread(), cd);
-			cd.count(time);
-		}
+	public Countdown getLastActivated() {
+		return lastActivated;
 	}
 	
-	public void finished(Countdown cd) {
-		currentlyActive.remove(cd);
+	public void count(String name, int time) {
+		Countdown cd = countdowns.get(name);
+		if(cd != null && !cd.isActive()) {
+			Thread currThread = Thread.currentThread();
+			currentlyActive.put(currThread, cd);
+			lastActivated = cd;
+			cd.count(time);
+			currentlyActive.remove(currThread);
+		}
 	}
 	
 	public void pauseAll() {

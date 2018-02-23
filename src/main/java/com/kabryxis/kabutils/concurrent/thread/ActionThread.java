@@ -26,8 +26,8 @@ public class ActionThread extends PausableThread {
 	@Override
 	public void run() {
 		lastQueueTime = System.currentTimeMillis();
-		while(true) {
-			if(!pause0()) break;
+		while(isRunning()) {
+			pauseCheck();
 			Runnable run;
 			while((run = queue.poll()) != null) {
 				run.run();

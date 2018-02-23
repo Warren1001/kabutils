@@ -9,4 +9,10 @@ public class Arrays {
 		return false;
 	}
 	
+	public static String[] splitStringArray(int startingIndex, String[] originalArray) {
+		String[] newArray = new String[originalArray.length - startingIndex];
+		System.arraycopy(originalArray, startingIndex, newArray, 0, originalArray.length - startingIndex);
+		return newArray;
+	}
+	
 }

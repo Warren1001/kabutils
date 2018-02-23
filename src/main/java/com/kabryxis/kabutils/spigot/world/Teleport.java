@@ -15,7 +15,7 @@ public class Teleport {
 			double dz = centerZ - z;
 			float yaw = -(dx != 0 ? (dx < 0 ? (float)(1.5 * Math.PI) : (float)(0.5 * Math.PI)) - (float)Math.atan(dz / dx) : (float)Math.PI) * 180F / (float)Math.PI;
 			float pitch = ((float)(-Math.atan(0 / Math.sqrt(Math.pow(dx, 2) + Math.pow(dz, 2))))) * 180F / (float)Math.PI;
-			locs[i] = new Location(center.getWorld(), x - 0.5, center.getY() + 1.75, z - 0.5, yaw, pitch);
+			locs[i] = new Location(center.getWorld(), x, center.getY(), z, yaw, pitch);
 		}
 		return locs;
 	}

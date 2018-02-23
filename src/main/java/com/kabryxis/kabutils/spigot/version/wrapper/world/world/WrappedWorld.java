@@ -1,15 +1,14 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.world.world;
 
+import com.kabryxis.kabutils.spigot.version.Version;
+import com.kabryxis.kabutils.spigot.version.wrapper.world.world.impl.WrappedWorldv1_8_R1;
+import com.kabryxis.kabutils.spigot.world.ChunkEntry;
+import org.bukkit.Material;
+import org.bukkit.World;
+
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.bukkit.World;
-import org.bukkit.metadata.MetadataValue;
-import org.bukkit.plugin.Plugin;
-
-import com.kabryxis.kabutils.spigot.version.Version;
-import com.kabryxis.kabutils.spigot.version.wrapper.world.world.impl.WrappedWorldv1_8_R1;
 
 public abstract class WrappedWorld<T> {
 	
@@ -30,23 +29,15 @@ public abstract class WrappedWorld<T> {
 	
 	public abstract String getName();
 	
-	public abstract void setBlock(int x, int y, int z, int type, byte data);
+	public abstract void setBlock(int x, int y, int z, Material type, byte data);
 	
-	public abstract void setBlockFast(int x, int y, int z, int type, byte data);
+	public abstract void setBlockFast(int x, int y, int z, Material type, byte data);
 	
-	public abstract void loadSchematic(Map<Long, List<int[]>> chunksData);
+	public abstract void loadSchematic(Map<Long, List<ChunkEntry>> chunksData);
 	
-	public abstract void eraseSchematic(Map<Long, List<int[]>> chunksData);
+	public abstract void eraseSchematic(Map<Long, List<ChunkEntry>> chunksData);
 	
 	public abstract org.bukkit.block.Block getBlock(int x, int y, int z);
-	
-	public abstract int getBlockId(int x, int y, int z);
-	
-	public abstract void setMetadata(int x, int y, int z, String key, MetadataValue value);
-	
-	public abstract void removeMetadata(int x, int y, int z, String key, Plugin plugin);
-	
-	public abstract boolean hasMetadata(int x, int y, int z, String key);
 	
 	public abstract void eraseChunk(int cx, int cz);
 	

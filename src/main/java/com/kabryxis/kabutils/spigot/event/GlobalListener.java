@@ -6,8 +6,8 @@ import org.bukkit.plugin.Plugin;
 
 public interface GlobalListener extends Listener {
 	
-	public void onEvent(Event event);
+	void onEvent(Event event);
 	
-	public Plugin getPlugin();
+	Plugin getPlugin();
 	
 }

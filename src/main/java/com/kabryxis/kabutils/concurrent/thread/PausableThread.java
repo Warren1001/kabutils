@@ -19,14 +19,19 @@ public abstract class PausableThread extends QuittableThread {
 	}
 	
 	public void pause() {
-		if(!pause) pause = true;
+		if(!pause) {
+			pause = true;
+			onPause();
+		}
 	}
 	
-	public synchronized void unpause() {
+	public void unpause() {
 		if(pause) {
 			pause = false;
 			onUnpause();
-			notify();
+			synchronized(this) {
+				notify();
+			}
 		}
 	}
 	
@@ -38,16 +43,14 @@ public abstract class PausableThread extends QuittableThread {
 	
 	public abstract void onUnpause();
 	
-	protected synchronized boolean pause0() {
-		if(!isRunning()) return false;
+	public void pauseCheck() {
 		if(pause) {
-			onPause();
-			while(pause) {
-				if(!isRunning()) break;
-				Threads.wait(this);
+			synchronized(this) {
+				while(pause) {
+					Threads.wait(this);
+				}
 			}
 		}
-		return true;
 	}
 	
 }

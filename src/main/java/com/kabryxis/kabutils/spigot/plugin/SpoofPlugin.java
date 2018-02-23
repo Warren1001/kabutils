@@ -1,13 +1,7 @@
 package com.kabryxis.kabutils.spigot.plugin;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.logging.Logger;
-import java.util.regex.Pattern;
-
+import com.avaje.ebean.EbeanServer;
+import com.kabryxis.kabutils.concurrent.Threads;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -16,22 +10,22 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.event.Listener;
 import org.bukkit.generator.ChunkGenerator;
-import org.bukkit.plugin.InvalidDescriptionException;
-import org.bukkit.plugin.InvalidPluginException;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
-import org.bukkit.plugin.RegisteredListener;
-import org.bukkit.plugin.UnknownDependencyException;
+import org.bukkit.plugin.*;
 
-import com.avaje.ebean.EbeanServer;
+import java.io.File;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 public class SpoofPlugin implements Plugin {
 	
 	private static Plugin plugin;
 	
 	public static Plugin get() {
-		if(plugin == null) plugin = new SpoofPlugin("Spoof");
+		if(plugin == null) plugin = new SpoofPlugin();
 		return plugin;
 	}
 	
@@ -41,10 +35,10 @@ public class SpoofPlugin implements Plugin {
 	private final PluginLoader loader;
 	private final Logger logger;
 	
-	private SpoofPlugin(String name) {
-		this.name = name;
+	private SpoofPlugin() {
+		this.name = "Spoof";
 		this.server = Bukkit.getServer();
-		this.pdf = new PluginDescriptionFile(name, "1", getClass().getPackage().getName() + "." + getClass().getName());
+		this.pdf = new PluginDescriptionFile("Spoof", "1", getClass().getPackage().getName() + "." + getClass().getName());
 		this.loader = new SpoofPluginLoader();
 		this.logger = Logger.getLogger("SpoofPlugin");
 		server.getPluginManager().enablePlugin(this);
@@ -57,7 +51,9 @@ public class SpoofPlugin implements Plugin {
 	public void onEnable() {}
 	
 	@Override
-	public void onDisable() {}
+	public void onDisable() {
+		Threads.stopThreads();
+	}
 	
 	@Override
 	public String getName() {
@@ -164,7 +160,7 @@ public class SpoofPlugin implements Plugin {
 		public void enablePlugin(Plugin plugin) {}
 		
 		@Override
-		public PluginDescriptionFile getPluginDescription(File file) throws InvalidDescriptionException {
+		public PluginDescriptionFile getPluginDescription(File file) {
 			return null;
 		}
 		
@@ -174,7 +170,7 @@ public class SpoofPlugin implements Plugin {
 		}
 		
 		@Override
-		public Plugin loadPlugin(File file) throws InvalidPluginException, UnknownDependencyException {
+		public Plugin loadPlugin(File file) throws UnknownDependencyException {
 			return null;
 		}
 		

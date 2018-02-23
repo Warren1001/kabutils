@@ -21,6 +21,9 @@ public abstract class QuittableThread extends Thread {
 		register();
 	}
 	
+	@Override
+	public abstract void run();
+	
 	private void register() {
 		Threads.registerQuittable(this);
 	}
