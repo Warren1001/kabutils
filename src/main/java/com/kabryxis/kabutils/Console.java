@@ -1,10 +1,10 @@
 package com.kabryxis.kabutils;
 
-import java.io.InputStream;
-import java.util.Scanner;
-
 import com.kabryxis.kabutils.concurrent.Threads;
 import com.kabryxis.kabutils.concurrent.thread.QuittableThread;
+
+import java.io.InputStream;
+import java.util.Scanner;
 
 public class Console extends QuittableThread {
 	

@@ -17,7 +17,7 @@ public class BukkitCommandWrapper extends Command {
 	public boolean execute(CommandSender sender, String alias, String[] args) {
 		BukkitCommandIssuer commandIssuer = Cache.get(BukkitCommandIssuer.class);
 		commandIssuer.reuse(sender);
-		manager.handleCommand(commandIssuer, alias.toLowerCase(), args);
+		manager.handle(commandIssuer, alias.toLowerCase(), args);
 		return true;
 	}
 	

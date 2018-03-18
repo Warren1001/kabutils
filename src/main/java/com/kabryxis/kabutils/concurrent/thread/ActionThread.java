@@ -52,4 +52,9 @@ public class ActionThread extends PausableThread {
 	@Override
 	public void onUnpause() {}
 	
+	@Override
+	public void quit() {
+		super.quit();
+		queue.forEach(Runnable::run);
+	}
 }

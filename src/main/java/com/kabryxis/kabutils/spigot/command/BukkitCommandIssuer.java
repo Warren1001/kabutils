@@ -1,5 +1,6 @@
 package com.kabryxis.kabutils.spigot.command;
 
+import com.kabryxis.kabutils.cache.Cache;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -21,6 +22,12 @@ public class BukkitCommandIssuer implements CommandIssuer {
 	@Override
 	public void sendMessage(String message) {
 		sender.sendMessage(message);
+	}
+	
+	@Override
+	public void cache() {
+		sender = null;
+		Cache.cache(this);
 	}
 	
 	public boolean isPlayer() {

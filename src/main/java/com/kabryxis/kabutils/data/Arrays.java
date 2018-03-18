@@ -15,4 +15,11 @@ public class Arrays {
 		return newArray;
 	}
 	
+	public static boolean containsClass(Class<?>[] array, Class<?> clazz) {
+		for(Class<?> c : array) {
+			if(c == clazz) return true;
+		}
+		return false;
+	}
+	
 }

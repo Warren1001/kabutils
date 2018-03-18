@@ -1,20 +1,20 @@
 package com.kabryxis.kabutils.spigot.command;
 
+import com.kabryxis.kabutils.command.Com;
 import com.kabryxis.kabutils.command.CommandManager;
-import com.kabryxis.kabutils.command.CommandManagerWork;
+import com.kabryxis.kabutils.command.CommandWork;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 
 import java.lang.reflect.Method;
 
-public class CommandMapHook implements CommandManagerWork {
+public class CommandMapHook implements CommandWork {
 	
 	private CommandManager commandManager;
 	private CommandMap commandMap;
 	
-	@Override
-	public void initialize(CommandManager manager) {
+	public CommandMapHook(CommandManager manager) {
 		this.commandManager = manager;
 		this.commandMap = hook();
 	}
@@ -31,7 +31,10 @@ public class CommandMapHook implements CommandManagerWork {
 	}
 	
 	@Override
-	public void registerCommand(String alias) {
-		commandMap.register(alias, new BukkitCommandWrapper(commandManager, alias));
+	public void registerCommand(Com com) {
+		for(String alias : com.aliases()) {
+			commandMap.register(alias, new BukkitCommandWrapper(commandManager, alias));
+		}
 	}
+	
 }

@@ -1,5 +1,6 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
+import com.kabryxis.kabutils.data.Data;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
@@ -9,6 +10,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class Config extends ConfigSection {
 	
@@ -21,13 +23,25 @@ public class Config extends ConfigSection {
 	}
 	
 	private final File file;
+	private final String name;
 	
 	public Config(String name) {
-		this.file = new File(name + ".yml");
-		load();
+		this.file = new File(name);
+		this.name = file.getName().split("\\.")[0];
 	}
 	
 	public void load() {
+		Data.queue(this::loadSync);
+	}
+	
+	public void load(Consumer<Config> callable) {
+		Data.queue(() -> {
+			loadSync();
+			callable.accept(this);
+		});
+	}
+	
+	public void loadSync() {
 		Object obj;
 		try {
 			if(!file.exists()) return;
@@ -47,6 +61,10 @@ public class Config extends ConfigSection {
 	}
 	
 	public void save() {
+		Data.queue(this::save0);
+	}
+	
+	private void save0() {
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
@@ -65,6 +83,11 @@ public class Config extends ConfigSection {
 	
 	public boolean exists() {
 		return file.exists();
+	}
+	
+	@Override
+	public String getName() {
+		return name;
 	}
 	
 }

@@ -105,24 +105,23 @@ public class WrappedWorldv1_8_R1 extends WrappedWorld<World> {
 			Chunk chunk = getChunk(entry.getKey());
 			chunks.add(chunk.bukkitChunk);
 			for(ChunkEntry data : entry.getValue()) {
-				int y = data.getY();
+				int x = data.getX(), y = data.getY(), z = data.getZ(), d = data.getData();
 				Material type = data.getType();
 				if(y > largestY) largestY = y;
-				chunk.a(new BlockPosition(data.getX(), y, data.getZ()), type == Material.AIR ? AIR : CraftMagicNumbers.getBlock(type).fromLegacyData(data.getData()));
+				chunk.a(new BlockPosition(x, y, z), type == Material.AIR ? AIR : CraftMagicNumbers.getBlock(type).fromLegacyData(d));
 			}
 			refreshChunk(chunk.locX, chunk.locZ);
 		}
 		int y = largestY + 1;
-		chunks.forEach(c -> relight.accept(c, y));
+		chunks.forEach(c -> relight.accept(c, y)); // TODO try changing to placing relight layer in the middle of the schematic if the height is > 3
+		// TODO otherwise choose 1 + largestY. modify to replace existing block rather than setting back to air
 	}
 	
 	@Override
 	public void eraseSchematic(Map<Long, List<ChunkEntry>> chunksData) {
 		for(Entry<Long, List<ChunkEntry>> entry : chunksData.entrySet()) {
 			Chunk chunk = getChunk(entry.getKey());
-			for(ChunkEntry data : entry.getValue()) {
-				chunk.a(new BlockPosition(data.getX(), data.getY(), data.getZ()), AIR);
-			}
+			entry.getValue().forEach(data -> chunk.a(new BlockPosition(data.getX(), data.getY(), data.getZ()), AIR));
 			refreshChunk(chunk.locX, chunk.locZ);
 		}
 	}

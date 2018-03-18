@@ -1,87 +1,86 @@
 package com.kabryxis.kabutils.command;
 
-import com.kabryxis.kabutils.cache.Cache;
-import com.kabryxis.kabutils.data.Lists;
 import com.kabryxis.kabutils.string.Strings;
+import org.apache.commons.lang3.Validate;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
-import java.util.function.Function;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class CommandManager {
 	
-	private final Map<String, List<CommandData>> methods = new HashMap<>();
-	private final List<CommandManagerWork> extraWork = new ArrayList<>();
+	private final Map<String, CommandData> commandData = new HashMap<>();
 	
-	private String commandPrefix = "-";
+	private Predicate<Method> methodPredicate;
+	private String prefix = "-";
 	
-	public void addExtraWork(CommandManagerWork work) {
-		extraWork.add(work);
-		work.initialize(this);
+	private Set<CommandWork> extraWork;
+	
+	public CommandManager(Predicate<Method> methodPredicate) {
+		this.methodPredicate = methodPredicate;
 	}
 	
-	public void registerCommands(Object obj) {
-		for(Method method : obj.getClass().getDeclaredMethods()) {
-			if(isCommand(method)) registerCommand(new CommandData(method.getAnnotation(Com.class), obj, method));
-		}
+	public CommandManager() {
+		this(method -> {
+			if(method.getAnnotation(Com.class) == null) return false;
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			return parameterTypes.length == 3 && CommandIssuer.class.isAssignableFrom(parameterTypes[0]) && parameterTypes[1] == String.class &&
+					parameterTypes[2] == String[].class;
+		});
 	}
 	
-	protected boolean isCommand(Method method) {
-		if(method.getAnnotation(Com.class) == null) return false;
-		Class<?>[] params = method.getParameterTypes();
-		if(params.length != 1 || params[0] != Command.class) {
-			System.out.println(
-					"Method '" + method.getName() + "' in class '" + method.getDeclaringClass().getSimpleName() + "' has a Com annotation but does not have a singular parameter of the " + Command.class.getName() +
-							" class.");
-			return false;
-		}
-		method.setAccessible(true);
-		return true;
+	public void setMethodPredicate(Predicate<Method> methodPredicate) {
+		this.methodPredicate = methodPredicate;
 	}
 	
-	protected void registerCommand(CommandData data) {
-		Function<? super String, ? extends List<CommandData>> action = Lists.getGenericCreator();
-		for(String alias : data.getCom().aliases()) {
-			methods.computeIfAbsent(alias.toLowerCase(), action).add(data);
-			extraWork.forEach(work -> work.registerCommand(alias));
-		}
+	public void setPrefix(String prefix) {
+		this.prefix = prefix;
 	}
 	
-	public void handleCommand(CommandIssuer issuer, String message) {
-		if(!isCommand(message)) return;
-		boolean containsSpace = message.contains(" ");
-		String alias = removeCommandPrefix(containsSpace ? message.substring(0, message.indexOf(' ')) : message);
-		String[] args = containsSpace ? Strings.split(message.substring(message.indexOf(' ') + 1, message.length()), " ") : new String[0];
-		Command command = Cache.get(Command.class);
-		command.reuse(alias, args, issuer);
-		methods.get(alias.toLowerCase()).forEach(d -> d.issue(command));
-		command.cache();
-	}
-	
-	public void handleCommand(CommandIssuer issuer, String alias, String[] args) {
-		Command command = Cache.get(Command.class);
-		command.reuse(alias, args, issuer);
-		methods.get(alias).forEach(d -> d.issue(command));
-		command.cache();
-	}
-	
-	public void setCommandPrefix(String commandPrefix) {
-		this.commandPrefix = commandPrefix;
-	}
-	
-	public String getCommandPrefix() {
-		return commandPrefix;
+	public String getPrefix() {
+		return prefix;
 	}
 	
 	public boolean isCommand(String message) {
-		return message.startsWith(commandPrefix);
+		return message.startsWith(prefix);
 	}
 	
-	public String removeCommandPrefix(String message) {
-		return message.substring(commandPrefix.length());
+	public String getAlias(String message) {
+		return message.substring(prefix.length(), message.contains(" ") ? message.indexOf(" ") : message.length());
+	}
+	
+	public String[] getArgs(String message) {
+		return Strings.split(message.substring(message.indexOf(' ') + 1, message.length()), " ");
+	}
+	
+	public void addExtraWork(CommandWork commandWork) {
+		if(extraWork == null) extraWork = new HashSet<>();
+		extraWork.add(commandWork);
+	}
+	
+	public void registerListener(Object listener) {
+		for(Method method : listener.getClass().getDeclaredMethods()) {
+			if(methodPredicate.test(method)) registerMethod(method, listener);
+		}
+	}
+	
+	private void registerMethod(Method method, Object listener) {
+		method.setAccessible(true);
+		Com com = method.getAnnotation(Com.class);
+		CommandData data = new CommandData(com, listener, method);
+		for(String alias : com.aliases()) {
+			commandData.put(alias, data);
+		}
+		if(extraWork != null) extraWork.forEach(work -> work.registerCommand(com));
+	}
+	
+	public boolean handle(CommandIssuer issuer, String alias, String[] args) {
+		CommandData data = commandData.get(alias.toLowerCase());
+		Validate.notNull(data, "Tried to handle command '" + alias + "' but could not find any command data for this command.");
+		return data.issue(issuer, alias, args);
 	}
 	
 }
