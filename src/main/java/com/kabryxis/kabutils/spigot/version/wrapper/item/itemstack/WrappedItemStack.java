@@ -2,7 +2,7 @@ package com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack;
 
 import org.bukkit.inventory.ItemStack;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.Wrapper;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl.WrappedItemStackv1_10_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl.WrappedItemStackv1_11_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl.WrappedItemStackv1_12_R1;
@@ -13,7 +13,7 @@ import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl.WrappedI
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl.WrappedItemStackv1_9_R2;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 
-public abstract class WrappedItemStack<T> extends Wrappable<T> {
+public abstract class WrappedItemStack<T> extends Wrapper<T> {
 	
 	static { // include in maven shade plugin
 		WrappedItemStackv1_8_R1.class.getClass();

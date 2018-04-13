@@ -1,0 +1,43 @@
+package com.kabryxis.kabutils.random;
+
+import java.util.List;
+
+public class WeightedRandomArrayList<E extends Weighted> extends RandomArrayList<E> {
+	
+	public WeightedRandomArrayList() {
+		super();
+	}
+	
+	public WeightedRandomArrayList(int noRepeat) {
+		super(noRepeat);
+	}
+	
+	public WeightedRandomArrayList(int noRepeat, int capacity) {
+		super(noRepeat, capacity);
+	}
+	
+	public E random() {
+		if(currNoRepeat == -1) throw new IllegalStateException("No values in list to get from");
+		E value = currNoRepeat == 0 ? list.get(0) : list.remove(getWeightedIndex(list));
+		if(currNoRepeat != 0) used.add(value);
+		if(used.size() == currNoRepeat + 1) list.add(used.remove(0));
+		return value;
+	}
+	
+	protected int getWeightedIndex(List<E> values) {
+		int totalWeight = 0;
+		for(E value : values) {
+			totalWeight += value.getWeight();
+		}
+		int chosenRarity = random.nextInt(totalWeight);
+		int currentWeight = 0;
+		for(int index = 0; index < values.size(); index++) {
+			E value = values.get(index);
+			currentWeight += value.getWeight();
+			if(currentWeight >= chosenRarity) return index;
+		}
+		System.out.println("for some reason the weighted system failed");
+		return random.nextInt(values.size());
+	}
+	
+}

@@ -4,7 +4,7 @@ import com.kabryxis.kabutils.concurrent.Threads;
 
 public abstract class QuittableThread extends Thread {
 	
-	private boolean stop = false;
+	private boolean stop = true;
 	
 	public QuittableThread() {
 		super();
@@ -22,7 +22,10 @@ public abstract class QuittableThread extends Thread {
 	}
 	
 	@Override
-	public abstract void run();
+	public synchronized void start() {
+		stop = false;
+		super.start();
+	}
 	
 	private void register() {
 		Threads.registerQuittable(this);

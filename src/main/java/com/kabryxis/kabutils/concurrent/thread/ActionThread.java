@@ -57,4 +57,5 @@ public class ActionThread extends PausableThread {
 		super.quit();
 		queue.forEach(Runnable::run);
 	}
+	
 }

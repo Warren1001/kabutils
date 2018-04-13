@@ -10,16 +10,16 @@ import java.util.function.Supplier;
 
 public class MultiRandomArrayList<K, V> {
 	
-	private final Queue<ListEntry> cache = new ConcurrentLinkedQueue<>();
-	private final Random random = new Random();
+	protected final Queue<ListEntry> cache = new ConcurrentLinkedQueue<>();
+	protected final Random random = new Random();
 	
-	private final List<ListEntry> used;
-	private final Map<K, List<V>> map;
-	private final Function<? super V, ? extends K> identifier;
+	protected final List<ListEntry> used;
+	protected final Map<K, List<V>> map;
+	protected final Function<? super V, ? extends K> identifier;
 	
-	private int size = 0;
-	private int noRepeat;
-	private int currNoRepeat;
+	protected int size = 0;
+	protected int noRepeat;
+	protected int currNoRepeat;
 	
 	public MultiRandomArrayList(Supplier<Map<K, List<V>>> supplier, Function<? super V, ? extends K> identifier, int noRepeat) {
 		this.used = new ArrayList<>(noRepeat);
@@ -61,7 +61,7 @@ public class MultiRandomArrayList<K, V> {
 		return size;
 	}
 	
-	private void update() {
+	protected void update() {
 		if(currNoRepeat == size - 1) return;
 		currNoRepeat = size <= noRepeat ? size - 1 : noRepeat;
 		if(currNoRepeat < 1) {
@@ -98,7 +98,7 @@ public class MultiRandomArrayList<K, V> {
 				if(values != null && !values.isEmpty()) combined.addAll(values);
 			}
 			if(combined.isEmpty()) return tryUsed(keys);
-			value = combined.remove(combined.size() == 1 ? 0 : random.nextInt(combined.size()));
+			value = combined.get(combined.size() == 1 ? 0 : random.nextInt(combined.size()));
 			List<V> belonging = map.get(identifier.apply(value));
 			belonging.remove(value);
 			used.add(getListEntry(value, belonging));
@@ -127,7 +127,7 @@ public class MultiRandomArrayList<K, V> {
 				if(values != null && !values.isEmpty()) combined.addAll(values);
 			}
 			if(combined.isEmpty()) return tryUsed(keys);
-			value = combined.remove(combined.size() == 1 ? 0 : random.nextInt(combined.size()));
+			value = combined.get(combined.size() == 1 ? 0 : random.nextInt(combined.size()));
 			List<V> belonging = map.get(identifier.apply(value));
 			belonging.remove(value);
 			used.add(getListEntry(value, belonging));
@@ -197,13 +197,13 @@ public class MultiRandomArrayList<K, V> {
 		used.forEach(p -> action.accept(p.getObject()));
 	}
 	
-	private ListEntry getListEntry(V obj, List<V> belongingList) {
+	protected ListEntry getListEntry(V obj, List<V> belongingList) {
 		ListEntry entry = cache.isEmpty() ? new ListEntry() : cache.poll();
 		entry.reuse(obj, belongingList);
 		return entry;
 	}
 	
-	private class ListEntry {
+	public class ListEntry {
 		
 		private V obj;
 		private List<V> belongingList;

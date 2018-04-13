@@ -3,7 +3,7 @@ package com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftVillager;
 import org.bukkit.entity.Villager;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.WrapperCache;
+import com.kabryxis.kabutils.spigot.version.WrappableCache;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.WrappedEntityVillager;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.WrappedMerchantRecipeList;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.impl.WrappedMerchantRecipeListv1_10_R1;
@@ -19,7 +19,7 @@ public class WrappedEntityVillagerv1_10_R1 extends WrappedEntityVillager<EntityV
 	
 	@Override
 	public WrappedMerchantRecipeListv1_10_R1 getOffers() {
-		WrappedMerchantRecipeListv1_10_R1 handle = (WrappedMerchantRecipeListv1_10_R1)WrapperCache.get(WrappedMerchantRecipeList.class);
+		WrappedMerchantRecipeListv1_10_R1 handle = (WrappedMerchantRecipeListv1_10_R1)WrappableCache.get(WrappedMerchantRecipeList.class);
 		handle.set(get().getOffers(null));
 		return handle;
 	}

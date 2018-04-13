@@ -2,7 +2,7 @@ package com.kabryxis.kabutils.spigot.version.wrapper.entity.villager;
 
 import org.bukkit.entity.Villager;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.Wrapper;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl.WrappedEntityVillagerv1_10_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl.WrappedEntityVillagerv1_11_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl.WrappedEntityVillagerv1_12_R1;
@@ -13,7 +13,7 @@ import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl.Wrapped
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl.WrappedEntityVillagerv1_9_R2;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.WrappedMerchantRecipeList;
 
-public abstract class WrappedEntityVillager<T> extends Wrappable<T> {
+public abstract class WrappedEntityVillager<T> extends Wrapper<T> {
 	
 	static { // include in maven shade plugin
 		WrappedEntityVillagerv1_8_R1.class.getClass();

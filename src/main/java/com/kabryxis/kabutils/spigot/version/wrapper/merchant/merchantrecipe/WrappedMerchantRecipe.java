@@ -1,6 +1,6 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.Wrapper;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_10_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_11_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_12_R1;
@@ -10,7 +10,7 @@ import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_9_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_9_R2;
 
-public abstract class WrappedMerchantRecipe<T> extends Wrappable<T> {
+public abstract class WrappedMerchantRecipe<T> extends Wrapper<T> {
 	
 	static { // include in maven shade plugin
 		WrappedMerchantRecipev1_8_R1.class.getClass();

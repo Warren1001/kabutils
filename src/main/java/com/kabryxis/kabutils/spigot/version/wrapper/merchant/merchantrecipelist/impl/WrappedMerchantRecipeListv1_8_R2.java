@@ -3,7 +3,7 @@ package com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist
 import java.util.ArrayList;
 import java.util.List;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.WrapperCache;
+import com.kabryxis.kabutils.spigot.version.WrappableCache;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.WrappedMerchantRecipe;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_8_R2;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.WrappedMerchantRecipeList;
@@ -19,7 +19,7 @@ public class WrappedMerchantRecipeListv1_8_R2 extends WrappedMerchantRecipeList<
 		List<WrappedMerchantRecipe<?>> list = new ArrayList<>(rList.size());
 		for(Object obj : rList) {
 			MerchantRecipe recipe = (MerchantRecipe)obj;
-			WrappedMerchantRecipev1_8_R2 handle = (WrappedMerchantRecipev1_8_R2)WrapperCache.get(WrappedMerchantRecipe.class);
+			WrappedMerchantRecipev1_8_R2 handle = (WrappedMerchantRecipev1_8_R2)WrappableCache.get(WrappedMerchantRecipe.class);
 			handle.set(recipe);
 			list.add(handle);
 		}

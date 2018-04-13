@@ -7,12 +7,12 @@ import java.util.Random;
 
 public class RandomArrayList<E> {
 	
-	private final Random random;
-	private final List<E> list;
-	private final List<E> used;
+	protected final Random random;
+	protected final List<E> list;
+	protected final List<E> used;
 	
-	private int noRepeat;
-	private int currNoRepeat;
+	protected int noRepeat;
+	protected int currNoRepeat;
 	
 	public RandomArrayList() {
 		this(-1, 10);

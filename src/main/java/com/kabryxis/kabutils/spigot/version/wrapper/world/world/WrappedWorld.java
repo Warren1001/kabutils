@@ -2,6 +2,7 @@ package com.kabryxis.kabutils.spigot.version.wrapper.world.world;
 
 import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.world.world.impl.WrappedWorldv1_8_R1;
+import com.kabryxis.kabutils.spigot.version.wrapper.world.world.impl.WrappedWorldv1_8_R3;
 import com.kabryxis.kabutils.spigot.world.ChunkEntry;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -15,9 +16,8 @@ public abstract class WrappedWorld<T> {
 	private static final Function<World, WrappedWorld<?>> supplier;
 	
 	static { // include in maven shade plugin
-		if(Version.VERSION == Version.v1_8_R1) {
-			supplier = WrappedWorldv1_8_R1::new;
-		}
+		if(Version.VERSION == Version.v1_8_R1) supplier = WrappedWorldv1_8_R1::new;
+		else if(Version.VERSION == Version.v1_8_R3) supplier = WrappedWorldv1_8_R3::new;
 		else supplier = null;
 	}
 	

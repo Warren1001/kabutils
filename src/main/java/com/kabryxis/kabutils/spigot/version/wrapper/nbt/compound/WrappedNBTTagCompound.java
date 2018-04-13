@@ -2,7 +2,7 @@ package com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound;
 
 import java.io.File;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.Wrapper;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_10_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_11_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_12_R1;
@@ -13,7 +13,7 @@ import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBT
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_9_R2;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
 
-public abstract class WrappedNBTTagCompound<T> extends Wrappable<T> {
+public abstract class WrappedNBTTagCompound<T> extends Wrapper<T> {
 	
 	static { // include in maven shade plugin
 		WrappedNBTTagCompoundv1_8_R1.class.getClass();
