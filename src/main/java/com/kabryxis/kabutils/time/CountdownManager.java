@@ -1,10 +1,10 @@
 package com.kabryxis.kabutils.time;
 
+import com.kabryxis.kabutils.BiIntConsumer;
+import com.kabryxis.kabutils.Worker;
+
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.IntConsumer;
-
-import com.kabryxis.kabutils.Worker;
 
 public class CountdownManager {
 	
@@ -12,19 +12,19 @@ public class CountdownManager {
 	private final Map<Thread, Countdown> currentlyActive = new HashMap<>();
 	private Countdown lastActivated = null;
 	
-	public Countdown constructNewCountdown(String name, long interval, boolean repeat, IntConsumer timerAction, Worker zeroAction) {
+	public Countdown constructNewCountdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction, Worker zeroAction) {
 		return countdowns.computeIfAbsent(name, s -> new Countdown(s, interval, repeat, timerAction, zeroAction));
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, boolean repeat, IntConsumer timerAction) {
+	public Countdown constructNewCountdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction) {
 		return constructNewCountdown(name, interval, repeat, timerAction, null);
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, IntConsumer timerAction, Worker zeroAction) {
+	public Countdown constructNewCountdown(String name, long interval, BiIntConsumer<TimeLeft> timerAction, Worker zeroAction) {
 		return constructNewCountdown(name, interval, false, timerAction, zeroAction);
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, IntConsumer timerAction) {
+	public Countdown constructNewCountdown(String name, long interval, BiIntConsumer<TimeLeft> timerAction) {
 		return constructNewCountdown(name, interval, timerAction, null);
 	}
 	
@@ -69,9 +69,9 @@ public class CountdownManager {
 		if(cd != null) cd.unpause();
 	}
 	
-	public void setTime(String name, int time) {
+	public void setCurrentTime(String name, int time) {
 		Countdown cd = countdowns.get(name);
-		if(cd != null) cd.setTime(time);
+		if(cd != null) cd.setCurrentTime(time);
 	}
 	
 }

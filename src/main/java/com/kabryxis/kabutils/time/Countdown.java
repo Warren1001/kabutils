@@ -1,23 +1,22 @@
 package com.kabryxis.kabutils.time;
 
+import com.kabryxis.kabutils.BiIntConsumer;
 import com.kabryxis.kabutils.Worker;
 import com.kabryxis.kabutils.concurrent.Threads;
-
-import java.util.function.IntConsumer;
 
 public class Countdown {
 	
 	private String name;
 	private long interval;
 	private boolean repeat;
-	private IntConsumer timerAction;
+	private BiIntConsumer<TimeLeft> timerAction;
 	private Worker zeroAction;
 	
 	private Thread currThread;
-	private int time = -1;
+	private int time = -1, maxTime = -1;
 	private boolean wait = false, stop = false;
 	
-	public Countdown(String name, long interval, boolean repeat, IntConsumer timerAction, Worker zeroAction) {
+	public Countdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction, Worker zeroAction) {
 		this.name = name;
 		this.interval = interval;
 		this.repeat = repeat;
@@ -35,7 +34,7 @@ public class Countdown {
 		setTime(t);
 		for(; time > 0 && !stop; time--) {
 			waitCheck();
-			timerAction.accept(time);
+			timerAction.accept(time, getTimeLeft());
 			Threads.sleep(interval);
 		}
 		if(!stop && zeroAction != null) zeroAction.work();
@@ -44,11 +43,22 @@ public class Countdown {
 		stop = false;
 	}
 	
+	private TimeLeft getTimeLeft() {
+		if(maxTime == time) return TimeLeft.FULL;
+		if((int)Math.ceil((double)maxTime * 0.75) == time) return TimeLeft.THREE_FOURTHS;
+		if((int)Math.ceil((double)maxTime * 0.66) == time) return TimeLeft.TWO_THIRDS;
+		if((int)Math.ceil((double)maxTime * 0.5) == time) return TimeLeft.HALF;
+		if((int)Math.ceil((double)maxTime * 0.33) == time) return TimeLeft.ONE_THIRD;
+		if((int)Math.ceil((double)maxTime * 0.25) == time) return TimeLeft.ONE_FORTH;
+		return TimeLeft.UNKNOWN;
+	}
+	
 	private void waitCheck() {
 		if(wait) {
 			if(repeat) {
+				TimeLeft timeLeft = getTimeLeft();
 				while(wait) {
-					timerAction.accept(time);
+					timerAction.accept(time, timeLeft);
 					Threads.sleep(interval);
 				}
 			}
@@ -62,8 +72,13 @@ public class Countdown {
 		}
 	}
 	
-	public void setTime(int t) {
-		this.time = t;
+	public void setTime(int time) {
+		setCurrentTime(time);
+		this.maxTime = time;
+	}
+	
+	public void setCurrentTime(int time) {
+		this.time = time;
 	}
 	
 	public Thread getCurrentlyActiveThread() {

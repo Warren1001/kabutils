@@ -20,6 +20,8 @@ public class WeightedMultiRandomArrayList<K, V extends Weighted> extends MultiRa
 	
 	@Override
 	public V random(K[] keys) {
+		Validate.notNull(keys, "keys cannot be null");
+		Validate.isTrue(keys.length != 0, "keys cannot be empty");
 		V value;
 		if(keys.length == 1) {
 			K key = keys[0];
