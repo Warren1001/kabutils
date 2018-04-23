@@ -22,12 +22,21 @@ public class IncrementalString {
 		return get();
 	}
 	
+	public String decrement() {
+		number--;
+		return get();
+	}
+	
 	public String get() {
 		return string.replace("[x]", String.valueOf(number));
 	}
 	
 	public void setNumber(int number) {
 		this.number = number;
+	}
+	
+	public int getNumber() {
+		return number;
 	}
 	
 	public String reset() {

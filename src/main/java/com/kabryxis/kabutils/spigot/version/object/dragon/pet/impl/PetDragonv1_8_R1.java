@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMonster, PetDragon {
 	
-	static {
+	public static void register() {
 		String name = "EnderDragon";
 		Class<?> clazz = PetDragonv1_8_R1.class;
 		((Map<String, Class<?>>)getPrivateField("c", EntityTypes.class, null)).put(name, clazz);

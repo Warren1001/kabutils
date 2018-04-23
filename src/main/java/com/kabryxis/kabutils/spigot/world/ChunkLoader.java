@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-public class ChunkLoader {
+public class ChunkLoader { // TODO make interface that has an instance, rather than static accessor
 	
 	private static final Map<Object, Set<Chunk>> loadedChunks = new HashMap<>();
 	

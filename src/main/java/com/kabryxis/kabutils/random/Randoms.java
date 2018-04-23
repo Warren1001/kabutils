@@ -1,8 +1,6 @@
 package com.kabryxis.kabutils.random;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Randoms {
 	
@@ -26,6 +24,14 @@ public class Randoms {
 	
 	public static <T> T getRandom(T[] array) {
 		return array.length == 1 ? array[0] : array[random.nextInt(array.length)];
+	}
+	
+	public static <T> T getRandom(Collection<T> collection) {
+		Iterator<T> iter = collection.iterator();
+		for(int i = 0; i < random.nextInt(collection.size()); i++) {
+			iter.next();
+		}
+		return iter.next();
 	}
 	
 }
