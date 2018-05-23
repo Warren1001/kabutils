@@ -18,12 +18,17 @@ public class Config extends YamlConfiguration {
 		return configs.computeIfAbsent(file, Config::new);
 	}
 	
-	private final File file;
-	private final String name;
+	private File file;
+	private String name;
 	
 	private Config(File file) {
 		this.file = file;
 		this.name = file.getName().split("\\.")[0];
+	}
+	
+	public Config() {
+		this.file = null;
+		this.name = null;
 	}
 	
 	@Override
@@ -32,18 +37,18 @@ public class Config extends YamlConfiguration {
 	}
 	
 	public void load() {
-		if(file.exists()) Data.queue(this::load0);
+		if(file != null && file.exists()) Data.queue(this::load0);
 	}
 	
 	public void load(Consumer<Config> callable) {
-		if(file.exists()) Data.queue(() -> {
+		if(file != null && file.exists()) Data.queue(() -> {
 			load0();
 			callable.accept(this);
 		});
 	}
 	
 	public void save() {
-		Data.queue(this::save0);
+		if(file != null) Data.queue(this::save0);
 	}
 	
 	private void load0() {

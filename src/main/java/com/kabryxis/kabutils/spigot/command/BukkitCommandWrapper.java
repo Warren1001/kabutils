@@ -14,11 +14,11 @@ public class BukkitCommandWrapper extends Command {
 		this.manager = manager;
 	}
 	
+	@Override
 	public boolean execute(CommandSender sender, String alias, String[] args) {
 		BukkitCommandIssuer commandIssuer = Cache.get(BukkitCommandIssuer.class);
 		commandIssuer.reuse(sender);
-		manager.handle(commandIssuer, alias.toLowerCase(), args);
-		return true;
+		return manager.handle(commandIssuer, alias.toLowerCase(), args);
 	}
 	
 }
