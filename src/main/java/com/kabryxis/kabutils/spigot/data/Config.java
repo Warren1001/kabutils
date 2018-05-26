@@ -4,26 +4,26 @@ import com.kabryxis.kabutils.data.Data;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
 import java.util.function.Consumer;
 
 public class Config extends YamlConfiguration {
 	
-	private final static Map<File, Config> configs = new HashMap<>();
-	
-	public static Config get(File file) {
-		return configs.computeIfAbsent(file, Config::new);
-	}
-	
 	private File file;
 	private String name;
 	
-	private Config(File file) {
+	public Config(File file) {
 		this.file = file;
 		this.name = file.getName().split("\\.")[0];
+	}
+	
+	public Config(File file, InputStream is) {
+		this.file = file;
+		try(InputStreamReader isr = new InputStreamReader(is)) {
+			load(isr);
+		} catch(IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public Config() {
@@ -34,6 +34,14 @@ public class Config extends YamlConfiguration {
 	@Override
 	public String getName() {
 		return name;
+	}
+	
+	public void setFile(File file) {
+		this.file = file;
+	}
+	
+	public File getFile() {
+		return file;
 	}
 	
 	public void load() {

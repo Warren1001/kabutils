@@ -17,7 +17,7 @@ public class WeightedRandomArrayList<E extends Weighted> extends RandomArrayList
 	}
 	
 	public E random() {
-		if(currNoRepeat == -1) throw new IllegalStateException("No values in list to get from");
+		if(currNoRepeat == -1) return null;
 		E value = currNoRepeat == 0 ? list.get(0) : list.remove(getWeightedIndex(list));
 		if(currNoRepeat != 0) used.add(value);
 		if(used.size() == currNoRepeat + 1) list.add(used.remove(0));
@@ -36,7 +36,6 @@ public class WeightedRandomArrayList<E extends Weighted> extends RandomArrayList
 			currentWeight += value.getWeight();
 			if(currentWeight >= chosenRarity) return index;
 		}
-		System.out.println("for some reason the weighted system failed");
 		return random.nextInt(values.size());
 	}
 	

@@ -36,11 +36,12 @@ public class RandomArrayList<E> {
 		return value;
 	}
 	
-	public boolean add(E[] objects) {
-		boolean value = true;
+	public boolean add(E... objects) {
+		boolean value = false;
 		for(E object : objects) {
-			if(!add(object) && value) value = false;
+			if(add(object) && !value) value = true;
 		}
+		if(value) update();
 		return value;
 	}
 	
@@ -76,22 +77,14 @@ public class RandomArrayList<E> {
 	}
 	
 	public E random() {
-		if(currNoRepeat == -1) throw new IllegalStateException("No values in list to get from");
+		if(currNoRepeat == -1) return null;
 		E value = currNoRepeat == 0 ? list.get(0) : list.remove(random.nextInt(list.size()));
 		if(currNoRepeat != 0) used.add(value);
 		if(used.size() == currNoRepeat + 1) list.add(used.remove(0));
 		return value;
 	}
 	
-	public List<E> random(int amount) {
-		List<E> list = new ArrayList<>(amount);
-		for(int i = 0; i < amount; i++) {
-			list.add(random());
-		}
-		return list;
-	}
-	
-	private void update() {
+	protected void update() {
 		int size = list.size();
 		if(currNoRepeat == size - 1) return;
 		currNoRepeat = size <= noRepeat ? size - 1 : noRepeat;
