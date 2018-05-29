@@ -1,36 +1,44 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.kabryxis.kabutils.spigot.version.WrappableCache;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.WrappedMerchantRecipe;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.WrappedMerchantRecipev1_8_R2;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.WrappedMerchantRecipeList;
-
 import net.minecraft.server.v1_8_R2.MerchantRecipe;
 import net.minecraft.server.v1_8_R2.MerchantRecipeList;
 
-public class WrappedMerchantRecipeListv1_8_R2 extends WrappedMerchantRecipeList<MerchantRecipeList> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class WrappedMerchantRecipeListv1_8_R2 extends WrappedMerchantRecipeList {
+	
+	private final MerchantRecipeList merchantRecipeList;
+	
+	public WrappedMerchantRecipeListv1_8_R2() {
+		this.merchantRecipeList = new MerchantRecipeList();
+	}
+	
+	public WrappedMerchantRecipeListv1_8_R2(MerchantRecipeList merchantRecipeList) {
+		this.merchantRecipeList = merchantRecipeList;
+	}
 	
 	@Override
-	public List<WrappedMerchantRecipe<?>> getRecipes() {
-		MerchantRecipeList rList = get();
-		List<WrappedMerchantRecipe<?>> list = new ArrayList<>(rList.size());
-		for(Object obj : rList) {
-			MerchantRecipe recipe = (MerchantRecipe)obj;
-			WrappedMerchantRecipev1_8_R2 handle = (WrappedMerchantRecipev1_8_R2)WrappableCache.get(WrappedMerchantRecipe.class);
-			handle.set(recipe);
-			list.add(handle);
+	public Object getObject() {
+		return merchantRecipeList;
+	}
+	
+	@Override
+	public List<WrappedMerchantRecipe> getRecipes() {
+		List<WrappedMerchantRecipe> list = new ArrayList<>(merchantRecipeList.size());
+		for(MerchantRecipe merchantRecipe : merchantRecipeList) {
+			list.add(new WrappedMerchantRecipev1_8_R2(merchantRecipe));
 		}
 		return list;
 	}
 	
 	@Override
-	public void setRecipes(List<WrappedMerchantRecipe<?>> recipes) {
-		MerchantRecipeList list = get();
-		list.clear();
-		recipes.forEach(r -> list.add(((WrappedMerchantRecipev1_8_R2)r).get()));
+	public void setRecipes(List<WrappedMerchantRecipe> recipes) {
+		merchantRecipeList.clear();
+		recipes.forEach(r -> merchantRecipeList.add(((WrappedMerchantRecipev1_8_R2)r).getHandle()));
 	}
 	
 }

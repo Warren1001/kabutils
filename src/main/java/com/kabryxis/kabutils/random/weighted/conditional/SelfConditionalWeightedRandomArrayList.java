@@ -1,19 +1,19 @@
-package com.kabryxis.kabutils.random;
+package com.kabryxis.kabutils.random.weighted.conditional;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SelfPredicateWeightedRandomArrayList<E extends PredicateWeighted<Object>> extends PredicateWeightedRandomArrayList<E> {
+public class SelfConditionalWeightedRandomArrayList<E extends ConditionalWeighted<Object>> extends ConditionalWeightedRandomArrayList<E> {
 	
-	public SelfPredicateWeightedRandomArrayList() {
+	public SelfConditionalWeightedRandomArrayList() {
 		super();
 	}
 	
-	public SelfPredicateWeightedRandomArrayList(int noRepeat) {
+	public SelfConditionalWeightedRandomArrayList(int noRepeat) {
 		super(noRepeat);
 	}
 	
-	public SelfPredicateWeightedRandomArrayList(int noRepeat, int capacity) {
+	public SelfConditionalWeightedRandomArrayList(int noRepeat, int capacity) {
 		super(noRepeat, capacity);
 	}
 	

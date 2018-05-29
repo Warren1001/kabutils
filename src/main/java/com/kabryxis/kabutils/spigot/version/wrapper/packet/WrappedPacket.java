@@ -1,11 +1,10 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.packet;
 
+import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
 import org.bukkit.entity.Player;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.Wrapper;
-
-public abstract class WrappedPacket<T> extends Wrapper<T> {
+public interface WrappedPacket extends Wrappable {
 	
-	public abstract void send(Player player);
+	void send(Player player);
 	
 }

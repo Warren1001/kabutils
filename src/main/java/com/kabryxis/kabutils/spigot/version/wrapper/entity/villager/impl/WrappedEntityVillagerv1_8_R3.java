@@ -1,27 +1,27 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.impl;
 
+import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.WrappedEntityVillager;
+import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.impl.WrappedMerchantRecipeListv1_8_R3;
+import net.minecraft.server.v1_8_R3.EntityVillager;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftVillager;
 import org.bukkit.entity.Villager;
 
-import com.kabryxis.kabutils.spigot.version.WrappableCache;
-import com.kabryxis.kabutils.spigot.version.wrapper.entity.villager.WrappedEntityVillager;
-import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.WrappedMerchantRecipeList;
-import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.impl.WrappedMerchantRecipeListv1_8_R3;
-
-import net.minecraft.server.v1_8_R3.EntityVillager;
-
-public class WrappedEntityVillagerv1_8_R3 extends WrappedEntityVillager<EntityVillager> {
+public class WrappedEntityVillagerv1_8_R3 extends WrappedEntityVillager {
+	
+	private final EntityVillager entityVillager;
+	
+	public WrappedEntityVillagerv1_8_R3(Villager villager) {
+		this.entityVillager = ((CraftVillager)villager).getHandle();
+	}
 	
 	@Override
-	public void setVillager(Villager villager) {
-		set(((CraftVillager)villager).getHandle());
+	public Object getObject() {
+		return entityVillager;
 	}
 	
 	@Override
 	public WrappedMerchantRecipeListv1_8_R3 getOffers() {
-		WrappedMerchantRecipeListv1_8_R3 handle = (WrappedMerchantRecipeListv1_8_R3)WrappableCache.get(WrappedMerchantRecipeList.class);
-		handle.set(get().getOffers(null));
-		return handle;
+		return new WrappedMerchantRecipeListv1_8_R3(entityVillager.getOffers(null));
 	}
 	
 }

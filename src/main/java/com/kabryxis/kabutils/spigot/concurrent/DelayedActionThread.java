@@ -47,7 +47,6 @@ public class DelayedActionThread extends PausableThread {
 	
 	public void clear() {
 		synchronized(active) {
-			active.forEach(DelayedAction::cache);
 			active.clear();
 		}
 	}

@@ -2,15 +2,13 @@ package com.kabryxis.kabutils.spigot.world;
 
 import org.bukkit.Material;
 
-import com.kabryxis.kabutils.cache.Cache;
-
 public class ChunkEntry {
 	
-	private int x, y, z;
-	private Material type;
-	private int data; // TODO 1.13 update
+	private final int x, y, z;
+	private final Material type;
+	private final int data; // TODO 1.13 update
 	
-	public void reuse(int x, int y, int z, Material type, int data) {
+	public ChunkEntry(int x, int y, int z, Material type, int data) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -18,12 +16,12 @@ public class ChunkEntry {
 		this.data = data;
 	}
 	
-	public void reuse(int x, int y, int z, Material type) {
-		reuse(x, y, z, type, 0);
+	public ChunkEntry(int x, int y, int z, Material type) {
+		this(x, y, z, type, 0);
 	}
 	
-	public void reuse(int x, int y, int z) {
-		reuse(x, y, z, Material.AIR);
+	public ChunkEntry(int x, int y, int z) {
+		this(x, y, z, Material.AIR);
 	}
 	
 	public int getX() {
@@ -44,15 +42,6 @@ public class ChunkEntry {
 	
 	public int getData() {
 		return data;
-	}
-	
-	public void cache() {
-		x = 0;
-		y = 0;
-		z = 0;
-		type = null;
-		data = 0;
-		Cache.cache(this);
 	}
 	
 }

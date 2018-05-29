@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils.random;
+package com.kabryxis.kabutils.random.weighted;
 
 public interface Weighted {
 	

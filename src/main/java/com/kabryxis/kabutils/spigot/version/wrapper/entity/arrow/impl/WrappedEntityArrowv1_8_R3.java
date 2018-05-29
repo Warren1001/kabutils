@@ -8,7 +8,7 @@ import org.bukkit.entity.Arrow;
 
 import java.lang.reflect.Field;
 
-public class WrappedEntityArrowv1_8_R3 extends WrappedEntityArrow<EntityArrow> {
+public class WrappedEntityArrowv1_8_R3 extends WrappedEntityArrow {
 	
 	private static Field fieldX, fieldY, fieldZ;
 	
@@ -25,17 +25,23 @@ public class WrappedEntityArrowv1_8_R3 extends WrappedEntityArrow<EntityArrow> {
 		}
 	}
 	
+	private final EntityArrow entityArrow;
+	
+	public WrappedEntityArrowv1_8_R3(Arrow arrow) {
+		this.entityArrow = ((CraftArrow)arrow).getHandle();
+	}
+	
 	@Override
-	public void set(Arrow arrow) {
-		set(((CraftArrow)arrow).getHandle());
+	public Object getObject() {
+		return entityArrow;
 	}
 	
 	@Override
 	public Block getHitBlock() {
 		try {
-			int y = fieldY.getInt(get());
+			int y = fieldY.getInt(entityArrow);
 			if(y == -1) return null;
-			return get().world.getWorld().getBlockAt(fieldX.getInt(get()), y, fieldZ.getInt(get()));
+			return entityArrow.world.getWorld().getBlockAt(fieldX.getInt(entityArrow), y, fieldZ.getInt(entityArrow));
 		} catch(IllegalAccessException e) {
 			e.printStackTrace();
 			return null;

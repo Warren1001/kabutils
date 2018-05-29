@@ -1,5 +1,6 @@
-package com.kabryxis.kabutils.random;
+package com.kabryxis.kabutils.random.weighted;
 
+import com.kabryxis.kabutils.random.MultiRandomArrayList;
 import org.apache.commons.lang3.Validate;
 
 import java.util.ArrayList;

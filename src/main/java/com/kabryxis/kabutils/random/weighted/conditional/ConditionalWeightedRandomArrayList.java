@@ -1,21 +1,24 @@
-package com.kabryxis.kabutils.random;
+package com.kabryxis.kabutils.random.weighted.conditional;
+
+import com.kabryxis.kabutils.random.weighted.Weighted;
+import com.kabryxis.kabutils.random.weighted.WeightedRandomArrayList;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PredicateWeightedRandomArrayList<E extends Weighted> extends WeightedRandomArrayList<E> {
+public class ConditionalWeightedRandomArrayList<E extends Weighted> extends WeightedRandomArrayList<E> {
 	
-	public PredicateWeightedRandomArrayList() {
+	public ConditionalWeightedRandomArrayList() {
 		super();
 	}
 	
-	public PredicateWeightedRandomArrayList(int noRepeat) {
+	public ConditionalWeightedRandomArrayList(int noRepeat) {
 		super(noRepeat);
 	}
 	
-	public PredicateWeightedRandomArrayList(int noRepeat, int capacity) {
+	public ConditionalWeightedRandomArrayList(int noRepeat, int capacity) {
 		super(noRepeat, capacity);
 	}
 	

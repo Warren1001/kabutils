@@ -23,9 +23,4 @@ public class ConsoleIssuer implements CommandIssuer {
 		return true;
 	}
 	
-	@Override
-	public void cache() {
-		throw new UnsupportedOperationException("Singular instance, not cacheable.");
-	}
-	
 }

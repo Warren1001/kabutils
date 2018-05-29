@@ -1,11 +1,14 @@
-package com.kabryxis.kabutils.spigot.version;
+package com.kabryxis.kabutils.spigot.version.wrapper;
 
-import com.kabryxis.kabutils.cache.Cache;
+import com.kabryxis.kabutils.cache.CacheB;
+import com.kabryxis.kabutils.spigot.version.UnsupportedVersionException;
+import com.kabryxis.kabutils.spigot.version.Version;
+import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class WrappableCache {
+public class WrappableCacheB {
 	
 	private final static Map<Class<? extends Wrappable>, Class<? extends Wrappable>> implementations = new HashMap<>();
 	
@@ -20,7 +23,7 @@ public class WrappableCache {
 			}
 			implementations.put(clazz, implementation);
 		}
-		return (T)Cache.get(implementation);
+		return (T)CacheB.get(implementation);
 	}
 	
 }

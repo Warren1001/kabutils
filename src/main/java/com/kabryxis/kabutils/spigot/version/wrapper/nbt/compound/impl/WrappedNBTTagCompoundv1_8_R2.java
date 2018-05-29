@@ -1,63 +1,71 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl.WrappedNBTTagListv1_8_R2;
-
 import net.minecraft.server.v1_8_R2.NBTCompressedStreamTools;
 import net.minecraft.server.v1_8_R2.NBTTagCompound;
 
-public class WrappedNBTTagCompoundv1_8_R2 extends WrappedNBTTagCompound<NBTTagCompound> {
+import java.io.*;
+
+public class WrappedNBTTagCompoundv1_8_R2 extends WrappedNBTTagCompound {
 	
-	@Override
-	public void newInstance() {
-		set(new NBTTagCompound());
+	private final NBTTagCompound tag;
+	
+	public WrappedNBTTagCompoundv1_8_R2() {
+		this.tag = new NBTTagCompound();
+	}
+	
+	public WrappedNBTTagCompoundv1_8_R2(NBTTagCompound tag) {
+		this.tag = tag;
+	}
+	
+	public WrappedNBTTagCompoundv1_8_R2(File playerFile) {
+		NBTTagCompound tag = null;
+		try {
+			tag = NBTCompressedStreamTools.a(new FileInputStream(playerFile));
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		this.tag = tag;
+	}
+	
+	public NBTTagCompound getHandle() {
+		return tag;
 	}
 	
 	@Override
-	public void loadPlayerData(File file) {
+	public Object getObject() {
+		return tag;
+	}
+	
+	@Override
+	public void savePlayerData(File playerFile) {
 		try {
-			set(NBTCompressedStreamTools.a(new FileInputStream(file)));
-		}
-		catch(IOException e) {
+			NBTCompressedStreamTools.a(tag, new FileOutputStream(playerFile));
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@Override
-	public void savePlayerData(File file) {
-		try {
-			NBTCompressedStreamTools.a(get(), new FileOutputStream(file));
-		}
-		catch(IOException e) {
-			e.printStackTrace();
-		}
+	public void set(String key, WrappedNBTTagList list) {
+		tag.set(key, ((WrappedNBTTagListv1_8_R2)list).getHandle());
 	}
 	
 	@Override
-	public void set(String key, WrappedNBTTagList<?> list) {
-		get().set(key, ((WrappedNBTTagListv1_8_R2)list).get());
-	}
-	
-	@Override
-	public void getList(WrappedNBTTagList<?> instance, String key, int i) {
-		WrappedNBTTagListv1_8_R2 handle = (WrappedNBTTagListv1_8_R2)instance;
-		handle.set(get().getList(key, i));
+	public WrappedNBTTagListv1_8_R2 getList(String key, int i) {
+		return new WrappedNBTTagListv1_8_R2(tag.getList(key, i));
 	}
 	
 	@Override
 	public void setByte(String key, byte value) {
-		get().setByte(key, value);
+		tag.setByte(key, value);
 	}
 	
 	@Override
 	public byte getByte(String key) {
-		return get().getByte(key);
+		return tag.getByte(key);
 	}
 	
 }

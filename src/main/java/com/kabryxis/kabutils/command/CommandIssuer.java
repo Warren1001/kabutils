@@ -6,6 +6,4 @@ public interface CommandIssuer {
 	
 	boolean hasPermission(String permission);
 	
-	void cache();
-	
 }

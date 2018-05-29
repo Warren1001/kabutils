@@ -1,6 +1,5 @@
 package com.kabryxis.kabutils.spigot.command;
 
-import com.kabryxis.kabutils.cache.Cache;
 import com.kabryxis.kabutils.command.CommandManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,9 +15,7 @@ public class BukkitCommandWrapper extends Command {
 	
 	@Override
 	public boolean execute(CommandSender sender, String alias, String[] args) {
-		BukkitCommandIssuer commandIssuer = Cache.get(BukkitCommandIssuer.class);
-		commandIssuer.reuse(sender);
-		return manager.handle(commandIssuer, alias.toLowerCase(), args);
+		return manager.handle(new BukkitCommandIssuer(sender), alias.toLowerCase(), args);
 	}
 	
 }

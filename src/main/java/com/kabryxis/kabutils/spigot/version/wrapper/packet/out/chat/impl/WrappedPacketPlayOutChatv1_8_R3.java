@@ -6,27 +6,22 @@ import net.minecraft.server.v1_8_R3.PacketPlayOutChat;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-public class WrappedPacketPlayOutChatv1_8_R3 extends WrappedPacketPlayOutChat<PacketPlayOutChat> {
+public class WrappedPacketPlayOutChatv1_8_R3 extends WrappedPacketPlayOutChat {
 	
-	private String lastMessage;
+	private final PacketPlayOutChat packet;
+	
+	public WrappedPacketPlayOutChatv1_8_R3(String message) {
+		this.packet = new PacketPlayOutChat(new ChatComponentText(message), (byte)2);
+	}
 	
 	@Override
-	public void newInstance(String message) {
-		if(lastMessage == null || !lastMessage.equals(message)) {
-			lastMessage = message;
-			set(new PacketPlayOutChat(new ChatComponentText(message), (byte)2));
-		}
+	public Object getObject() {
+		return packet;
 	}
 	
 	@Override
 	public void send(Player player) {
-		((CraftPlayer)player).getHandle().playerConnection.sendPacket(get());
-	}
-	
-	@Override
-	public void clear() {
-		super.clear();
-		lastMessage = null;
+		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 	}
 	
 }

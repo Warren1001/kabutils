@@ -1,7 +1,7 @@
 package com.kabryxis.kabutils.time;
 
-import com.kabryxis.kabutils.BiIntConsumer;
 import com.kabryxis.kabutils.Worker;
+import com.kabryxis.kabutils.spigot.utility.BiIntConsumer;
 
 import java.util.HashMap;
 import java.util.Map;

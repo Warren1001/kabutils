@@ -4,6 +4,4 @@ public interface DelayedAction {
 	
 	boolean test();
 	
-	void cache();
-	
 }

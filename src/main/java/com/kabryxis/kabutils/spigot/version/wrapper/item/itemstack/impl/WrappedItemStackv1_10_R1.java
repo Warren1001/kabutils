@@ -8,26 +8,31 @@ import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBT
 
 import net.minecraft.server.v1_10_R1.ItemStack;
 
-public class WrappedItemStackv1_10_R1 extends WrappedItemStack<ItemStack> {
+public class WrappedItemStackv1_10_R1 extends WrappedItemStack {
 	
-	@Override
-	public void createStack(WrappedNBTTagCompound<?> tag) {
-		set(ItemStack.createStack(((WrappedNBTTagCompoundv1_10_R1)tag).get()));
+	private final ItemStack itemStack;
+	
+	public WrappedItemStackv1_10_R1(org.bukkit.inventory.ItemStack itemStack) {
+		this.itemStack = CraftItemStack.asNMSCopy(itemStack);
+	}
+	
+	public WrappedItemStackv1_10_R1(WrappedNBTTagCompound tag) {
+		this.itemStack = ItemStack.createStack(((WrappedNBTTagCompoundv1_10_R1)tag).getHandle());
 	}
 	
 	@Override
-	public void setBukkitItemStack(org.bukkit.inventory.ItemStack item) {
-		set(CraftItemStack.asNMSCopy(item));
+	public Object getObject() {
+		return itemStack;
 	}
 	
 	@Override
 	public org.bukkit.inventory.ItemStack getBukkitItemStack() {
-		return CraftItemStack.asBukkitCopy(get());
+		return CraftItemStack.asBukkitCopy(itemStack);
 	}
 	
 	@Override
-	public void save(WrappedNBTTagCompound<?> tag) {
-		get().save(((WrappedNBTTagCompoundv1_10_R1)tag).get());
+	public void save(WrappedNBTTagCompound tag) {
+		itemStack.save(((WrappedNBTTagCompoundv1_10_R1)tag).getHandle());
 	}
 	
 }

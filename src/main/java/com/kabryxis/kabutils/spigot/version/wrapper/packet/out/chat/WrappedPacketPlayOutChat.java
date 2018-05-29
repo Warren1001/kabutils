@@ -1,16 +1,32 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat;
 
+import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.WrappedPacket;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat.impl.WrappedPacketPlayOutChatv1_8_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat.impl.WrappedPacketPlayOutChatv1_8_R3;
 
-public abstract class WrappedPacketPlayOutChat<T> extends WrappedPacket<T> {
+import java.util.function.Function;
+
+public abstract class WrappedPacketPlayOutChat implements WrappedPacket {
 	
-	static { // include in maven shade plugin
-		WrappedPacketPlayOutChatv1_8_R1.class.getClass();
-		WrappedPacketPlayOutChatv1_8_R3.class.getClass();
+	private static final Function<String, WrappedPacketPlayOutChat> supplier;
+	
+	static {
+		switch(Version.VERSION) {
+			case v1_8_R1:
+				supplier = WrappedPacketPlayOutChatv1_8_R1::new;
+				break;
+			case v1_8_R3:
+				supplier = WrappedPacketPlayOutChatv1_8_R3::new;
+				break;
+			default:
+				supplier = null;
+				break;
+		}
 	}
 	
-	public abstract void newInstance(String message);
+	public static WrappedPacketPlayOutChat newInstance(String message) {
+		return supplier.apply(message);
+	}
 	
 }

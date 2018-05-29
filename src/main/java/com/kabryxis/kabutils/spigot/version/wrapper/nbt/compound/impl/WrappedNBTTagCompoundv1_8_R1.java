@@ -1,28 +1,51 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl;
 
+import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
+import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
+import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl.WrappedNBTTagListv1_8_R1;
+import net.minecraft.server.v1_8_R1.NBTCompressedStreamTools;
+import net.minecraft.server.v1_8_R1.NBTTagCompound;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
-import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
-import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl.WrappedNBTTagListv1_8_R1;
-
-import net.minecraft.server.v1_8_R1.NBTCompressedStreamTools;
-import net.minecraft.server.v1_8_R1.NBTTagCompound;
-
-public class WrappedNBTTagCompoundv1_8_R1 extends WrappedNBTTagCompound<NBTTagCompound> {
+public class WrappedNBTTagCompoundv1_8_R1 extends WrappedNBTTagCompound {
 	
-	@Override
-	public void newInstance() {
-		set(new NBTTagCompound());
+	private final NBTTagCompound tag;
+	
+	public WrappedNBTTagCompoundv1_8_R1() {
+		this.tag = new NBTTagCompound();
+	}
+	
+	public WrappedNBTTagCompoundv1_8_R1(NBTTagCompound tag) {
+		this.tag = tag;
+	}
+	
+	public WrappedNBTTagCompoundv1_8_R1(File playerFile) {
+		NBTTagCompound tag = null;
+		try {
+			tag = NBTCompressedStreamTools.a(new FileInputStream(playerFile));
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		this.tag = tag;
+	}
+	
+	public NBTTagCompound getHandle() {
+		return tag;
 	}
 	
 	@Override
-	public void loadPlayerData(File file) {
+	public Object getObject() {
+		return tag;
+	}
+	
+	@Override
+	public void savePlayerData(File playerFile) {
 		try {
-			set(NBTCompressedStreamTools.a(new FileInputStream(file)));
+			NBTCompressedStreamTools.a(tag, new FileOutputStream(playerFile));
 		}
 		catch(FileNotFoundException e) {
 			e.printStackTrace();
@@ -30,34 +53,23 @@ public class WrappedNBTTagCompoundv1_8_R1 extends WrappedNBTTagCompound<NBTTagCo
 	}
 	
 	@Override
-	public void savePlayerData(File file) {
-		try {
-			NBTCompressedStreamTools.a(get(), new FileOutputStream(file));
-		}
-		catch(FileNotFoundException e) {
-			e.printStackTrace();
-		}
+	public void set(String key, WrappedNBTTagList list) {
+		tag.set(key, ((WrappedNBTTagListv1_8_R1)list).getHandle());
 	}
 	
 	@Override
-	public void set(String key, WrappedNBTTagList<?> list) {
-		get().set(key, ((WrappedNBTTagListv1_8_R1)list).get());
-	}
-	
-	@Override
-	public void getList(WrappedNBTTagList<?> instance, String key, int i) {
-		WrappedNBTTagListv1_8_R1 handle = (WrappedNBTTagListv1_8_R1)instance;
-		handle.set(get().getList(key, i));
+	public WrappedNBTTagListv1_8_R1 getList(String key, int i) {
+		return new WrappedNBTTagListv1_8_R1(tag.getList(key, i));
 	}
 	
 	@Override
 	public void setByte(String key, byte value) {
-		get().setByte(key, value);
+		tag.setByte(key, value);
 	}
 	
 	@Override
 	public byte getByte(String key) {
-		return get().getByte(key);
+		return tag.getByte(key);
 	}
 	
 }

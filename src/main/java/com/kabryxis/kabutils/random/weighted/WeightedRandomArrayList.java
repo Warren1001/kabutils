@@ -1,4 +1,6 @@
-package com.kabryxis.kabutils.random;
+package com.kabryxis.kabutils.random.weighted;
+
+import com.kabryxis.kabutils.random.RandomArrayList;
 
 import java.util.List;
 
