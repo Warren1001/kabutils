@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils.spigot.utility;
+package com.kabryxis.kabutils.utility;
 
 import org.apache.commons.lang3.Validate;
 

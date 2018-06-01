@@ -1,6 +1,6 @@
 package com.kabryxis.kabutils.spigot.version.object.dragon.pet;
 
-import com.kabryxis.kabutils.spigot.utility.TriFunction;
+import com.kabryxis.kabutils.utility.TriFunction;
 import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.object.dragon.pet.impl.PetDragonv1_8_R1;
 import org.bukkit.Location;

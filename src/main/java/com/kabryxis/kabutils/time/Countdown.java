@@ -2,7 +2,7 @@ package com.kabryxis.kabutils.time;
 
 import com.kabryxis.kabutils.Worker;
 import com.kabryxis.kabutils.concurrent.Threads;
-import com.kabryxis.kabutils.spigot.utility.BiIntConsumer;
+import com.kabryxis.kabutils.utility.BiIntConsumer;
 
 public class Countdown {
 	

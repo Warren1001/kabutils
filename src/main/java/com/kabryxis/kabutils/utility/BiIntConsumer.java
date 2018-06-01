@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils.spigot.utility;
+package com.kabryxis.kabutils.utility;
 
 @FunctionalInterface
 public interface BiIntConsumer<T> {
