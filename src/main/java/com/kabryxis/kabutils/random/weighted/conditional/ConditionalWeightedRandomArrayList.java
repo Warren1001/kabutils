@@ -23,7 +23,7 @@ public class ConditionalWeightedRandomArrayList<E extends Weighted> extends Weig
 	}
 	
 	public E random(Predicate<Object>... predicates) {
-		if(currNoRepeat == -1) return null;
+		if(currNoRepeat == -1) throw new IllegalStateException("Could not find a valid object");
 		E value;
 		if(currNoRepeat == 0) {
 			value = list.get(0);
@@ -34,7 +34,7 @@ public class ConditionalWeightedRandomArrayList<E extends Weighted> extends Weig
 					break;
 				}
 			}
-			if(!check) return null;
+			if(!check) throw new IllegalStateException("Could not find a valid object");
 		}
 		else {
 			Stream<E> stream = list.stream();
@@ -43,9 +43,16 @@ public class ConditionalWeightedRandomArrayList<E extends Weighted> extends Weig
 			}
 			List<E> testedList = stream.collect(Collectors.toList());
 			int size = testedList.size();
-			if(size == 0) return null;
-			if(size == 1) value = testedList.get(0);
-			else value = testedList.get(getWeightedIndex(testedList));
+			if(size == 0) {
+				stream = used.stream();
+				for(Predicate<Object> predicate : predicates) {
+					stream = stream.filter(predicate);
+				}
+				testedList = stream.collect(Collectors.toList());
+				size = testedList.size();
+			}
+			if(size == 0) throw new IllegalStateException("Could not find a valid object");
+			value = size == 1 ? testedList.get(0) : testedList.get(getWeightedIndex(testedList));
 		}
 		if(currNoRepeat != 0) {
 			list.remove(value);

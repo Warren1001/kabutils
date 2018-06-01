@@ -18,18 +18,21 @@ public class SelfConditionalWeightedRandomArrayList<E extends ConditionalWeighte
 	}
 	
 	public E random() { // TODO probably needs some revising
-		if(currNoRepeat == -1) return null;
+		if(currNoRepeat == -1) throw new IllegalStateException("Could not find a valid object");
 		E value;
 		if(currNoRepeat == 0) {
 			value = list.get(0);
-			if(!value.test(value)) return null;
+			if(!value.test(value)) throw new IllegalStateException("Could not find a valid object");
 		}
 		else {
 			List<E> testedList = list.stream().filter(v -> v.test(v)).collect(Collectors.toList());
 			int size = testedList.size();
-			if(size == 0) return null;
-			if(size == 1) value = testedList.get(0);
-			else value = testedList.get(getWeightedIndex(testedList));
+			if(size == 0) {
+				testedList = used.stream().filter(v -> v.test(v)).collect(Collectors.toList());
+				size = testedList.size();
+			}
+			if(size == 0) throw new IllegalStateException("Could not find a valid object");
+			value = size == 1 ? testedList.get(0) : testedList.get(getWeightedIndex(testedList));
 		}
 		if(currNoRepeat != 0) {
 			list.remove(value);
