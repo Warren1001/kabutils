@@ -10,6 +10,14 @@ public class Randoms {
 		return list.get(random.nextInt(list.size()));
 	}
 	
+	public static <T> T getRandom(List<T> list, T noRepeat) {
+		T choice = null;
+		while(choice == null || noRepeat.equals(choice)) {
+			choice = getRandom(list);
+		}
+		return choice;
+	}
+	
 	public static <T> T getRandomAndRemove(List<T> list) {
 		return list.remove(random.nextInt(list.size()));
 	}
@@ -22,8 +30,36 @@ public class Randoms {
 		return newList;
 	}
 	
+	public static <T> int getRandomIndex(T[] array) {
+		return array.length == 1 ? 0 : random.nextInt(array.length);
+	}
+	
+	public static <T> int getRandomIndex(T[] array, T noRepeat) {
+		int index = -1;
+		while(index == -1 || noRepeat.equals(array[index])) {
+			index = getRandomIndex(array);
+		}
+		return index;
+	}
+	
+	public static int getRandomIndex(Object[] array, int noRepeat) {
+		int index = noRepeat;
+		while(index == noRepeat) {
+			index = getRandomIndex(array);
+		}
+		return index;
+	}
+	
 	public static <T> T getRandom(T[] array) {
-		return array.length == 1 ? array[0] : array[random.nextInt(array.length)];
+		return array[getRandomIndex(array)];
+	}
+	
+	public static <T> T getRandom(T[] array, T noRepeat) {
+		T choice = null;
+		while(choice == null || noRepeat.equals(choice)) {
+			choice = getRandom(array);
+		}
+		return choice;
 	}
 	
 	public static <T> T getRandom(Collection<T> collection) {
