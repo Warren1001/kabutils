@@ -25,9 +25,14 @@ public class Config extends ConfigSection {
 	private final File file;
 	private final String name;
 	
+	public Config(File file) {
+		this.file = file;
+		this.name = file.getName().split("\\.")[0];
+	}
+	
 	public Config(String name) {
 		this.file = new File(name);
-		this.name = file.getName().split("\\.")[0];
+		this.name = name;
 	}
 	
 	public void load() {

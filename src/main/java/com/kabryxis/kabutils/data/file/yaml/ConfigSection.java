@@ -1,9 +1,6 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ConfigSection {
 	
@@ -42,6 +39,28 @@ public class ConfigSection {
 	
 	public ConfigSection getChild(String name) {
 		return getChild(name, false);
+	}
+	
+	public Set<ConfigSection> getChildren() {
+		Collection<ConfigSection> values = children.values();
+		Set<ConfigSection> sections = new HashSet<>(values.size());
+		sections.addAll(values);
+		return sections;
+	}
+	
+	public Set<String> getKeys(boolean deep) {
+		Set<String> keys = new HashSet<>(data.size());
+		keys.addAll(data.keySet());
+		keys.addAll(children.keySet());
+		if(deep) children.values().forEach(section -> section.addKeysDeep(keys, section.getName()));
+		return keys;
+	}
+	
+	private void addKeysDeep(Set<String> keys, String append) {
+		for(String key : data.keySet()) {
+			keys.add(append + "." + key);
+		}
+		children.values().forEach(section -> section.addKeysDeep(keys, append + "." + section.getName()));
 	}
 	
 	public void set(String path, Object value) {

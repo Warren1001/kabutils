@@ -5,6 +5,7 @@ import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.impl.WrappedEntityPlayerv1_8_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.impl.WrappedEntityPlayerv1_8_R3;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.WrappedPacket;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.function.Function;
@@ -32,5 +33,7 @@ public abstract class WrappedEntityPlayer implements Wrappable {
 	}
 	
 	public abstract void sendPacket(WrappedPacket packet);
+	
+	public abstract void teleportRelative(Location location);
 	
 }

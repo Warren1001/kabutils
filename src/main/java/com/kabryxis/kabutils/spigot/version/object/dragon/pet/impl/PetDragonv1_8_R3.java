@@ -1,18 +1,18 @@
 package com.kabryxis.kabutils.spigot.version.object.dragon.pet.impl;
 
 import com.kabryxis.kabutils.spigot.version.object.dragon.pet.PetDragon;
-import net.minecraft.server.v1_8_R1.*;
+import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMonster, PetDragon {
+public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMonster, PetDragon {
 	
 	public static boolean isPetDragon(org.bukkit.entity.Entity entity) {
 		return ((CraftEntity)entity).getHandle() instanceof PetDragon;
@@ -20,10 +20,10 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	
 	public static void register() {
 		String name = "EnderDragon";
-		Class<?> clazz = PetDragonv1_8_R1.class;
+		Class<?> clazz = PetDragonv1_8_R3.class;
 		((Map<String, Class<?>>)getPrivateField("c", EntityTypes.class, null)).put(name, clazz);
 		((Map<Class<?>, String>)getPrivateField("d", EntityTypes.class, null)).put(clazz, name);
-		((Map<Class<?>, Integer>)getPrivateField("f", EntityTypes.class, null)).put(clazz, Integer.valueOf(63));
+		((Map<Class<?>, Integer>)getPrivateField("f", EntityTypes.class, null)).put(clazz, 63);
 	}
 	
 	private static Object getPrivateField(String fieldName, Class<?> clazz, Object object) {
@@ -74,11 +74,11 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	public boolean bv;
 	public int bw;
 	
-	public PetDragonv1_8_R1(Object[] objs) {
+	public PetDragonv1_8_R3(Object[] objs) {
 		this((Location)objs[0], (Player)objs[1], (Location)objs[2]);
 	}
 	
-	public PetDragonv1_8_R1(Location loc, Player owner, Location center) {
+	public PetDragonv1_8_R3(Location loc, Player owner, Location center) {
 		super(((CraftWorld)loc.getWorld()).getHandle());
 		this.owner = owner;
 		this.centerX = center.getX();
@@ -92,7 +92,7 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 				this.bq = new EntityComplexPart(this, "wing", 4.0f, 4.0f), this.br = new EntityComplexPart(this, "wing", 4.0f, 4.0f) };
 		this.setHealth(this.getMaxHealth());
 		this.a(16.0f, 8.0f);
-		this.T = true;
+		this.noclip = true;
 		this.fireProof = true;
 		this.b = 100.0;
 		this.ah = true;
@@ -237,17 +237,17 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 		final float f11 = this.yaw * 3.1415927f / 180.0f;
 		final float f12 = MathHelper.sin(f11);
 		final float f13 = MathHelper.cos(f11);
-		this.bm.s_();
+		this.bm.t_();
 		this.bm.setPositionRotation(this.locX + f12 * 0.5f, this.locY, this.locZ - f13 * 0.5f, 0.0f, 0.0f);
-		this.bq.s_();
+		this.bq.t_();
 		this.bq.setPositionRotation(this.locX + f13 * 4.5f, this.locY + 2.0, this.locZ + f12 * 4.5f, 0.0f, 0.0f);
-		this.br.s_();
+		this.br.t_();
 		this.br.setPositionRotation(this.locX - f13 * 4.5f, this.locY + 2.0, this.locZ - f12 * 4.5f, 0.0f, 0.0f);
 		final double[] adouble = this.b(5, 1.0f);
 		final double[] adouble2 = this.b(0, 1.0f);
 		final float f45 = MathHelper.sin(this.yaw * 3.1415927f / 180.0f - this.aZ * 0.01f);
 		final float f14 = MathHelper.cos(this.yaw * 3.1415927f / 180.0f - this.aZ * 0.01f);
-		this.bl.s_();
+		this.bl.t_();
 		this.bl.setPositionRotation(this.locX + f45 * 5.5f * f3, this.locY + (adouble2[1] - adouble[1]) * 1.0 + f10 * 5.5f,
 				this.locZ - f14 * 5.5f * f3, 0.0f, 0.0f);
 		for(int j = 0; j < 3; ++j) {
@@ -267,7 +267,7 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 			final float f17 = MathHelper.cos(f15);
 			final float f18 = 1.5f;
 			final float f19 = (j + 1) * 2.0f;
-			entitycomplexpart.s_();
+			entitycomplexpart.t_();
 			entitycomplexpart.setPositionRotation(this.locX - (f12 * f18 + f16 * f19) * f3,
 					this.locY + (adouble3[1] - adouble[1]) * 1.0 - (f19 + f18) * f10 + 1.5, this.locZ + (f13 * f18 + f17 * f19) * f3, 0.0f, 0.0f);
 		}
@@ -328,13 +328,13 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	public void G() {}
 	
 	@Override
-	protected void aY() {}
+	protected void aZ() {}
 	
 	@Override
 	protected void D() {}
 	
 	@Override
-	public Entity[] aC() {
+	public Entity[] aB() {
 		return this.children;
 	}
 	
@@ -354,12 +354,12 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	}
 	
 	@Override
-	protected String bn() {
+	protected String bo() {
 		return "";
 	}
 	
 	@Override
-	protected float bA() {
+	protected float bB() {
 		return 5.0f;
 	}
 	
