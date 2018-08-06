@@ -8,11 +8,13 @@ import org.bukkit.entity.Player;
 
 public class WrappedPacketPlayOutChatv1_8_R3 extends WrappedPacketPlayOutChat {
 	
-	private final PacketPlayOutChat packet;
+	private PacketPlayOutChat packet;
 	
 	public WrappedPacketPlayOutChatv1_8_R3(String message) {
-		this.packet = new PacketPlayOutChat(new ChatComponentText(message), (byte)2);
+		setMessage(message);
 	}
+	
+	public WrappedPacketPlayOutChatv1_8_R3() {}
 	
 	@Override
 	public Object getObject() {
@@ -22,6 +24,11 @@ public class WrappedPacketPlayOutChatv1_8_R3 extends WrappedPacketPlayOutChat {
 	@Override
 	public void send(Player player) {
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
+	}
+	
+	@Override
+	public void setMessage(String message) {
+		this.packet = new PacketPlayOutChat(new ChatComponentText(message), (byte)2);
 	}
 	
 }

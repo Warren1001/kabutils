@@ -33,12 +33,13 @@ public class ConfigSection {
 		return name;
 	}
 	
-	public ConfigSection getChild(String name, boolean create) {
-		return create ? children.computeIfAbsent(name, ConfigSection::new) : children.get(name);
+	public ConfigSection getChild(String path, boolean create) {
+		ConfigSection correctSection = getCorrectSection(path, create);
+		return correctSection != null ? correctSection.getChild0(getCorrectKey(path), create) : null;
 	}
 	
-	public ConfigSection getChild(String name) {
-		return getChild(name, false);
+	public ConfigSection getChild(String path) {
+		return getChild(path, false);
 	}
 	
 	public Set<ConfigSection> getChildren() {
@@ -48,9 +49,14 @@ public class ConfigSection {
 		return sections;
 	}
 	
+	public Map<String, Object> getPairs(boolean deep) {
+		Map<String, Object> map = new HashMap<>(data);
+		if(deep) children.forEach((key, section) -> map.put(key, section.getPairs(true)));
+		return map;
+	}
+	
 	public Set<String> getKeys(boolean deep) {
-		Set<String> keys = new HashSet<>(data.size());
-		keys.addAll(data.keySet());
+		Set<String> keys = new HashSet<>(data.keySet());
 		keys.addAll(children.keySet());
 		if(deep) children.values().forEach(section -> section.addKeysDeep(keys, section.getName()));
 		return keys;
@@ -61,6 +67,17 @@ public class ConfigSection {
 			keys.add(append + "." + key);
 		}
 		children.values().forEach(section -> section.addKeysDeep(keys, append + "." + section.getName()));
+	}
+	
+	public Set<Object> getValues(boolean deep) {
+		Set<Object> objects = new HashSet<>(data.values());
+		if(deep) children.values().forEach(section -> addValuesDeep(objects));
+		return objects;
+	}
+	
+	private void addValuesDeep(Set<Object> objects) {
+		objects.addAll(data.values());
+		children.values().forEach(section -> section.addValuesDeep(objects));
 	}
 	
 	public void set(String path, Object value) {
@@ -89,7 +106,7 @@ public class ConfigSection {
 	
 	public <T> T get(String path, Class<T> clazz) {
 		Object obj = get(path);
-		return obj != null && clazz.isInstance(obj) ? clazz.cast(obj) : null;
+		return clazz.isInstance(obj) ? clazz.cast(obj) : null;
 	}
 	
 	public <T> T get(String path, Class<T> clazz, T def) {
@@ -99,13 +116,13 @@ public class ConfigSection {
 	
 	/**
 	 * Attempts to retrieve the value set at the specified path and cast it into the specified class.
-	 * If no object is found there, it will return the provided default value.
-	 * If setDefault is true and no object was found at the path, the default object provided will be set at the path.
+	 * If no custom is found there, it will return the provided default value.
+	 * If setDefault is true and no custom was found at the path, the default custom provided will be set at the path.
 	 * 
-	 * @param path The path the object is set at.
-	 * @param clazz The class of the object you are trying to get.
-	 * @param def The default return value if an object is not found at the specified path.
-	 * @param setDefault Whether to set the provided default value at the path if no object was found.
+	 * @param path The path the custom is set at.
+	 * @param clazz The class of the custom you are trying to get.
+	 * @param def The default return value if an custom is not found at the specified path.
+	 * @param setDefault Whether to set the provided default value at the path if no custom was found.
 	 * @return
 	 */
 	public <T> T get(String path, Class<T> clazz, T def, boolean setDefault) {
@@ -134,10 +151,16 @@ public class ConfigSection {
 	}
 	
 	protected void setChild(String key, ConfigSection child) {
+		data.remove(key);
 		children.put(key, child);
 	}
 	
+	protected ConfigSection getChild0(String key, boolean create) {
+		return create ? children.computeIfAbsent(key, ConfigSection::new) : children.get(key);
+	}
+	
 	protected void set0(String key, Object value) {
+		children.remove(key);
 		data.put(key, value);
 	}
 	
@@ -147,6 +170,7 @@ public class ConfigSection {
 	
 	protected void remove0(String path) {
 		data.remove(path);
+		children.remove(path);
 	}
 	
 	protected Map<String, Object> saveToMap() {
@@ -170,6 +194,11 @@ public class ConfigSection {
 	
 	protected String getCorrectKey(String path) {
 		return path.contains(".") ? path.substring(path.lastIndexOf(".") + 1) : path;
+	}
+	
+	@Override
+	public String toString() {
+		return saveToMap().toString();
 	}
 	
 }

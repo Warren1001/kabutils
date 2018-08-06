@@ -1,6 +1,6 @@
-package com.kabryxis.kabutils.spigot.version.object.dragon.pet.impl;
+package com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl;
 
-import com.kabryxis.kabutils.spigot.version.object.dragon.pet.PetDragon;
+import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.PetDragon;
 import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

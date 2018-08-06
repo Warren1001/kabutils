@@ -10,7 +10,7 @@ public class Items {
 	}
 	
 	public static boolean isType(ItemStack item, Material type) {
-		return exists(item) && item.getType() == type;
+		return item != null && item.getType() == type;
 	}
 	
 }

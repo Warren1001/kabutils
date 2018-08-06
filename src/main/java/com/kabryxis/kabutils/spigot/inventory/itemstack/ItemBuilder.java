@@ -1,34 +1,54 @@
 package com.kabryxis.kabutils.spigot.inventory.itemstack;
 
+import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class ItemBuilder {
 	
-	public ItemBuilder() {}
+	public static final ItemBuilder DEFAULT = new ItemBuilder();
 	
-	public ItemBuilder(Material type) {
-		material(type);
+	public static ItemBuilder newItemBuilder() {
+		return DEFAULT.clone();
 	}
 	
-	public ItemBuilder(Material type, int amount) {
-		this(type);
-		amount(amount);
+	public static ItemBuilder newItemBuilder(Material type) {
+		return newItemBuilder().type(type);
 	}
+	
+	public static ItemBuilder newItemBuilder(Material type, int amount) {
+		return newItemBuilder(type).amount(amount);
+	}
+	
+	public static ItemBuilder newItemBuilder(ConfigSection section) {
+		ItemBuilder builder = newItemBuilder(Material.getMaterial(section.get("type", String.class).toUpperCase()));
+		builder.amount(section.get("amount", Integer.class, 1));
+		String name = section.get("name", String.class);
+		if(name != null) builder.name(ChatColor.translateAlternateColorCodes('&', name));
+		List<String> lore = section.getList("lore", String.class);
+		if(lore != null) builder.lore(lore, true);
+		ConfigSection enchantsSection = section.getChild("enchants");
+		if(enchantsSection != null) enchantsSection.getPairs(false).forEach((enchantName, o) -> builder.enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
+		return builder;
+	}
+	
+	private ItemBuilder() {}
 	
 	private Material type;
 	
-	public ItemBuilder material(Material type) {
+	public ItemBuilder type(Material type) {
 		this.type = type;
 		return this;
+	}
+	
+	public Material type() {
+		return type;
 	}
 	
 	private int amount = 1;
@@ -45,10 +65,42 @@ public class ItemBuilder {
 		return this;
 	}
 	
-	private String name;
+	private String prefix = "";
+	
+	public ItemBuilder prefix(String prefix) {
+		this.prefix = ChatColor.translateAlternateColorCodes('&', prefix);
+		return this;
+	}
+	
+	private String name = "";
 	
 	public ItemBuilder name(String name) {
-		this.name = name;
+		this.name = ChatColor.translateAlternateColorCodes('&', name);
+		return this;
+	}
+	
+	public String name() {
+		return name;
+	}
+	
+	private List<String> lore;
+	
+	public ItemBuilder lore(String... lines) {
+		lore = new ArrayList<>();
+		for(String line : lines) {
+			lore.add(ChatColor.translateAlternateColorCodes('&', line));
+		}
+		return this;
+	}
+	
+	public ItemBuilder lore(List<String> lines) {
+		return lore(lines, false);
+	}
+	
+	public ItemBuilder lore(List<String> lines, boolean append) {
+		if(lore == null) lore = new ArrayList<>(lines.size());
+		else if(!append) lore.clear();
+		lines.forEach(line -> lore.add(ChatColor.translateAlternateColorCodes('&', line)));
 		return this;
 	}
 	
@@ -68,22 +120,70 @@ public class ItemBuilder {
 		return this;
 	}
 	
+	public ItemBuilder reset() {
+		type = null;
+		amount = 1;
+		data = 0;
+		prefix = "";
+		name = "";
+		lore = null;
+		enchants = null;
+		flags = null;
+		return this;
+	}
+	
 	public ItemStack build() {
 		ItemStack item = new ItemStack(type, amount, data);
-		if(name != null || enchants != null || flags != null) {
+		if(name != null || lore != null || enchants != null || flags != null) {
 			ItemMeta meta = item.getItemMeta();
-			if(name != null) meta.setDisplayName(name);
-			if(enchants != null) {
-				enchants.forEach((key, value) -> meta.addEnchant(key, value, true));
-				enchants.clear();
-			}
-			if(flags != null) {
-				meta.addItemFlags(flags.toArray(new ItemFlag[flags.size()]));
-				flags.clear();
-			}
+			if(!prefix.isEmpty() || !name.isEmpty()) meta.setDisplayName(prefix + name);
+			if(lore != null) meta.setLore(lore);
+			if(enchants != null) enchants.forEach((key, value) -> meta.addEnchant(key, value, true));
+			if(flags != null) flags.forEach(meta::addItemFlags);
 			item.setItemMeta(meta);
 		}
 		return item;
+	}
+	
+	public ItemBuilder clone() {
+		ItemBuilder newBuilder = new ItemBuilder();
+		newBuilder.type = type;
+		newBuilder.amount = amount;
+		newBuilder.data = data;
+		newBuilder.prefix = prefix;
+		newBuilder.name = name;
+		if(lore != null) newBuilder.lore = new ArrayList<>(lore);
+		if(enchants != null) newBuilder.enchants = new HashMap<>(enchants);
+		if(flags != null) newBuilder.flags = new HashSet<>(flags);
+		return newBuilder;
+	}
+	
+	public boolean isOf(ItemStack itemStack, ItemCompareFlag... flags) {
+		for(ItemCompareFlag compareFlag : flags) {
+			switch(compareFlag) {
+				case TYPE:
+					if(type != itemStack.getType()) return false;
+					break;
+				case DATA:
+					if(data != itemStack.getData().getData()) return false;
+					break;
+				case NAME:
+					if(!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() ||
+							!itemStack.getItemMeta().getDisplayName().equals(prefix + name)) return false;
+					break;
+				case COLORLESS_NAME:
+					if(!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() ||
+							!ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()).equals(ChatColor.stripColor(prefix + name))) return false;
+					break;
+			}
+		}
+		return true;
+	}
+	
+	public enum ItemCompareFlag {
+		
+		TYPE, DATA, NAME, COLORLESS_NAME
+		
 	}
 	
 }

@@ -10,4 +10,8 @@ public class MathHelp {
 		return (int)Math.ceil(d);
 	}
 	
+	public static double roundToHalf(double d) {
+		return Math.round(d * 2) / 2.0;
+	}
+	
 }

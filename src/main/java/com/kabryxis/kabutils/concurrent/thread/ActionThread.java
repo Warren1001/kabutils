@@ -29,9 +29,7 @@ public class ActionThread extends PausableThread {
 		while(isRunning()) {
 			pauseCheck();
 			Runnable run;
-			while((run = queue.poll()) != null) {
-				run.run();
-			}
+			while((run = queue.poll()) != null) run.run();
 			if(shouldPause()) pause();
 		}
 	}

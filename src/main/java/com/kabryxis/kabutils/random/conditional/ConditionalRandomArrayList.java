@@ -1,24 +1,24 @@
-package com.kabryxis.kabutils.random.weighted.conditional;
+package com.kabryxis.kabutils.random.conditional;
 
-import com.kabryxis.kabutils.random.weighted.Weighted;
-import com.kabryxis.kabutils.random.weighted.WeightedRandomArrayList;
+import com.kabryxis.kabutils.random.RandomArrayList;
+import com.kabryxis.kabutils.random.Randoms;
 
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class ConditionalWeightedRandomArrayList<E extends Weighted> extends WeightedRandomArrayList<E> {
+public class ConditionalRandomArrayList<E> extends RandomArrayList<E> {
 	
-	public ConditionalWeightedRandomArrayList() {
+	public ConditionalRandomArrayList() {
 		super();
 	}
 	
-	public ConditionalWeightedRandomArrayList(int noRepeat) {
+	public ConditionalRandomArrayList(int noRepeat) {
 		super(noRepeat);
 	}
 	
-	public ConditionalWeightedRandomArrayList(int noRepeat, int capacity) {
+	public ConditionalRandomArrayList(int noRepeat, int capacity) {
 		super(noRepeat, capacity);
 	}
 	
@@ -52,7 +52,7 @@ public class ConditionalWeightedRandomArrayList<E extends Weighted> extends Weig
 				size = testedList.size();
 			}
 			if(size == 0) throw new IllegalStateException("Could not find a valid custom");
-			value = size == 1 ? testedList.get(0) : testedList.get(getWeightedIndex(testedList));
+			value = size == 1 ? testedList.get(0) : Randoms.getRandom(testedList);
 		}
 		if(currNoRepeat != 0) {
 			list.remove(value);

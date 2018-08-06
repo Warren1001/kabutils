@@ -14,22 +14,32 @@ public class CommandManager {
 	
 	private final Map<String, CommandData> commandData = new HashMap<>();
 	
+	private String permissionMsg;
 	private Predicate<Method> methodPredicate;
 	private String prefix = "-";
 	
 	private Set<CommandWork> extraWork;
 	
-	public CommandManager(Predicate<Method> methodPredicate) {
+	public CommandManager(String permissionMsg, Predicate<Method> methodPredicate) {
+		this.permissionMsg = permissionMsg;
 		this.methodPredicate = methodPredicate;
 	}
 	
-	public CommandManager() {
-		this(method -> {
+	public CommandManager(String permissionMsg) {
+		this(permissionMsg, method -> {
 			if(method.getAnnotation(Com.class) == null) return false;
 			Class<?>[] parameterTypes = method.getParameterTypes();
 			return parameterTypes.length == 3 && CommandIssuer.class.isAssignableFrom(parameterTypes[0]) && parameterTypes[1] == String.class &&
 					parameterTypes[2] == String[].class;
 		});
+	}
+	
+	public void setPermissionMessage(String permissionMsg) {
+		this.permissionMsg = permissionMsg;
+	}
+	
+	public String getPermissionMessage() {
+		return permissionMsg;
 	}
 	
 	public void setMethodPredicate(Predicate<Method> methodPredicate) {
@@ -70,7 +80,7 @@ public class CommandManager {
 	private void registerMethod(Method method, Object listener) {
 		method.setAccessible(true);
 		Com com = method.getAnnotation(Com.class);
-		CommandData data = new CommandData(com, listener, method);
+		CommandData data = new CommandData(this, com, listener, method);
 		for(String alias : com.aliases()) {
 			commandData.put(alias, data);
 		}

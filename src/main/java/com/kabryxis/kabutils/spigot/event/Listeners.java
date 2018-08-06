@@ -1,5 +1,6 @@
 package com.kabryxis.kabutils.spigot.event;
 
+import com.avaje.ebean.validation.NotNull;
 import com.google.common.collect.Sets;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
@@ -19,6 +20,7 @@ import org.bukkit.event.weather.ThunderChangeEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.event.world.*;
 import org.bukkit.plugin.EventExecutor;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
@@ -74,38 +76,45 @@ public class Listeners {
 		}
 	}
 	
-	public static void registerListener(GlobalListener listener) {
+	public static void registerListener(GlobalListener listener, Plugin plugin) {
+		registerListener(listener, plugin, EventPriority.LOWEST);
+	}
+	
+	public static void registerListener(GlobalListener listener, Plugin plugin, EventPriority priority) {
+		registerListener(listener, plugin, priority, globalExecutor);
+	}
+	
+	public static void registerListener(GlobalListener listener, Plugin plugin, EventExecutor executor) {
+		registerListener(listener, plugin, EventPriority.LOWEST, executor);
+	}
+	
+	public static void registerListener(GlobalListener listener, Plugin plugin, EventPriority priority, EventExecutor executor) {
+		plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 		if(!globalListeners.containsKey(listener)) {
-			RegisteredListener registeredListener = new RegisteredListener(listener, globalExecutor, EventPriority.LOWEST, listener.getPlugin(),
-					false);
+			RegisteredListener registeredListener = new RegisteredListener(listener, executor, priority, plugin, false);
 			globalListeners.put(listener, registeredListener);
 			CLASSES.forEach(clazz -> {
 				try {
 					getHandlerList(clazz).register(registeredListener);
-				}
-				catch(IllegalStateException e) {
-					System.out.println(clazz.getSimpleName() + " is already registered.");
-				}
+				} catch(IllegalStateException ignored) {}
 			});
 		}
 	}
 	
+	@NotNull
 	private static HandlerList getHandlerList(Class<?> clazz) {
 		Method method;
 		try {
 			method = clazz.getMethod("getHandlerList");
-		}
-		catch(NoSuchMethodException e) {
-			return null;
+		} catch(NoSuchMethodException e) {
+			throw new RuntimeException(e);
 		}
 		if(!method.isAccessible()) method.setAccessible(true);
 		HandlerList hl;
 		try {
 			hl = (HandlerList)method.invoke(null);
-		}
-		catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
-			e.printStackTrace();
-			return null;
+		} catch(IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			throw new RuntimeException(e);
 		}
 		return hl;
 	}

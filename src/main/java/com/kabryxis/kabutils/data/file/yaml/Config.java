@@ -30,20 +30,18 @@ public class Config extends ConfigSection {
 		this.name = file.getName().split("\\.")[0];
 	}
 	
-	public Config(String name) {
-		this.file = new File(name);
-		this.name = name;
-	}
-	
 	public void load() {
-		Data.queue(this::loadSync);
+		if(exists()) Data.queue(this::loadSync);
 	}
 	
 	public void load(Consumer<Config> callable) {
-		Data.queue(() -> {
-			loadSync();
-			callable.accept(this);
-		});
+		if(exists()) {
+			Data.queue(() -> {
+				loadSync();
+				callable.accept(this);
+			});
+		}
+		else callable.accept(this);
 	}
 	
 	public void loadSync() {
@@ -66,10 +64,10 @@ public class Config extends ConfigSection {
 	}
 	
 	public void save() {
-		Data.queue(this::save0);
+		Data.queue(this::saveSync);
 	}
 	
-	private void save0() {
+	public void saveSync() {
 		if(!file.exists()) {
 			try {
 				file.createNewFile();
@@ -87,7 +85,7 @@ public class Config extends ConfigSection {
 	}
 	
 	public boolean exists() {
-		return file.exists();
+		return file != null && file.exists();
 	}
 	
 	@Override

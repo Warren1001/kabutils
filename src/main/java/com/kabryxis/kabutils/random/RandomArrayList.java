@@ -1,13 +1,10 @@
 package com.kabryxis.kabutils.random;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+import java.util.function.Consumer;
 
-public class RandomArrayList<E> {
+public class RandomArrayList<E> implements Collection<E> {
 	
-	protected final Random random;
 	protected final List<E> list;
 	protected final List<E> used;
 	
@@ -23,13 +20,17 @@ public class RandomArrayList<E> {
 	}
 	
 	public RandomArrayList(int noRepeat, int capacity) {
-		this.random = new Random();
 		this.list = new ArrayList<>(capacity);
 		this.used = new ArrayList<>();
 		this.noRepeat = noRepeat;
 		this.currNoRepeat = 0;
 	}
 	
+	public int getCurrNoRepeat() {
+		return currNoRepeat;
+	}
+	
+	@Override
 	public boolean add(E object) {
 		boolean value = list.add(object);
 		if(value) update();
@@ -45,13 +46,15 @@ public class RandomArrayList<E> {
 		return value;
 	}
 	
+	@Override
 	public boolean addAll(Collection<? extends E> collection) {
 		boolean value = list.addAll(collection);
 		if(value) update();
 		return value;
 	}
 	
-	public boolean remove(E object) {
+	@Override
+	public boolean remove(Object object) {
 		boolean value = list.remove(object);
 		if(!value) {
 			value = used.remove(object);
@@ -61,7 +64,8 @@ public class RandomArrayList<E> {
 		return value;
 	}
 	
-	public boolean removeAll(Collection<E> collection) {
+	@Override
+	public boolean removeAll(Collection<?> collection) {
 		boolean value = list.removeAll(collection);
 		if(!value) {
 			value = used.removeAll(collection);
@@ -78,7 +82,7 @@ public class RandomArrayList<E> {
 	
 	public E random() {
 		if(currNoRepeat == -1) return null;
-		E value = currNoRepeat == 0 ? list.get(0) : list.remove(random.nextInt(list.size()));
+		E value = currNoRepeat == 0 ? list.get(0) : list.remove(new Random().nextInt(list.size()));
 		if(currNoRepeat != 0) used.add(value);
 		if(used.size() == currNoRepeat + 1) list.add(used.remove(0));
 		return value;
@@ -103,6 +107,63 @@ public class RandomArrayList<E> {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public int size() {
+		return list.size() + used.size();
+	}
+	
+	public int remainingSize() {
+		return list.size();
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		return size() == 0;
+	}
+	
+	@Override
+	public void clear() {
+		list.clear();
+		used.clear();
+		update();
+	}
+	
+	@Override
+	public void forEach(Consumer<? super E> action) {
+		list.forEach(action);
+		used.forEach(action);
+	}
+	
+	@Override
+	public <T> T[] toArray(T[] a) {
+		throw new UnsupportedOperationException("simply because im lazy.");
+	}
+	
+	@Override
+	public Object[] toArray() {
+		throw new UnsupportedOperationException("simply because im lazy.");
+	}
+	
+	@Override
+	public Iterator<E> iterator() {
+		throw new UnsupportedOperationException("simply because im lazy.");
+	}
+	
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		throw new UnsupportedOperationException("simply because im lazy.");
+	}
+	
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		throw new UnsupportedOperationException("simply because im lazy.");
+	}
+	
+	@Override
+	public boolean contains(Object o) {
+		throw new UnsupportedOperationException("simply because im lazy.");
 	}
 	
 }

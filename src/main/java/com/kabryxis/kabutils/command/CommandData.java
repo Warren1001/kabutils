@@ -5,12 +5,14 @@ import java.lang.reflect.Method;
 
 public class CommandData {
 	
+	private final CommandManager manager;
 	private final Com com;
 	private final Object obj;
 	private final Method method;
 	private final Class<? extends CommandIssuer> clazz;
 	
-	public CommandData(Com com, Object obj, Method method) {
+	public CommandData(CommandManager manager, Com com, Object obj, Method method) {
+		this.manager = manager;
 		this.com = com;
 		this.obj = obj;
 		this.method = method;
@@ -23,7 +25,7 @@ public class CommandData {
 	
 	public boolean issue(CommandIssuer issuer, String alias, String[] args) {
 		if(!issuer.hasPermission(com.permission())) {
-			issuer.sendMessage("no fuck u");
+			issuer.sendMessage(manager.getPermissionMessage());
 			return true;
 		}
 		Class<? extends CommandIssuer> objectClass = issuer.getClass();

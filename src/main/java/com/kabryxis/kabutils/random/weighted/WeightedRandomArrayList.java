@@ -3,6 +3,7 @@ package com.kabryxis.kabutils.random.weighted;
 import com.kabryxis.kabutils.random.RandomArrayList;
 
 import java.util.List;
+import java.util.Random;
 
 public class WeightedRandomArrayList<E extends Weighted> extends RandomArrayList<E> {
 	
@@ -31,14 +32,14 @@ public class WeightedRandomArrayList<E extends Weighted> extends RandomArrayList
 		for(E value : values) {
 			totalWeight += value.getWeight();
 		}
-		int chosenRarity = random.nextInt(totalWeight);
+		int chosenRarity = new Random().nextInt(totalWeight);
 		int currentWeight = 0;
 		for(int index = 0; index < values.size(); index++) {
 			E value = values.get(index);
 			currentWeight += value.getWeight();
 			if(currentWeight >= chosenRarity) return index;
 		}
-		return random.nextInt(values.size());
+		return new Random().nextInt(values.size());
 	}
 	
 }

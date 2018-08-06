@@ -49,10 +49,13 @@ public class Config extends YamlConfiguration {
 	}
 	
 	public void load(Consumer<Config> callable) {
-		if(file != null && file.exists()) Data.queue(() -> {
-			load0();
-			callable.accept(this);
-		});
+		if(file != null && file.exists()) {
+			Data.queue(() -> {
+				load0();
+				callable.accept(this);
+			});
+		}
+		else callable.accept(this);
 	}
 	
 	public void save() {

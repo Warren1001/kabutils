@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- * A {@link FilenameFilter} implementation that checks the ending of the file name for a specific extension.
+ * A {@link FilenameFilter} implementation that checks the ending of the file name for a specified string.
  * 
  * @author Kabryxis
  *

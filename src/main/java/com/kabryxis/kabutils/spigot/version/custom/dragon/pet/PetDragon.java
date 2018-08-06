@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils.spigot.version.object.dragon.pet;
+package com.kabryxis.kabutils.spigot.version.custom.dragon.pet;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

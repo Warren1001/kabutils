@@ -1,8 +1,8 @@
-package com.kabryxis.kabutils.spigot.version.object.dragon.pet;
+package com.kabryxis.kabutils.spigot.version.custom.dragon.pet;
 
 import com.kabryxis.kabutils.spigot.version.Version;
-import com.kabryxis.kabutils.spigot.version.object.dragon.pet.impl.PetDragonv1_8_R1;
-import com.kabryxis.kabutils.spigot.version.object.dragon.pet.impl.PetDragonv1_8_R3;
+import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl.PetDragonv1_8_R1;
+import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl.PetDragonv1_8_R3;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
