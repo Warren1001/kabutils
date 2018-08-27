@@ -57,4 +57,6 @@ public abstract class WrappedEntityPlayer implements Wrappable {
 	
 	public abstract double getLocZ();
 	
+	public abstract int getPing();
+	
 }

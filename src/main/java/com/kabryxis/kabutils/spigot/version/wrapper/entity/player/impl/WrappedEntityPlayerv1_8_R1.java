@@ -84,4 +84,9 @@ public class WrappedEntityPlayerv1_8_R1 extends WrappedEntityPlayer {
 		return entityPlayer.locZ;
 	}
 	
+	@Override
+	public int getPing() {
+		return entityPlayer.ping;
+	}
+	
 }

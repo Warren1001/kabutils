@@ -21,7 +21,7 @@ public class BlockSelection {
 	
 	public BlockSelection(Player player) {
 		this.player = player;
-		reset();
+		//reset();
 	}
 	
 	public void tpToLowest() {
@@ -96,55 +96,18 @@ public class BlockSelection {
 	public void removeSelection() {
 		World world = player.getWorld();
 		extreme();
-		for(int x = leftX; x <= rightX; x++) {
-			for(int y = leftY; y <= rightY; y++) {
-				for(int z = leftZ; z <= rightZ; z++) {
+		for(int x = lowestX; x <= highestX; x++) {
+			for(int y = lowestY; y <= highestY; y++) {
+				for(int z = lowestZ; z <= highestZ; z++) {
 					selectedBlocks.remove(world.getBlockAt(x, y, z));
 				}
 			}
 		}
-		recalculateMinMax();
-	}
-	
-	public void addBlock(Block block) {
-		if(!selectedBlocks.contains(block)) {
-			selectedBlocks.add(block);
-			calculateMinMax(block);
-		}
-	}
-	
-	public void removeBlock(Block block) {
-		selectedBlocks.remove(block);
-		int y = block.getY();
-		if(y == lowestY || y == highestY) recalculateMinMax();
-	}
-	
-	private void calculateMinMax(Block block) {
-		int x = block.getX(), y = block.getY(), z = block.getZ();
-		if(x < lowestX) lowestX = x;
-		if(x > highestX) highestX = x;
-		if(y < lowestY) lowestY = y;
-		if(y > highestY) highestY = y;
-		if(z < lowestZ) lowestZ = z;
-		if(z > highestZ) highestZ = z;
-	}
-	
-	public void recalculateMinMax() {
-		reset();
-		selectedBlocks.forEach(this::calculateMinMax);
-	}
-	
-	private void reset() {
-		lowestX = Integer.MAX_VALUE;
-		highestX = Integer.MIN_VALUE;
-		lowestY = 256;
-		highestY = 0;
-		lowestZ = Integer.MAX_VALUE;
-		highestZ = Integer.MIN_VALUE;
+		//recalculateMinMax();
 	}
 	
 	public void extreme() {
-		if(rightX < leftX) {
+		/*if(rightX < leftX) {
 			int buffer = leftX;
 			leftX = rightX;
 			rightX = buffer;
@@ -158,12 +121,55 @@ public class BlockSelection {
 			int buffer = leftZ;
 			leftZ = rightZ;
 			rightZ = buffer;
+		}*/
+		lowestX = Math.min(rightX, leftX);
+		highestX = Math.max(rightX, leftX);
+		lowestY = Math.min(rightY, leftY);
+		highestY = Math.max(rightY, leftY);
+		lowestZ = Math.min(rightZ, leftZ);
+		highestZ = Math.max(rightZ, leftZ);
+	}
+	
+	public void addBlock(Block block) {
+		if(!selectedBlocks.contains(block)) {
+			selectedBlocks.add(block);
+			//calculateMinMax(block);
 		}
+	}
+	
+	private void calculateMinMax(Block block) {
+		int x = block.getX(), y = block.getY(), z = block.getZ();
+		if(x < lowestX) lowestX = x;
+		if(x > highestX) highestX = x;
+		if(y < lowestY) lowestY = y;
+		if(y > highestY) highestY = y;
+		if(z < lowestZ) lowestZ = z;
+		if(z > highestZ) highestZ = z;
+	}
+	
+	public void removeBlock(Block block) {
+		selectedBlocks.remove(block);
+		int y = block.getY();
+		//if(y == lowestY || y == highestY) recalculateMinMax();
+	}
+	
+	private void reset() {
+		lowestX = Integer.MAX_VALUE;
+		highestX = Integer.MIN_VALUE;
+		lowestY = 256;
+		highestY = 0;
+		lowestZ = Integer.MAX_VALUE;
+		highestZ = Integer.MIN_VALUE;
+	}
+	
+	public void recalculateMinMax() {
+		reset();
+		//selectedBlocks.forEach(this::calculateMinMax);
 	}
 	
 	public void clearSelection() {
 		selectedBlocks.clear();
-		reset();
+		//reset();
 	}
 	
 }

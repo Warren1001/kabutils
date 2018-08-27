@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 
 public enum Version {
 	
-	UNSUPPORTED(-1, "unknown", "unknown"),
+	UNSUPPORTED(-1, null, null),
 	v1_8_R1(0, "v1_8_R1", "1.8"),
 	v1_8_R2(1, "v1_8_R2", "1.8.3"),
 	v1_8_R3(2, "v1_8_R3", "1.8.6"),
@@ -47,6 +47,22 @@ public enum Version {
 		default:
 			VERSION = UNSUPPORTED;
 			break;
+		}
+	}
+	
+	public static Class<?> getNMSClass(String className) {
+		try {
+			return Class.forName("net.minecraft.server." + Version.VERSION.getImplementationNamespace() + "." + className);
+		} catch(ClassNotFoundException e) {
+			throw new UnsupportedVersionException(e);
+		}
+	}
+	
+	public static Class<?> getOBCClass(String className) {
+		try {
+			return Class.forName("org.bukkit.craftbukkit." + Version.VERSION.getImplementationNamespace() + "." + className);
+		} catch(ClassNotFoundException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	

@@ -7,6 +7,6 @@ public interface PetDragon {
 	
 	void setTarget(Player player);
 	
-	Entity getBukkit();
+	Entity getBukkitEntity();
 	
 }

@@ -1,5 +1,6 @@
 package com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl;
 
+import com.kabryxis.kabutils.spigot.version.custom.CustomEntityRegistry;
 import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.PetDragon;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.GameMode;
@@ -9,9 +10,6 @@ import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
 public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMonster, PetDragon {
 	
 	public static boolean isPetDragon(org.bukkit.entity.Entity entity) {
@@ -19,24 +17,7 @@ public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMon
 	}
 	
 	public static void register() {
-		String name = "EnderDragon";
-		Class<?> clazz = PetDragonv1_8_R3.class;
-		((Map<String, Class<?>>)getPrivateField("c", EntityTypes.class, null)).put(name, clazz);
-		((Map<Class<?>, String>)getPrivateField("d", EntityTypes.class, null)).put(clazz, name);
-		((Map<Class<?>, Integer>)getPrivateField("f", EntityTypes.class, null)).put(clazz, 63);
-	}
-	
-	private static Object getPrivateField(String fieldName, Class<?> clazz, Object object) {
-		Object o = null;
-		try {
-			Field field = clazz.getDeclaredField(fieldName);
-			field.setAccessible(true);
-			o = field.get(object);
-		}
-		catch(NoSuchFieldException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return o;
+		CustomEntityRegistry.registerEntity("EnderDragon", PetDragonv1_8_R3.class);
 	}
 	
 	private final Player owner;
@@ -51,8 +32,8 @@ public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMon
 	}
 	
 	@Override
-	public org.bukkit.entity.Entity getBukkit() {
-		return getBukkitEntity();
+	public CraftEntity getBukkitEntity() {
+		return super.getBukkitEntity();
 	}
 	
 	public double a;

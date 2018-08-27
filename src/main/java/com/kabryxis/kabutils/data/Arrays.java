@@ -2,6 +2,13 @@ package com.kabryxis.kabutils.data;
 
 public class Arrays {
 	
+	public static boolean containsEnum(Enum[] array, Enum e) {
+		for(Enum a : array) {
+			if(a == e) return true;
+		}
+		return false;
+	}
+	
 	public static boolean containsInt(int[] array, int i) {
 		for(int a : array) {
 			if(a == i) return true;

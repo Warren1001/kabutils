@@ -10,7 +10,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class ItemBuilder {
+public class ItemBuilder implements Cloneable {
 	
 	public static final ItemBuilder DEFAULT = new ItemBuilder();
 	
@@ -145,8 +145,14 @@ public class ItemBuilder {
 		return item;
 	}
 	
+	@Override
 	public ItemBuilder clone() {
-		ItemBuilder newBuilder = new ItemBuilder();
+		ItemBuilder newBuilder;
+		try {
+			newBuilder = (ItemBuilder)super.clone();
+		} catch(CloneNotSupportedException e) {
+			throw new RuntimeException(e);
+		}
 		newBuilder.type = type;
 		newBuilder.amount = amount;
 		newBuilder.data = data;
@@ -175,6 +181,12 @@ public class ItemBuilder {
 					if(!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() ||
 							!ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()).equals(ChatColor.stripColor(prefix + name))) return false;
 					break;
+				case AMOUNT:
+					if(amount != itemStack.getAmount()) return false;
+					break;
+				case AMOUNT_MIN:
+					if(itemStack.getAmount() < amount) return false;
+					break;
 			}
 		}
 		return true;
@@ -182,7 +194,7 @@ public class ItemBuilder {
 	
 	public enum ItemCompareFlag {
 		
-		TYPE, DATA, NAME, COLORLESS_NAME
+		TYPE, DATA, AMOUNT, AMOUNT_MIN, NAME, COLORLESS_NAME
 		
 	}
 	

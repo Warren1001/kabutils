@@ -51,8 +51,8 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	}
 	
 	@Override
-	public org.bukkit.entity.Entity getBukkit() {
-		return getBukkitEntity();
+	public CraftEntity getBukkitEntity() {
+		return super.getBukkitEntity();
 	}
 	
 	public double a;

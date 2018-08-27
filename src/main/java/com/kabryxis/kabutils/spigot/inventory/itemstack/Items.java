@@ -13,4 +13,13 @@ public class Items {
 		return item != null && item.getType() == type;
 	}
 	
+	public static ItemStack[] deepClone(ItemStack[] items) {
+		ItemStack[] cloned = new ItemStack[items.length];
+		for(int i = 0; i < items.length; i++) {
+			ItemStack item = items[i];
+			cloned[i] = item == null ? null : items[i].clone();
+		}
+		return cloned;
+	}
+	
 }
