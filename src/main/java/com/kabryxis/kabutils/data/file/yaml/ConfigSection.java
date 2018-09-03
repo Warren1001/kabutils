@@ -1,10 +1,19 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
+import org.bukkit.util.NumberConversions;
+
 import java.util.*;
 
 public class ConfigSection {
 	
-	public final static String PERIOD = "\\.";
+	public static final String PERIOD = "\\.";
+	private static final Map<Class<?>, Class<?>[]> castableClasses = new HashMap<>();
+	
+	static {
+		castableClasses.put(Float.class, new Class<?>[] {Integer.class, Double.class});
+		castableClasses.put(Byte.class, new Class<?>[] {Integer.class});
+		castableClasses.put(Long.class, new Class<?>[] {Integer.class});
+	}
 	
 	protected final Map<String, Object> data = new HashMap<>();
 	protected final Map<String, ConfigSection> children = new HashMap<>();
@@ -106,7 +115,15 @@ public class ConfigSection {
 	
 	public <T> T get(String path, Class<T> clazz) {
 		Object obj = get(path);
-		return clazz.isInstance(obj) ? clazz.cast(obj) : null;
+		if(obj instanceof Number) {
+			if(clazz == Float.class || clazz == float.class) obj = NumberConversions.toFloat(obj);
+			else if(clazz == Byte.class || clazz == byte.class) obj = NumberConversions.toByte(obj);
+			else if(clazz == Long.class || clazz == long.class) obj = NumberConversions.toLong(obj);
+			else if(clazz == Short.class || clazz == short.class) obj = NumberConversions.toShort(obj);
+			else if(clazz == Integer.class || clazz == int.class) obj = NumberConversions.toInt(obj);
+			else if(clazz == Double.class || clazz == double.class) obj = NumberConversions.toDouble(obj);
+		}
+		return clazz.isInstance(obj) ? (T)obj : null;
 	}
 	
 	public <T> T get(String path, Class<T> clazz, T def) {
@@ -114,17 +131,6 @@ public class ConfigSection {
 		return obj != null ? obj : def;
 	}
 	
-	/**
-	 * Attempts to retrieve the value set at the specified path and cast it into the specified class.
-	 * If no custom is found there, it will return the provided default value.
-	 * If setDefault is true and no custom was found at the path, the default custom provided will be set at the path.
-	 * 
-	 * @param path The path the custom is set at.
-	 * @param clazz The class of the custom you are trying to get.
-	 * @param def The default return value if an custom is not found at the specified path.
-	 * @param setDefault Whether to set the provided default value at the path if no custom was found.
-	 * @return
-	 */
 	public <T> T get(String path, Class<T> clazz, T def, boolean setDefault) {
 		T obj = get(path, clazz);
 		if(obj == null) {
