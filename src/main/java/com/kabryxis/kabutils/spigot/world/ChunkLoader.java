@@ -18,10 +18,18 @@ public class ChunkLoader implements Listener {
 	
 	public void keepInMemory(Object key, Chunk chunk) {
 		loadedChunks.computeIfAbsent(key, o -> new HashSet<>()).add(chunk);
+		if(!chunk.isLoaded()) chunk.load();
 	}
 	
 	public void keepInMemory(Object key, Collection<Chunk> chunks) {
 		loadedChunks.computeIfAbsent(key, o -> new HashSet<>()).addAll(chunks);
+		chunks.forEach(chunk -> {
+			if(!chunk.isLoaded()) chunk.load();
+		});
+	}
+	
+	public Set<Chunk> getChunksInMemory(Object obj) {
+		return loadedChunks.get(obj);
 	}
 	
 	public boolean shouldStayLoaded(Chunk chunk) {

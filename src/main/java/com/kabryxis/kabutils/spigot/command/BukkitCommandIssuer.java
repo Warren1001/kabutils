@@ -1,6 +1,7 @@
 package com.kabryxis.kabutils.spigot.command;
 
 import com.kabryxis.kabutils.command.CommandIssuer;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -27,6 +28,7 @@ public class BukkitCommandIssuer implements CommandIssuer {
 	}
 	
 	public Player getPlayer() {
+		Validate.isInstanceOf(Player.class, sender, "Must be a player to use this command.");
 		return (Player)sender;
 	}
 	

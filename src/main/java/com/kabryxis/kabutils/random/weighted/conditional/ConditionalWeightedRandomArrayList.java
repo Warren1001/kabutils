@@ -22,7 +22,7 @@ public class ConditionalWeightedRandomArrayList<E extends Weighted> extends Weig
 		super(noRepeat, capacity);
 	}
 	
-	public E random(Predicate<Object>... predicates) {
+	public E random(ObjectPredicate... predicates) {
 		if(currNoRepeat == -1) throw new IllegalStateException("Could not find a valid custom");
 		E value;
 		if(currNoRepeat == 0) {

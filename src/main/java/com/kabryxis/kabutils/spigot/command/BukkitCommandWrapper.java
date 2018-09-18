@@ -1,21 +1,23 @@
 package com.kabryxis.kabutils.spigot.command;
 
-import com.kabryxis.kabutils.command.CommandManager;
+import com.kabryxis.kabutils.command.CommandData;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
+import java.util.Arrays;
+
 public class BukkitCommandWrapper extends Command {
 	
-	private final CommandManager manager;
+	private final CommandData commandData;
 	
-	public BukkitCommandWrapper(CommandManager manager, String name) {
-		super(name);
-		this.manager = manager;
+	public BukkitCommandWrapper(CommandData commandData) {
+		super(commandData.getName(), commandData.getCom().description(), commandData.getCom().usage(), Arrays.asList(commandData.getCom().aliases()));
+		this.commandData = commandData;
 	}
 	
 	@Override
 	public boolean execute(CommandSender sender, String alias, String[] args) {
-		return manager.handle(new BukkitCommandIssuer(sender), alias.toLowerCase(), args);
+		return commandData.handle(new BukkitCommandIssuer(sender), args);
 	}
 	
 }

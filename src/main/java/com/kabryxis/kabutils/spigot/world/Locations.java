@@ -35,4 +35,15 @@ public class Locations {
 		return deserialize(string, null);
 	}
 	
+	public static Location deserialize(World world, String string) {
+		Validate.notNull(world, "world cannot be null.");
+		Validate.notNull(string, "string cannot be null.");
+		String[] args = string.split(",");
+		Validate.isTrue(args.length == 3 || args.length == 5, "string needs to have 3 or 5 arguments for a location when providing a world.");
+		double x = Double.parseDouble(args[0]);
+		double y = Double.parseDouble(args[1]);
+		double z = Double.parseDouble(args[2]);
+		return args.length == 5 ? new Location(world, x, y, z, Float.parseFloat(args[3]), Float.parseFloat(args[4])) : new Location(world, x, y, z);
+	}
+	
 }
