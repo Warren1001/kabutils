@@ -5,30 +5,35 @@ import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.Wrap
 import net.minecraft.server.v1_9_R1.ItemStack;
 import net.minecraft.server.v1_9_R1.MerchantRecipe;
 
-public class WrappedMerchantRecipev1_9_R1 extends WrappedMerchantRecipe {
+public class WrappedMerchantRecipev1_9_R1 implements WrappedMerchantRecipe {
 	
-	private final MerchantRecipe merchantRecipe;
+	private MerchantRecipe merchantRecipe;
 	
 	public WrappedMerchantRecipev1_9_R1(Object[] objects) {
-		Object buyItem2 = objects[1];
-		this.merchantRecipe = new MerchantRecipe((ItemStack)objects[0], buyItem2 != null ? (ItemStack)buyItem2 : null, (ItemStack)objects[2], (Integer)objects[3], (Integer)objects[4]);
+		setHandle(objects);
 	}
 	
-	public WrappedMerchantRecipev1_9_R1(Object handle) {
-		this.merchantRecipe = (MerchantRecipe)handle;
+	public WrappedMerchantRecipev1_9_R1(MerchantRecipe merchantRecipe) {
+		this.merchantRecipe = merchantRecipe;
 	}
 	
+	@Override
+	public void setHandle(Object obj) {
+		if(obj instanceof MerchantRecipe) merchantRecipe = (MerchantRecipe)obj;
+		else if(obj instanceof Object[]) {
+			Object[] objects = (Object[])obj;
+			Object buyItem2 = objects[1];
+			merchantRecipe = new MerchantRecipe((ItemStack)objects[0], buyItem2 != null ? (ItemStack)buyItem2 : null, (ItemStack)objects[2], (Integer)objects[3], (Integer)objects[4]);
+		}
+	}
+	
+	@Override
 	public MerchantRecipe getHandle() {
 		return merchantRecipe;
 	}
 	
 	@Override
-	public Object getObject() {
-		return merchantRecipe;
-	}
-	
-	@Override
-	public Object handleGetBuyingItem1() {
+	public ItemStack getBuyingItem1() {
 		return merchantRecipe.getBuyItem1();
 	}
 	
@@ -38,12 +43,12 @@ public class WrappedMerchantRecipev1_9_R1 extends WrappedMerchantRecipe {
 	}
 	
 	@Override
-	public Object handleGetBuyingItem2() {
+	public ItemStack getBuyingItem2() {
 		return merchantRecipe.getBuyItem2();
 	}
 	
 	@Override
-	public Object handleGetSellingItem() {
+	public ItemStack getSellingItem() {
 		return merchantRecipe.getBuyItem3();
 	}
 	

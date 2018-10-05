@@ -1,34 +1,21 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.entity.human;
 
-import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.human.impl.WrappedEntityHumanv1_8_R3;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 
-import java.util.function.Function;
-
-public abstract class WrappedEntityHuman implements Wrappable {
+public interface WrappedEntityHuman extends Wrappable {
 	
-	private static final Function<Player, WrappedEntityHuman> cloneSupplier;
+	Class<WrappedEntityHumanv1_8_R3> v1_8_R3 = WrappedEntityHumanv1_8_R3.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R3:
-				cloneSupplier = WrappedEntityHumanv1_8_R3::new;
-				break;
-			default:
-				cloneSupplier = null;
-				break;
-		}
+	static WrappedEntityHuman newCloneInstance(Player player) {
+		return WrapperFactory.get(WrappedEntityHuman.class, Player.class, player);
 	}
 	
-	public static WrappedEntityHuman newCloneInstance(Player player) {
-		return cloneSupplier.apply(player);
-	}
+	Object getDataWatcher();
 	
-	public abstract Object getDataWatcher();
-	
-	public abstract HumanEntity getBukkitEntity();
+	HumanEntity getBukkitEntity();
 	
 }

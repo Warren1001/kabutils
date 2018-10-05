@@ -10,22 +10,32 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WrappedPacketPlayOutWindowItemsv1_8_R3 extends WrappedPacketPlayOutWindowItems {
+public class WrappedPacketPlayOutWindowItemsv1_8_R3 implements WrappedPacketPlayOutWindowItems {
 	
-	private final PacketPlayOutWindowItems packet;
+	private PacketPlayOutWindowItems packet;
 	
 	public WrappedPacketPlayOutWindowItemsv1_8_R3(Object[] objs) {
-		int windowId = (Integer)objs[0];
-		List<org.bukkit.inventory.ItemStack> bukkitItems = (List<org.bukkit.inventory.ItemStack>)objs[1];
-		List<ItemStack> items = new ArrayList<>(bukkitItems.size());
-		for(org.bukkit.inventory.ItemStack bukkitItem : bukkitItems) {
-			items.add(CraftItemStack.asNMSCopy(bukkitItem));
+		setHandle(objs);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public void setHandle(Object obj) {
+		if(obj instanceof PacketPlayOutWindowItems) packet = (PacketPlayOutWindowItems)obj;
+		else if(obj instanceof Object[]) {
+			Object[] objs = (Object[])obj;
+			int windowId = (Integer)objs[0];
+			List<org.bukkit.inventory.ItemStack> bukkitItems = (List<org.bukkit.inventory.ItemStack>)objs[1];
+			List<ItemStack> items = new ArrayList<>(bukkitItems.size());
+			for(org.bukkit.inventory.ItemStack bukkitItem : bukkitItems) {
+				items.add(CraftItemStack.asNMSCopy(bukkitItem));
+			}
+			packet = new PacketPlayOutWindowItems(windowId, items);
 		}
-		packet = new PacketPlayOutWindowItems(windowId, items);
 	}
 	
 	@Override
-	public Object getObject() {
+	public PacketPlayOutWindowItems getHandle() {
 		return packet;
 	}
 	

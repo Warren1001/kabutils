@@ -2,6 +2,8 @@ package com.kabryxis.kabutils.spigot.version.wrapper;
 
 public interface Wrappable {
 	
-	Object getObject();
+	void setHandle(Object obj);
+	
+	Object getHandle();
 	
 }

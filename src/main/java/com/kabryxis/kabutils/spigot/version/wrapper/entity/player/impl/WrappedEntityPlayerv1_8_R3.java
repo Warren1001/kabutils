@@ -12,7 +12,10 @@ import java.lang.reflect.Field;
 import java.util.EnumSet;
 import java.util.Set;
 
-public class WrappedEntityPlayerv1_8_R3 extends WrappedEntityPlayer {
+public class WrappedEntityPlayerv1_8_R3 implements WrappedEntityPlayer {
+	
+	private static final Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> teleportFlags = EnumSet.of(PacketPlayOutPosition.EnumPlayerTeleportFlags.X, PacketPlayOutPosition.EnumPlayerTeleportFlags.Y,
+			PacketPlayOutPosition.EnumPlayerTeleportFlags.Z);
 	
 	private static final Field containerCounter;
 	
@@ -27,25 +30,21 @@ public class WrappedEntityPlayerv1_8_R3 extends WrappedEntityPlayer {
 		containerCounter = localContainerCounter;
 	}
 	
-	private static final Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> teleportFlags = EnumSet.of(PacketPlayOutPosition.EnumPlayerTeleportFlags.X, PacketPlayOutPosition.EnumPlayerTeleportFlags.Y,
-			PacketPlayOutPosition.EnumPlayerTeleportFlags.Z);
-	
 	private EntityPlayer entityPlayer;
 	
-	public WrappedEntityPlayerv1_8_R3(Player player) {
-		setPlayer(player);
+	public WrappedEntityPlayerv1_8_R3(Object obj) {
+		setHandle(obj);
 	}
 	
-	public WrappedEntityPlayerv1_8_R3() {}
+	@Override
+	public void setHandle(Object obj) {
+		if(obj instanceof EntityPlayer) entityPlayer = (EntityPlayer)obj;
+		else if(obj instanceof Player) entityPlayer = ((CraftPlayer)obj).getHandle();
+	}
 	
 	@Override
-	public Object getObject() {
+	public EntityPlayer getHandle() {
 		return entityPlayer;
-	}
-	
-	@Override
-	public void setPlayer(Player player) {
-		this.entityPlayer = ((CraftPlayer)player).getHandle();
 	}
 	
 	@Override

@@ -66,6 +66,10 @@ public enum Version {
 		}
 	}
 	
+	public static boolean isAtLeast1_9() {
+		return Version.VERSION.isVersionAtLeast(Version.v1_9_R1);
+	}
+	
 	private final int id;
 	private final String implementationNamespace;
 	private final String bukkitVersion;

@@ -1,45 +1,23 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat;
 
-import com.kabryxis.kabutils.spigot.version.Version;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.WrappedPacket;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat.impl.WrappedPacketPlayOutChatv1_8_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.out.chat.impl.WrappedPacketPlayOutChatv1_8_R3;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-public abstract class WrappedPacketPlayOutChat implements WrappedPacket {
+public interface WrappedPacketPlayOutChat extends WrappedPacket {
 	
-	private static final Function<String, WrappedPacketPlayOutChat> stringSupplier;
-	private static final Supplier<WrappedPacketPlayOutChat> supplier;
-	public static final WrappedPacketPlayOutChat EMPTY;
+	Class<WrappedPacketPlayOutChatv1_8_R1> v1_8_R1 = WrappedPacketPlayOutChatv1_8_R1.class;
+	Class<WrappedPacketPlayOutChatv1_8_R3> v1_8_R3 = WrappedPacketPlayOutChatv1_8_R3.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R1:
-				stringSupplier = WrappedPacketPlayOutChatv1_8_R1::new;
-				supplier = WrappedPacketPlayOutChatv1_8_R1::new;
-				break;
-			case v1_8_R3:
-				stringSupplier = WrappedPacketPlayOutChatv1_8_R3::new;
-				supplier = WrappedPacketPlayOutChatv1_8_R3::new;
-				break;
-			default:
-				stringSupplier = null;
-				supplier = null;
-				break;
-		}
-		EMPTY = newInstance("");
+	WrappedPacketPlayOutChat EMPTY = newInstance("");
+	
+	static WrappedPacketPlayOutChat newInstance(String message) {
+		return WrapperFactory.getSupplier(WrappedPacketPlayOutChat.class, Object.class).apply(message);
 	}
 	
-	public static WrappedPacketPlayOutChat newInstance(String message) {
-		return stringSupplier.apply(message);
+	static WrappedPacketPlayOutChat newInstance() {
+		return newInstance(null);
 	}
-	
-	public static WrappedPacketPlayOutChat newInstance() {
-		return supplier.get();
-	}
-	
-	public abstract void setMessage(String message);
 	
 }

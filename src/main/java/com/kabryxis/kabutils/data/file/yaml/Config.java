@@ -1,6 +1,7 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
 import com.kabryxis.kabutils.data.Data;
+import com.kabryxis.kabutils.data.Maps;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
@@ -19,7 +20,7 @@ public class Config extends ConfigSection {
 	
 	static {
 		options.setDefaultFlowStyle(FlowStyle.BLOCK);
-		yaml = new Yaml(options);
+		yaml = new Yaml(new KabYamlConstructor(), new KabYamlRepresenter(), options);
 	}
 	
 	private final File file;
@@ -41,7 +42,6 @@ public class Config extends ConfigSection {
 				callable.accept(this);
 			});
 		}
-		else callable.accept(this);
 	}
 	
 	public void loadSync() {
@@ -54,13 +54,11 @@ public class Config extends ConfigSection {
 			e.printStackTrace();
 			return;
 		}
-		if(obj == null) return;
-		try {
-			load((Map<?, ?>)obj);
+		if(obj instanceof ConfigSection) {
+			putAll((ConfigSection)obj);
 		}
-		catch(ClassCastException e) {
-			e.printStackTrace();
-		}
+		else if(obj instanceof Map) putAll(Maps.convertMap((Map<?, ?>)obj, Object::toString, o -> o));
+		else throw new IllegalArgumentException(getClass().getSimpleName() + " does not know how to load " + (obj == null ? "null" : obj.getClass().getSimpleName()) + " object from yaml");
 	}
 	
 	public void save() {
@@ -68,16 +66,8 @@ public class Config extends ConfigSection {
 	}
 	
 	public void saveSync() {
-		if(!file.exists()) {
-			try {
-				file.createNewFile();
-			}
-			catch(IOException e1) {
-				e1.printStackTrace();
-			}
-		}
 		try(FileWriter writer = new FileWriter(file)) {
-			yaml.dump(saveToMap(), writer);
+			yaml.dump(this, writer);
 		}
 		catch(IOException e) {
 			e.printStackTrace();

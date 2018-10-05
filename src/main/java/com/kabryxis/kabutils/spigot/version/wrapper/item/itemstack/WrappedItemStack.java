@@ -1,69 +1,40 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack;
 
-import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl.*;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.function.Function;
-
-public abstract class WrappedItemStack implements Wrappable {
+public interface WrappedItemStack extends Wrappable {
 	
-	private static final Function<ItemStack, WrappedItemStack> bukkitSupplier;
-	private static final Function<WrappedNBTTagCompound, WrappedItemStack> tagSupplier;
+	Class<WrappedItemStackv1_8_R1> v1_8_R1 = WrappedItemStackv1_8_R1.class;
+	Class<WrappedItemStackv1_8_R2> v1_8_R2 = WrappedItemStackv1_8_R2.class;
+	Class<WrappedItemStackv1_8_R3> v1_8_R3 = WrappedItemStackv1_8_R3.class;
+	Class<WrappedItemStackv1_9_R1> v1_9_R1 = WrappedItemStackv1_9_R1.class;
+	Class<WrappedItemStackv1_9_R2> v1_9_R2 = WrappedItemStackv1_9_R2.class;
+	Class<WrappedItemStackv1_10_R1> v1_10_R1 = WrappedItemStackv1_10_R1.class;
+	Class<WrappedItemStackv1_11_R1> v1_11_R1 = WrappedItemStackv1_11_R1.class;
+	Class<WrappedItemStackv1_12_R1> v1_12_R1 = WrappedItemStackv1_12_R1.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R1:
-				bukkitSupplier = WrappedItemStackv1_8_R1::new;
-				tagSupplier = WrappedItemStackv1_8_R1::new;
-				break;
-			case v1_8_R2:
-				bukkitSupplier = WrappedItemStackv1_8_R2::new;
-				tagSupplier = WrappedItemStackv1_8_R2::new;
-				break;
-			case v1_8_R3:
-				bukkitSupplier = WrappedItemStackv1_8_R3::new;
-				tagSupplier = WrappedItemStackv1_8_R3::new;
-				break;
-			case v1_9_R1:
-				bukkitSupplier = WrappedItemStackv1_9_R1::new;
-				tagSupplier = WrappedItemStackv1_9_R1::new;
-				break;
-			case v1_9_R2:
-				bukkitSupplier = WrappedItemStackv1_9_R2::new;
-				tagSupplier = WrappedItemStackv1_9_R2::new;
-				break;
-			case v1_10_R1:
-				bukkitSupplier = WrappedItemStackv1_10_R1::new;
-				tagSupplier = WrappedItemStackv1_10_R1::new;
-				break;
-			case v1_11_R1:
-				bukkitSupplier = WrappedItemStackv1_11_R1::new;
-				tagSupplier = WrappedItemStackv1_11_R1::new;
-				break;
-			case v1_12_R1:
-				bukkitSupplier = WrappedItemStackv1_12_R1::new;
-				tagSupplier = WrappedItemStackv1_12_R1::new;
-				break;
-			default:
-				bukkitSupplier = null;
-				tagSupplier = null;
-				break;
-		}
+	static WrappedItemStack newInstance() {
+		return WrapperFactory.getSupplier(WrappedItemStack.class, Object.class).apply(null);
 	}
 	
-	public static WrappedItemStack newInstance(ItemStack itemStack) {
-		return bukkitSupplier.apply(itemStack);
+	static WrappedItemStack newInstance(ItemStack itemStack) {
+		return WrapperFactory.getSupplier(WrappedItemStack.class, Object.class).apply(itemStack);
 	}
 	
-	public static WrappedItemStack newInstance(WrappedNBTTagCompound tag) {
-		return tagSupplier.apply(tag);
+	static WrappedItemStack newInstance(WrappedNBTTagCompound tag) {
+		return WrapperFactory.getSupplier(WrappedItemStack.class, Object.class).apply(tag);
 	}
 	
-	public abstract ItemStack getBukkitItemStack();
+	boolean isClone();
 	
-	public abstract void save(WrappedNBTTagCompound tag);
+	ItemStack getBukkitItemStack();
+	
+	WrappedNBTTagCompound getTag(boolean create);
+	
+	void save(WrappedNBTTagCompound tag);
 	
 }

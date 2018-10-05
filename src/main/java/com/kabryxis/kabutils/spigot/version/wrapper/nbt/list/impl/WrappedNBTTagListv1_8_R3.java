@@ -1,29 +1,29 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl;
 
+import com.kabryxis.kabutils.spigot.version.wrapper.nbt.base.impl.WrappedNBTBasev1_8_R3;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_8_R3;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
-
+import net.minecraft.server.v1_8_R3.NBTTagCompound;
 import net.minecraft.server.v1_8_R3.NBTTagList;
 
-public class WrappedNBTTagListv1_8_R3 extends WrappedNBTTagList {
+public class WrappedNBTTagListv1_8_R3 extends WrappedNBTBasev1_8_R3 implements WrappedNBTTagList {
 	
-	private final NBTTagList list;
+	private NBTTagList list;
 	
-	public WrappedNBTTagListv1_8_R3() {
-		this.list = new NBTTagList();
-	}
-	
-	public WrappedNBTTagListv1_8_R3(NBTTagList list) {
-		this.list = list;
-	}
-	
-	public NBTTagList getHandle() {
-		return list;
+	public WrappedNBTTagListv1_8_R3(Object obj) {
+		setHandle(obj);
 	}
 	
 	@Override
-	public Object getObject() {
+	public void setHandle(Object obj) {
+		super.setHandle(obj);
+		if(obj instanceof NBTTagList) list = (NBTTagList)obj;
+		else if(obj instanceof Boolean) if((Boolean)obj) list = new NBTTagList();
+	}
+	
+	@Override
+	public NBTTagList getHandle() {
 		return list;
 	}
 	
@@ -33,7 +33,7 @@ public class WrappedNBTTagListv1_8_R3 extends WrappedNBTTagList {
 	}
 	
 	@Override
-	public Object handleGet(int index) {
+	public NBTTagCompound get(int index) {
 		return list.get(index);
 	}
 	

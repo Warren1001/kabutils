@@ -106,7 +106,7 @@ public class BukkitCommandManager implements CommandManager {
 						else if(parameterTypes.length > 2) {
 							if(hasNullArguments) {
 								parameterType = parameterTypes[1];
-								if(parameterType != int.class) throw new IllegalArgumentException("The command method '" + method.getName() + "' needs a second argument of int for a complex command.");
+								if(parameterType != int.class) throw new IllegalArgumentException("The command method '" + method.getName() + "' needs a second argument of int when using varied argument lengths.");
 							}
 							for(int i = hasNullArguments ? 2 : 1; i < parameterTypes.length; i++) {
 								parameterType = parameterTypes[i];

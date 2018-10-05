@@ -8,7 +8,7 @@ import org.bukkit.entity.Arrow;
 
 import java.lang.reflect.Field;
 
-public class WrappedEntityArrowv1_8_R3 extends WrappedEntityArrow {
+public class WrappedEntityArrowv1_8_R3 implements WrappedEntityArrow {
 	
 	private static Field fieldX, fieldY, fieldZ;
 	
@@ -25,14 +25,20 @@ public class WrappedEntityArrowv1_8_R3 extends WrappedEntityArrow {
 		}
 	}
 	
-	private final EntityArrow entityArrow;
+	private EntityArrow entityArrow;
 	
 	public WrappedEntityArrowv1_8_R3(Arrow arrow) {
-		this.entityArrow = ((CraftArrow)arrow).getHandle();
+		setHandle(arrow);
 	}
 	
 	@Override
-	public Object getObject() {
+	public void setHandle(Object obj) {
+		if(obj instanceof EntityArrow) entityArrow = (EntityArrow)obj;
+		else if(obj instanceof Arrow) entityArrow = ((CraftArrow)obj).getHandle();
+	}
+	
+	@Override
+	public EntityArrow getHandle() {
 		return entityArrow;
 	}
 	

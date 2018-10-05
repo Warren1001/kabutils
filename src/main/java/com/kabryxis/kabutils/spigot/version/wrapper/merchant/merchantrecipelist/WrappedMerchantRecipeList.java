@@ -1,55 +1,33 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist;
 
-import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.WrappedMerchantRecipe;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.impl.*;
 
 import java.util.List;
-import java.util.function.Supplier;
 
-public abstract class WrappedMerchantRecipeList implements Wrappable {
+public interface WrappedMerchantRecipeList extends Wrappable {
 	
-	private static final Supplier<WrappedMerchantRecipeList> supplier;
+	Class<WrappedMerchantRecipeListv1_8_R1> v1_8_R1 = WrappedMerchantRecipeListv1_8_R1.class;
+	Class<WrappedMerchantRecipeListv1_8_R2> v1_8_R2 = WrappedMerchantRecipeListv1_8_R2.class;
+	Class<WrappedMerchantRecipeListv1_8_R3> v1_8_R3 = WrappedMerchantRecipeListv1_8_R3.class;
+	Class<WrappedMerchantRecipeListv1_9_R1> v1_9_R1 = WrappedMerchantRecipeListv1_9_R1.class;
+	Class<WrappedMerchantRecipeListv1_9_R2> v1_9_R2 = WrappedMerchantRecipeListv1_9_R2.class;
+	Class<WrappedMerchantRecipeListv1_10_R1> v1_10_R1 = WrappedMerchantRecipeListv1_10_R1.class;
+	Class<WrappedMerchantRecipeListv1_11_R1> v1_11_R1 = WrappedMerchantRecipeListv1_11_R1.class;
+	Class<WrappedMerchantRecipeListv1_12_R1> v1_12_R1 = WrappedMerchantRecipeListv1_12_R1.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R1:
-				supplier = WrappedMerchantRecipeListv1_8_R1::new;
-				break;
-			case v1_8_R2:
-				supplier = WrappedMerchantRecipeListv1_8_R2::new;
-				break;
-			case v1_8_R3:
-				supplier = WrappedMerchantRecipeListv1_8_R3::new;
-				break;
-			case v1_9_R1:
-				supplier = WrappedMerchantRecipeListv1_9_R1::new;
-				break;
-			case v1_9_R2:
-				supplier = WrappedMerchantRecipeListv1_9_R2::new;
-				break;
-			case v1_10_R1:
-				supplier = WrappedMerchantRecipeListv1_10_R1::new;
-				break;
-			case v1_11_R1:
-				supplier = WrappedMerchantRecipeListv1_11_R1::new;
-				break;
-			case v1_12_R1:
-				supplier = WrappedMerchantRecipeListv1_12_R1::new;
-				break;
-			default:
-				supplier = null;
-				break;
-		}
+	static WrappedMerchantRecipeList newInstance() {
+		return newInstance(true);
 	}
 	
-	public static WrappedMerchantRecipeList newInstance() {
-		return supplier.get();
+	static WrappedMerchantRecipeList newInstance(boolean newEmpty) {
+		return WrapperFactory.get(WrappedMerchantRecipeList.class, boolean.class, newEmpty);
 	}
 	
-	public abstract List<WrappedMerchantRecipe> getRecipes();
+	List<WrappedMerchantRecipe> getRecipes();
 	
-	public abstract void setRecipes(List<WrappedMerchantRecipe> recipes);
+	void setRecipes(List<WrappedMerchantRecipe> recipes);
 	
 }

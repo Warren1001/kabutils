@@ -9,12 +9,12 @@ import net.minecraft.server.v1_8_R3.MerchantRecipeList;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WrappedMerchantRecipeListv1_8_R3 extends WrappedMerchantRecipeList {
+public class WrappedMerchantRecipeListv1_8_R3 implements WrappedMerchantRecipeList {
 	
-	private final MerchantRecipeList merchantRecipeList;
+	private MerchantRecipeList merchantRecipeList;
 	
-	public WrappedMerchantRecipeListv1_8_R3() {
-		this.merchantRecipeList = new MerchantRecipeList();
+	public WrappedMerchantRecipeListv1_8_R3(boolean newEmpty) {
+		setHandle(newEmpty);
 	}
 	
 	public WrappedMerchantRecipeListv1_8_R3(MerchantRecipeList merchantRecipeList) {
@@ -22,7 +22,13 @@ public class WrappedMerchantRecipeListv1_8_R3 extends WrappedMerchantRecipeList 
 	}
 	
 	@Override
-	public Object getObject() {
+	public void setHandle(Object obj) {
+		if(obj instanceof MerchantRecipeList) merchantRecipeList = (MerchantRecipeList)obj;
+		else if(obj instanceof Boolean) if((Boolean)obj) merchantRecipeList = new MerchantRecipeList();
+	}
+	
+	@Override
+	public MerchantRecipeList getHandle() {
 		return merchantRecipeList;
 	}
 	

@@ -6,16 +6,22 @@ import net.minecraft.server.v1_9_R1.EntityVillager;
 import org.bukkit.craftbukkit.v1_9_R1.entity.CraftVillager;
 import org.bukkit.entity.Villager;
 
-public class WrappedEntityVillagerv1_9_R1 extends WrappedEntityVillager {
+public class WrappedEntityVillagerv1_9_R1 implements WrappedEntityVillager {
 	
-	private final EntityVillager entityVillager;
+	private EntityVillager entityVillager;
 	
 	public WrappedEntityVillagerv1_9_R1(Villager villager) {
-		this.entityVillager = ((CraftVillager)villager).getHandle();
+		setHandle(villager);
 	}
 	
 	@Override
-	public Object getObject() {
+	public void setHandle(Object obj) {
+		if(obj instanceof EntityVillager) entityVillager = (EntityVillager)obj;
+		else if(obj instanceof Villager) entityVillager = ((CraftVillager)obj).getHandle();
+	}
+	
+	@Override
+	public EntityVillager getHandle() {
 		return entityVillager;
 	}
 	

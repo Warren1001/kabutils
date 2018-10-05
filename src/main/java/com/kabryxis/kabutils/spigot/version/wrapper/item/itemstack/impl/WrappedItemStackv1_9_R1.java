@@ -1,33 +1,81 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl;
 
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
-
+import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_9_R1;
-
 import net.minecraft.server.v1_9_R1.ItemStack;
+import net.minecraft.server.v1_9_R1.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftItemStack;
 
-public class WrappedItemStackv1_9_R1 extends WrappedItemStack {
+import java.lang.reflect.Field;
+
+public class WrappedItemStackv1_9_R1 implements WrappedItemStack {
 	
-	private final ItemStack itemStack;
+	private static final Field field;
 	
-	public WrappedItemStackv1_9_R1(org.bukkit.inventory.ItemStack itemStack) {
-		this.itemStack = CraftItemStack.asNMSCopy(itemStack);
+	static {
+		Field localField = null;
+		try {
+			localField = Version.getOBCClass("inventory.CraftItemStack").getDeclaredField("handle");
+			localField.setAccessible(true);
+		} catch(NoSuchFieldException e) {
+			e.printStackTrace();
+		}
+		field = localField;
 	}
 	
-	public WrappedItemStackv1_9_R1(WrappedNBTTagCompound tag) {
-		this.itemStack = ItemStack.createStack(((WrappedNBTTagCompoundv1_9_R1)tag).getHandle());
+	private ItemStack itemStack;
+	private boolean clone = false;
+	
+	public WrappedItemStackv1_9_R1(Object obj) {
+		if(obj != null) setHandle(obj);
 	}
 	
 	@Override
-	public Object getObject() {
+	public void setHandle(Object obj) {
+		if(obj instanceof ItemStack) this.itemStack = (ItemStack)obj;
+		else if(obj instanceof CraftItemStack) {
+			try {
+				this.itemStack = (ItemStack)field.get(obj);
+			} catch(IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		else if(obj instanceof org.bukkit.inventory.ItemStack) {
+			clone = true;
+			this.itemStack = CraftItemStack.asNMSCopy((org.bukkit.inventory.ItemStack)obj);
+		}
+		else if(obj instanceof WrappedNBTTagCompoundv1_9_R1) {
+			clone = true;
+			this.itemStack = ItemStack.createStack(((WrappedNBTTagCompoundv1_9_R1)obj).getHandle());
+		}
+	}
+	
+	@Override
+	public ItemStack getHandle() {
 		return itemStack;
 	}
 	
 	@Override
-	public org.bukkit.inventory.ItemStack getBukkitItemStack() {
-		return CraftItemStack.asBukkitCopy(itemStack);
+	public boolean isClone() {
+		return clone;
+	}
+	
+	@Override
+	public CraftItemStack getBukkitItemStack() {
+		return CraftItemStack.asCraftMirror(itemStack);
+	}
+	
+	@Override
+	public WrappedNBTTagCompoundv1_9_R1 getTag(boolean create) {
+		NBTTagCompound tag = itemStack.getTag();
+		if(tag == null) {
+			if(!create) return null;
+			tag = new NBTTagCompound();
+			itemStack.setTag(tag);
+		}
+		return new WrappedNBTTagCompoundv1_9_R1(tag);
 	}
 	
 	@Override

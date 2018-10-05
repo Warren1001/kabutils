@@ -1,75 +1,34 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe;
 
-import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl.*;
 
-import java.util.function.Function;
-
-public abstract class WrappedMerchantRecipe implements Wrappable {
+public interface WrappedMerchantRecipe extends Wrappable {
 	
-	private static final Function<Object[], WrappedMerchantRecipe> rawSupplier;
-	//private static final Function<Object, WrappedMerchantRecipe> handleSupplier;
+	Class<WrappedMerchantRecipev1_8_R1> v1_8_R1 = WrappedMerchantRecipev1_8_R1.class;
+	Class<WrappedMerchantRecipev1_8_R2> v1_8_R2 = WrappedMerchantRecipev1_8_R2.class;
+	Class<WrappedMerchantRecipev1_8_R3> v1_8_R3 = WrappedMerchantRecipev1_8_R3.class;
+	Class<WrappedMerchantRecipev1_9_R1> v1_9_R1 = WrappedMerchantRecipev1_9_R1.class;
+	Class<WrappedMerchantRecipev1_9_R2> v1_9_R2 = WrappedMerchantRecipev1_9_R2.class;
+	Class<WrappedMerchantRecipev1_10_R1> v1_10_R1 = WrappedMerchantRecipev1_10_R1.class;
+	Class<WrappedMerchantRecipev1_11_R1> v1_11_R1 = WrappedMerchantRecipev1_11_R1.class;
+	Class<WrappedMerchantRecipev1_12_R1> v1_12_R1 = WrappedMerchantRecipev1_12_R1.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R1:
-				rawSupplier = WrappedMerchantRecipev1_8_R1::new;
-				//handleSupplier = WrappedMerchantRecipev1_8_R1::new;
-				break;
-			case v1_8_R2:
-				rawSupplier = WrappedMerchantRecipev1_8_R2::new;
-				//handleSupplier = WrappedMerchantRecipev1_8_R2::new;
-				break;
-			case v1_8_R3:
-				rawSupplier = WrappedMerchantRecipev1_8_R3::new;
-				//handleSupplier = WrappedMerchantRecipev1_8_R3::new;
-				break;
-			case v1_9_R1:
-				rawSupplier = WrappedMerchantRecipev1_9_R1::new;
-				//handleSupplier = WrappedMerchantRecipev1_9_R1::new;
-				break;
-			case v1_9_R2:
-				rawSupplier = WrappedMerchantRecipev1_9_R2::new;
-				//handleSupplier = WrappedMerchantRecipev1_9_R2::new;
-				break;
-			case v1_10_R1:
-				rawSupplier = WrappedMerchantRecipev1_10_R1::new;
-				//handleSupplier = WrappedMerchantRecipev1_10_R1::new;
-				break;
-			case v1_11_R1:
-				rawSupplier = WrappedMerchantRecipev1_11_R1::new;
-				//handleSupplier = WrappedMerchantRecipev1_11_R1::new;
-				break;
-			case v1_12_R1:
-				rawSupplier = WrappedMerchantRecipev1_12_R1::new;
-				//handleSupplier = WrappedMerchantRecipev1_12_R1::new;
-				break;
-			default:
-				rawSupplier = null;
-				//handleSupplier = null;
-				break;
-		}
+	static WrappedMerchantRecipe newInstance(Object buyItem1, Object buyItem2, Object buyItem3, int uses, int maxUses) {
+		return WrapperFactory.getSupplier(WrappedMerchantRecipe.class, Object[].class).apply(new Object[] {buyItem1, buyItem2, buyItem3, uses, maxUses});
 	}
 	
-	public static WrappedMerchantRecipe newInstance(Object buyItem1, Object buyItem2, Object buyItem3, int uses, int maxUses) {
-		return rawSupplier.apply(new Object[] {buyItem1, buyItem2, buyItem3, uses, maxUses});
-	}
+	Object getBuyingItem1();
 	
-	/*public static WrappedMerchantRecipe newInstance(Object handle) {
-		return handleSupplier.apply(handle);
-	}*/
+	Object getBuyingItem2();
 	
-	public abstract Object handleGetBuyingItem1();
+	boolean hasSecondItem();
 	
-	public abstract Object handleGetBuyingItem2();
+	Object getSellingItem();
 	
-	public abstract boolean hasSecondItem();
+	int getUses();
 	
-	public abstract Object handleGetSellingItem();
-	
-	public abstract int getUses();
-	
-	public abstract int getMaxUses();
+	int getMaxUses();
 	
 }

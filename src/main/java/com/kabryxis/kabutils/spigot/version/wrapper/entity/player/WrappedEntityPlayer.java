@@ -1,62 +1,40 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.entity.player;
 
-import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.impl.WrappedEntityPlayerv1_8_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.entity.player.impl.WrappedEntityPlayerv1_8_R3;
 import com.kabryxis.kabutils.spigot.version.wrapper.packet.WrappedPacket;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-public abstract class WrappedEntityPlayer implements Wrappable {
+public interface WrappedEntityPlayer extends Wrappable {
 	
-	private static final Function<Player, WrappedEntityPlayer> playerSupplier;
-	private static final Supplier<WrappedEntityPlayer> supplier;
+	Class<WrappedEntityPlayerv1_8_R1> v1_8_R1 = WrappedEntityPlayerv1_8_R1.class;
+	Class<WrappedEntityPlayerv1_8_R3> v1_8_R3 = WrappedEntityPlayerv1_8_R3.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R1:
-				playerSupplier = WrappedEntityPlayerv1_8_R1::new;
-				supplier = WrappedEntityPlayerv1_8_R1::new;
-				break;
-			case v1_8_R3:
-				playerSupplier = WrappedEntityPlayerv1_8_R3::new;
-				supplier = WrappedEntityPlayerv1_8_R3::new;
-				break;
-			default:
-				playerSupplier = null;
-				supplier = null;
-				break;
-		}
+	static WrappedEntityPlayer newInstance(Player player) {
+		return WrapperFactory.get(WrappedEntityPlayer.class, Object.class, player);
 	}
 	
-	public static WrappedEntityPlayer newInstance(Player player) {
-		return playerSupplier.apply(player);
+	static WrappedEntityPlayer newInstance() {
+		return newInstance(null);
 	}
 	
-	public static WrappedEntityPlayer newInstance() {
-		return supplier.get();
-	}
+	void sendPacket(WrappedPacket packet);
 	
-	public abstract void setPlayer(Player player);
+	void teleportRelative(Location location);
 	
-	public abstract void sendPacket(WrappedPacket packet);
+	int getContainerId();
 	
-	public abstract void teleportRelative(Location location);
+	int getCurrentContainerCounter();
 	
-	public abstract int getContainerId();
+	double getLocX();
 	
-	public abstract int getCurrentContainerCounter();
+	double getLocY();
 	
-	public abstract double getLocX();
+	double getLocZ();
 	
-	public abstract double getLocY();
-	
-	public abstract double getLocZ();
-	
-	public abstract int getPing();
+	int getPing();
 	
 }

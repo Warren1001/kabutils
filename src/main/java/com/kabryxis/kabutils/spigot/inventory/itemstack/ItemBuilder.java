@@ -1,6 +1,8 @@
 package com.kabryxis.kabutils.spigot.inventory.itemstack;
 
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
+import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
+import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -33,8 +35,10 @@ public class ItemBuilder implements Cloneable {
 		if(name != null) builder.name(ChatColor.translateAlternateColorCodes('&', name));
 		List<String> lore = section.getList("lore", String.class);
 		if(lore != null) builder.lore(lore, true);
-		ConfigSection enchantsSection = section.getChild("enchants");
-		if(enchantsSection != null) enchantsSection.getPairs(false).forEach((enchantName, o) -> builder.enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
+		ConfigSection enchantsSection = section.get("enchants", ConfigSection.class);
+		if(enchantsSection != null) enchantsSection.getValues(false).forEach((enchantName, o) -> builder.enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
+		ConfigSection customSection = section.get("custom", ConfigSection.class);
+		if(customSection != null) customSection.getValues(false).forEach(builder::custom);
 		return builder;
 	}
 	
@@ -120,6 +124,14 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
+	private Map<String, Object> custom;
+	
+	public ItemBuilder custom(String key, Object obj) {
+		if(custom == null) custom = new HashMap<>();
+		custom.put(key, obj);
+		return this;
+	}
+	
 	public ItemBuilder reset() {
 		type = null;
 		amount = 1;
@@ -129,6 +141,7 @@ public class ItemBuilder implements Cloneable {
 		lore = null;
 		enchants = null;
 		flags = null;
+		custom = null;
 		return this;
 	}
 	
@@ -141,6 +154,12 @@ public class ItemBuilder implements Cloneable {
 			if(enchants != null) enchants.forEach((key, value) -> meta.addEnchant(key, value, true));
 			if(flags != null) flags.forEach(meta::addItemFlags);
 			item.setItemMeta(meta);
+		}
+		if(custom != null) {
+			WrappedItemStack wrappedItemStack = WrappedItemStack.newInstance(item);
+			item = wrappedItemStack.getBukkitItemStack();
+			WrappedNBTTagCompound tag = wrappedItemStack.getTag(true);
+			custom.forEach(tag::set);
 		}
 		return item;
 	}

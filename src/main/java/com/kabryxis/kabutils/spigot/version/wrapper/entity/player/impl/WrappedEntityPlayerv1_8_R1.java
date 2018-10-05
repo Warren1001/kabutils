@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 
-public class WrappedEntityPlayerv1_8_R1 extends WrappedEntityPlayer {
+public class WrappedEntityPlayerv1_8_R1 implements WrappedEntityPlayer {
 	
 	private static final Field containerCounter;
 	
@@ -28,20 +28,19 @@ public class WrappedEntityPlayerv1_8_R1 extends WrappedEntityPlayer {
 	
 	private EntityPlayer entityPlayer;
 	
-	public WrappedEntityPlayerv1_8_R1(Player player) {
-		setPlayer(player);
+	public WrappedEntityPlayerv1_8_R1(Object obj) {
+		setHandle(obj);
 	}
 	
-	public WrappedEntityPlayerv1_8_R1() {}
+	@Override
+	public void setHandle(Object obj) {
+		if(obj instanceof EntityPlayer) entityPlayer = (EntityPlayer)obj;
+		else if(obj instanceof Player) entityPlayer = ((CraftPlayer)obj).getHandle();
+	}
 	
 	@Override
-	public Object getObject() {
+	public EntityPlayer getHandle() {
 		return entityPlayer;
-	}
-	
-	@Override
-	public void setPlayer(Player player) {
-		this.entityPlayer = ((CraftPlayer)player).getHandle();
 	}
 	
 	@Override

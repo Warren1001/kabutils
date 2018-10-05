@@ -2,6 +2,7 @@ package com.kabryxis.kabutils.spigot.event;
 
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
 import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
@@ -42,23 +43,26 @@ public class Listeners {
 		globalHandlerList = globalHandlerListLocal;
 	}
 	
-	public static void registerListener(GlobalListener listener, Plugin plugin) {
-		registerListener(listener, plugin, EventPriority.LOWEST);
+	public static <T extends Listener> T registerListener(T listener, Plugin plugin) {
+		return registerListener(listener, plugin, EventPriority.LOWEST);
 	}
 	
-	public static void registerListener(GlobalListener listener, Plugin plugin, EventPriority priority) {
-		registerListener(listener, plugin, priority, globalExecutor);
+	public static <T extends Listener> T registerListener(T listener, Plugin plugin, EventPriority priority) {
+		return registerListener(listener, plugin, priority, globalExecutor);
 	}
 	
-	public static void registerListener(GlobalListener listener, Plugin plugin, EventExecutor executor) {
-		registerListener(listener, plugin, EventPriority.LOWEST, executor);
+	public static <T extends Listener> T registerListener(T listener, Plugin plugin, EventExecutor executor) {
+		return registerListener(listener, plugin, EventPriority.LOWEST, executor);
 	}
 	
-	public static void registerListener(GlobalListener listener, Plugin plugin, EventPriority priority, EventExecutor executor) {
+	public static <T extends Listener> T registerListener(T listener, Plugin plugin, EventPriority priority, EventExecutor executor) {
 		plugin.getServer().getPluginManager().registerEvents(listener, plugin);
-		RegisteredListener registeredListener = new RegisteredListener(listener, executor, priority, plugin, false);
-		globalListeners.add(registeredListener);
-		globalHandlerList.forEach(hl -> hl.register(registeredListener));
+		if(listener instanceof GlobalListener) {
+			RegisteredListener registeredListener = new RegisteredListener(listener, executor, priority, plugin, false);
+			globalListeners.add(registeredListener);
+			globalHandlerList.forEach(hl -> hl.register(registeredListener));
+		}
+		return listener;
 	}
 	
 }

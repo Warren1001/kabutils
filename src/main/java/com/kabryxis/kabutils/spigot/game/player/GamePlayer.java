@@ -1,5 +1,6 @@
 package com.kabryxis.kabutils.spigot.game.player;
 
+import com.google.common.collect.Sets;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -13,11 +14,11 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public abstract class GamePlayer {
+	
+	public static final Set<Material> IGNORED_TARGET_BLOCK_MATERIALS = Sets.newHashSet(Material.AIR, Material.CARPET);
 	
 	protected final UUID uuid;
 	
@@ -67,7 +68,7 @@ public abstract class GamePlayer {
 		return obj instanceof GamePlayer && ((GamePlayer)obj).uuid.equals(uuid);
 	}
 	
-	// common methods from bukkit's player custom
+	// common methods from bukkit's player object
 		
 	public boolean isSneaking() {
 		return player.isSneaking();
@@ -238,7 +239,7 @@ public abstract class GamePlayer {
 	}
 		
 	public Block getTargetBlock(int distance) {
-		return player.getTargetBlock((Set<Material>)null, distance);
+		return player.getTargetBlock(IGNORED_TARGET_BLOCK_MATERIALS, distance);
 	}
 		
 	public int getMaximumNoDamageTicks() {

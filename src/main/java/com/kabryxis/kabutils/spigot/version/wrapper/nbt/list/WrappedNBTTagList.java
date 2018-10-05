@@ -1,56 +1,33 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.nbt.list;
 
-import com.kabryxis.kabutils.spigot.version.Version;
-import com.kabryxis.kabutils.spigot.version.wrapper.Wrappable;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
+import com.kabryxis.kabutils.spigot.version.wrapper.nbt.base.WrappedNBTBase;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl.*;
 
-import java.util.function.Supplier;
-
-public abstract class WrappedNBTTagList implements Wrappable {
+public interface WrappedNBTTagList extends WrappedNBTBase {
 	
-	private static final Supplier<WrappedNBTTagList> supplier;
+	Class<WrappedNBTTagListv1_8_R1> v1_8_R1 = WrappedNBTTagListv1_8_R1.class;
+	Class<WrappedNBTTagListv1_8_R2> v1_8_R2 = WrappedNBTTagListv1_8_R2.class;
+	Class<WrappedNBTTagListv1_8_R3> v1_8_R3 = WrappedNBTTagListv1_8_R3.class;
+	Class<WrappedNBTTagListv1_9_R1> v1_9_R1 = WrappedNBTTagListv1_9_R1.class;
+	Class<WrappedNBTTagListv1_9_R2> v1_9_R2 = WrappedNBTTagListv1_9_R2.class;
+	Class<WrappedNBTTagListv1_10_R1> v1_10_R1 = WrappedNBTTagListv1_10_R1.class;
+	Class<WrappedNBTTagListv1_11_R1> v1_11_R1 = WrappedNBTTagListv1_11_R1.class;
+	Class<WrappedNBTTagListv1_12_R1> v1_12_R1 = WrappedNBTTagListv1_12_R1.class;
 	
-	static {
-		switch(Version.VERSION) {
-			case v1_8_R1:
-				supplier = WrappedNBTTagListv1_8_R1::new;
-				break;
-			case v1_8_R2:
-				supplier = WrappedNBTTagListv1_8_R2::new;
-				break;
-			case v1_8_R3:
-				supplier = WrappedNBTTagListv1_8_R3::new;
-				break;
-			case v1_9_R1:
-				supplier = WrappedNBTTagListv1_9_R1::new;
-				break;
-			case v1_9_R2:
-				supplier = WrappedNBTTagListv1_9_R2::new;
-				break;
-			case v1_10_R1:
-				supplier = WrappedNBTTagListv1_10_R1::new;
-				break;
-			case v1_11_R1:
-				supplier = WrappedNBTTagListv1_11_R1::new;
-				break;
-			case v1_12_R1:
-				supplier = WrappedNBTTagListv1_12_R1::new;
-				break;
-			default:
-				supplier = null;
-				break;
-		}
+	static WrappedNBTTagList newInstance() {
+		return newInstance(false);
 	}
 	
-	public static WrappedNBTTagList newInstance() {
-		return supplier.get();
+	static WrappedNBTTagList newInstance(boolean newEmpty) {
+		return WrapperFactory.getSupplier(WrappedNBTTagList.class, Object.class).apply(newEmpty);
 	}
 	
-	public abstract void add(WrappedNBTTagCompound tag);
+	void add(WrappedNBTTagCompound tag);
 	
-	public abstract Object handleGet(int index);
+	Object get(int index);
 	
-	public abstract int size();
+	int size();
 	
 }
