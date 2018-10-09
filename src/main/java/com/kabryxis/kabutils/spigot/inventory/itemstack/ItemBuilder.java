@@ -3,6 +3,7 @@ package com.kabryxis.kabutils.spigot.inventory.itemstack;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
+import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -14,35 +15,132 @@ import java.util.*;
 
 public class ItemBuilder implements Cloneable {
 	
-	public static final ItemBuilder DEFAULT = new ItemBuilder();
+	private static long UID_COUNTER = 1L;
 	
-	public static ItemBuilder newItemBuilder() {
-		return DEFAULT.clone();
+	public static final ItemBuilder DEFAULT = new ItemBuilder(true).amount(1).prefix("").name("");
+	/**
+	 * This can only be used in ItemBuilder#reset(ItemBuilder) method or ItemStack#clone. Using any standard methods will have no effect.
+	 */
+	public static final ItemBuilder EMPTY = new ItemBuilder(true) {
+		
+		@Override
+		public ItemBuilder type(Material type) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder amount(int amount) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder custom(String key, Object obj) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder data(byte data) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder data(int data) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder enchant(Enchantment enchant, int i) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder flag(ItemFlag flag) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder lore(String... lines) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder lore(List<String> lines) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder lore(boolean append, String... lines) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder lore(List<String> lines, boolean append) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder name(String name) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder prefix(String prefix) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder reset() {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder reset(ItemBuilder builder) {
+			return this;
+		}
+		
+		@Override
+		public ItemBuilder uid(String key) {
+			return this;
+		}
+		
+		@Override
+		public ItemStack build() {
+			throw new UnsupportedOperationException("Cannot generate ItemStack from designated empty ItemBuilder");
+		}
+		
+	};
+	
+	public ItemBuilder(boolean empty) {
+		if(!empty) reset();
 	}
 	
-	public static ItemBuilder newItemBuilder(Material type) {
-		return newItemBuilder().type(type);
+	public ItemBuilder() {
+		this(false);
 	}
 	
-	public static ItemBuilder newItemBuilder(Material type, int amount) {
-		return newItemBuilder(type).amount(amount);
+	public ItemBuilder(Material type) {
+		this();
+		type(type);
 	}
 	
-	public static ItemBuilder newItemBuilder(ConfigSection section) {
-		ItemBuilder builder = newItemBuilder(Material.getMaterial(section.get("type", String.class).toUpperCase()));
-		builder.amount(section.get("amount", Integer.class, 1));
+	public ItemBuilder(Material type, int amount) {
+		this(type);
+		amount(amount);
+	}
+	
+	public ItemBuilder(ConfigSection section) {
+		this(section.get("type", Material.class), section.get("amount", Integer.class, 1));
 		String name = section.get("name", String.class);
-		if(name != null) builder.name(ChatColor.translateAlternateColorCodes('&', name));
+		if(name != null) name(name);
 		List<String> lore = section.getList("lore", String.class);
-		if(lore != null) builder.lore(lore, true);
+		if(lore != null) lore(lore, true);
 		ConfigSection enchantsSection = section.get("enchants", ConfigSection.class);
-		if(enchantsSection != null) enchantsSection.getValues(false).forEach((enchantName, o) -> builder.enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
+		if(enchantsSection != null) enchantsSection.getValues(false).forEach((enchantName, o) -> enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
 		ConfigSection customSection = section.get("custom", ConfigSection.class);
-		if(customSection != null) customSection.getValues(false).forEach(builder::custom);
-		return builder;
+		if(customSection != null) customSection.getValues(false).forEach(this::custom);
+		String uid = section.get("uuid", String.class);
+		if(uid != null) uid(uid);
 	}
-	
-	private ItemBuilder() {}
 	
 	private Material type;
 	
@@ -55,7 +153,7 @@ public class ItemBuilder implements Cloneable {
 		return type;
 	}
 	
-	private int amount = 1;
+	private int amount;
 	
 	public ItemBuilder amount(int amount) {
 		this.amount = amount;
@@ -69,14 +167,18 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
-	private String prefix = "";
+	public ItemBuilder data(int data) {
+		return data((byte)data);
+	}
+	
+	private String prefix;
 	
 	public ItemBuilder prefix(String prefix) {
 		this.prefix = ChatColor.translateAlternateColorCodes('&', prefix);
 		return this;
 	}
 	
-	private String name = "";
+	private String name;
 	
 	public ItemBuilder name(String name) {
 		this.name = ChatColor.translateAlternateColorCodes('&', name);
@@ -90,7 +192,12 @@ public class ItemBuilder implements Cloneable {
 	private List<String> lore;
 	
 	public ItemBuilder lore(String... lines) {
-		lore = new ArrayList<>();
+		return lore(false, lines);
+	}
+	
+	public ItemBuilder lore(boolean append, String... lines) {
+		if(lore == null) lore = new ArrayList<>(lines.length);
+		else if(!append) lore.clear();
 		for(String line : lines) {
 			lore.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
@@ -108,11 +215,21 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
+	public ItemBuilder clearLore() {
+		lore = null;
+		return this;
+	}
+	
 	private Map<Enchantment, Integer> enchants;
 	
 	public ItemBuilder enchant(Enchantment enchant, int i) {
 		if(enchants == null) enchants = new HashMap<>();
 		enchants.put(enchant, i);
+		return this;
+	}
+	
+	public ItemBuilder clearEnchants() {
+		enchants = null;
 		return this;
 	}
 	
@@ -124,6 +241,11 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
+	public ItemBuilder clearFlags() {
+		flags = null;
+		return this;
+	}
+	
 	private Map<String, Object> custom;
 	
 	public ItemBuilder custom(String key, Object obj) {
@@ -132,20 +254,42 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
-	public ItemBuilder reset() {
-		type = null;
-		amount = 1;
-		data = 0;
-		prefix = "";
-		name = "";
-		lore = null;
-		enchants = null;
-		flags = null;
+	public ItemBuilder clearCustoms() {
 		custom = null;
 		return this;
 	}
 	
+	private String uidKey;
+	
+	/**
+	 * Important note, this is not designed for multiple server-sessions. Items using UIDs should be considered temporary to a game instance.
+	 * Trying to use it otherwise will essentially break the design, causing item UIDs to no longer be unique.
+	 */
+	public ItemBuilder uid(String key) {
+		this.uidKey = key;
+		return this;
+	}
+	
+	public ItemBuilder reset() {
+		return reset(ItemBuilder.DEFAULT);
+	}
+	
+	public ItemBuilder reset(ItemBuilder builder) {
+		this.type = builder.type;
+		this.amount = builder.amount;
+		this.data = builder.data;
+		this.prefix = builder.prefix;
+		this.name = builder.name;
+		if(builder.lore != null) this.lore = new ArrayList<>(builder.lore);
+		if(builder.enchants != null) this.enchants = new HashMap<>(builder.enchants);
+		if(builder.flags != null) this.flags = new HashSet<>(builder.flags);
+		if(builder.custom != null) this.custom = new HashMap<>(builder.custom);
+		this.uidKey = builder.uidKey;
+		return this;
+	}
+	
 	public ItemStack build() {
+		Validate.notNull(type, "Cannot build an ItemStack without a Material type");
 		ItemStack item = new ItemStack(type, amount, data);
 		if(name != null || lore != null || enchants != null || flags != null) {
 			ItemMeta meta = item.getItemMeta();
@@ -155,11 +299,12 @@ public class ItemBuilder implements Cloneable {
 			if(flags != null) flags.forEach(meta::addItemFlags);
 			item.setItemMeta(meta);
 		}
-		if(custom != null) {
+		if(custom != null || uidKey != null) {
 			WrappedItemStack wrappedItemStack = WrappedItemStack.newInstance(item);
 			item = wrappedItemStack.getBukkitItemStack();
 			WrappedNBTTagCompound tag = wrappedItemStack.getTag(true);
-			custom.forEach(tag::set);
+			if(custom != null) custom.forEach(tag::set);
+			if(uidKey != null) tag.set(uidKey, UID_COUNTER++);
 		}
 		return item;
 	}
@@ -180,6 +325,8 @@ public class ItemBuilder implements Cloneable {
 		if(lore != null) newBuilder.lore = new ArrayList<>(lore);
 		if(enchants != null) newBuilder.enchants = new HashMap<>(enchants);
 		if(flags != null) newBuilder.flags = new HashSet<>(flags);
+		if(custom != null) newBuilder.custom = new HashMap<>(custom);
+		newBuilder.uidKey = uidKey;
 		return newBuilder;
 	}
 	

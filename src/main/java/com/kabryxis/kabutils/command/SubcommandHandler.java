@@ -62,7 +62,7 @@ public class SubcommandHandler implements CommandData, CommandDataManager {
 	
 	@Override
 	public boolean handle(CommandIssuer issuer, String[] args) {
-		return args.length > 0 && commandDataMap.get(args[0].toLowerCase()).handle(issuer, Arrays.splitStringArray(1, args));
+		return args.length > 0 && commandDataMap.get(args[0].toLowerCase()).handle(issuer, Arrays.splitArray(args, 1));
 	}
 	
 }

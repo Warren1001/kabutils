@@ -50,6 +50,7 @@ public class WrappedItemStackv1_9_R2 implements WrappedItemStack {
 			clone = true;
 			this.itemStack = ItemStack.createStack(((WrappedNBTTagCompoundv1_9_R2)obj).getHandle());
 		}
+		else if(obj == null) itemStack = null;
 	}
 	
 	@Override

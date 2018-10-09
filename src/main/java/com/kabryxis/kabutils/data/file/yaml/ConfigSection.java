@@ -10,7 +10,11 @@ import java.util.stream.Collectors;
 public class ConfigSection extends HashMap<String, Object> {
 	
 	public static final String PERIOD = "\\.";
-	public static final Map<Class<?>, Function<String, ?>> DESERIALIZERS = new HashMap<>();
+	private static final Map<Class<?>, Function<String, ?>> DESERIALIZERS = new HashMap<>();
+	
+	public static <T> void addDeserializer(Class<T> clazz, Function<String, T> function) {
+		DESERIALIZERS.put(clazz, function);
+	}
 	
 	private String name;
 	

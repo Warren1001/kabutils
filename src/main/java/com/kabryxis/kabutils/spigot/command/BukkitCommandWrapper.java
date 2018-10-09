@@ -17,7 +17,13 @@ public class BukkitCommandWrapper extends Command {
 	
 	@Override
 	public boolean execute(CommandSender sender, String alias, String[] args) {
-		return commandData.handle(new BukkitCommandIssuer(sender), args);
+		try {
+			return commandData.handle(new BukkitCommandIssuer(sender), args);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return true;
+		}
 	}
 	
 }

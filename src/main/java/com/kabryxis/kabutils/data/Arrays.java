@@ -1,10 +1,12 @@
 package com.kabryxis.kabutils.data;
 
+import java.util.function.Supplier;
+
 public class Arrays {
 	
-	public static boolean contains(Object[] array, Object o) {
-		for(Object a : array) {
-			if(a == o) return true;
+	public static <T> boolean containsInstance(T[] array, T obj) {
+		for(T t : array) {
+			if(t == obj) return true;
 		}
 		return false;
 	}
@@ -16,10 +18,14 @@ public class Arrays {
 		return false;
 	}
 	
-	public static String[] splitStringArray(int startingIndex, String[] originalArray) {
-		String[] newArray = new String[originalArray.length - startingIndex];
-		System.arraycopy(originalArray, startingIndex, newArray, 0, originalArray.length - startingIndex);
-		return newArray;
+	public static <T> T[] splitArray(T[] originalArray, int start) {
+		return java.util.Arrays.copyOfRange(originalArray, start, originalArray.length - 1);
+	}
+	
+	public static <T> T computeIfAbsent(T[] array, int index, Supplier<T> supplier) {
+		T obj = array[index];
+		if(obj == null) array[index] = (obj = supplier.get());
+		return obj;
 	}
 	
 }

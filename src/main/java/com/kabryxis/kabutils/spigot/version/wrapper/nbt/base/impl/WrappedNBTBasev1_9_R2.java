@@ -7,6 +7,12 @@ public class WrappedNBTBasev1_9_R2 implements WrappedNBTBase {
 	
 	private NBTBase handle;
 	
+	public WrappedNBTBasev1_9_R2() {}
+	
+	public WrappedNBTBasev1_9_R2(NBTBase base) {
+		this.handle = base;
+	}
+	
 	@Override
 	public void setHandle(Object obj) {
 		if(obj instanceof NBTBase) handle = (NBTBase)obj;

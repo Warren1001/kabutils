@@ -26,19 +26,9 @@ public interface WrappedNBTTagCompound extends WrappedNBTBase {
 	
 	void set(String key, Object obj);
 	
+	<T> T get(String key, Class<T> clazz);
+	
 	WrappedNBTTagList getList(String key, int i);
-	
-	void setString(String key, String string);
-	
-	String getString(String key);
-	
-	void setInt(String key, int i);
-	
-	int getInt(String key);
-	
-	void setByte(String key, byte value);
-	
-	byte getByte(String key);
 	
 	void remove(String key);
 	

@@ -15,12 +15,12 @@ import java.util.function.Consumer;
 
 public class Config extends ConfigSection {
 	
-	private final static DumperOptions options = new DumperOptions();
-	private final static Yaml yaml;
+	public static final DumperOptions OPTIONS = new DumperOptions();
+	public static final Yaml YAML_INSTANCE;
 	
 	static {
-		options.setDefaultFlowStyle(FlowStyle.BLOCK);
-		yaml = new Yaml(new KabYamlConstructor(), new KabYamlRepresenter(), options);
+		OPTIONS.setDefaultFlowStyle(FlowStyle.BLOCK);
+		YAML_INSTANCE = new Yaml(new KabYamlConstructor(), new KabYamlRepresenter(), OPTIONS);
 	}
 	
 	private final File file;
@@ -48,15 +48,13 @@ public class Config extends ConfigSection {
 		Object obj;
 		try {
 			if(!file.exists()) return;
-			obj = yaml.load(new FileInputStream(file));
+			obj = YAML_INSTANCE.load(new FileInputStream(file));
 		}
 		catch(IOException e) {
 			e.printStackTrace();
 			return;
 		}
-		if(obj instanceof ConfigSection) {
-			putAll((ConfigSection)obj);
-		}
+		if(obj instanceof ConfigSection) putAll((ConfigSection)obj);
 		else if(obj instanceof Map) putAll(Maps.convertMap((Map<?, ?>)obj, Object::toString, o -> o));
 		else throw new IllegalArgumentException(getClass().getSimpleName() + " does not know how to load " + (obj == null ? "null" : obj.getClass().getSimpleName()) + " object from yaml");
 	}
@@ -67,7 +65,7 @@ public class Config extends ConfigSection {
 	
 	public void saveSync() {
 		try(FileWriter writer = new FileWriter(file)) {
-			yaml.dump(this, writer);
+			YAML_INSTANCE.dump(this, writer);
 		}
 		catch(IOException e) {
 			e.printStackTrace();
