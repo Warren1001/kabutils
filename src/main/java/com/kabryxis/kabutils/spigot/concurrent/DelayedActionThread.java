@@ -2,31 +2,34 @@ package com.kabryxis.kabutils.spigot.concurrent;
 
 import com.kabryxis.kabutils.concurrent.Threads;
 import com.kabryxis.kabutils.concurrent.thread.PausableThread;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DelayedActionThread extends PausableThread {
 	
+	protected final Plugin plugin;
 	protected final Set<DelayedAction> active;
 	protected final Runnable action;
 	
-	public DelayedActionThread(String name, Set<DelayedAction> actionSet, Runnable action) {
+	public DelayedActionThread(String name, Plugin plugin, Set<DelayedAction> actionSet, Runnable action) {
 		super(name);
+		this.plugin = plugin;
 		this.active = actionSet;
 		this.action = action;
 	}
 	
-	public DelayedActionThread(String name, Set<DelayedAction> actionSet) {
-		this(name, actionSet, () -> {
+	public DelayedActionThread(String name, Plugin plugin, Set<DelayedAction> actionSet) {
+		this(name, plugin, actionSet, () -> {
 			synchronized(actionSet) {
 				actionSet.removeIf(DelayedAction::test);
 			}
 		});
 	}
 	
-	public DelayedActionThread(String name) {
-		this(name, ConcurrentHashMap.newKeySet());
+	public DelayedActionThread(String name, Plugin plugin) {
+		this(name, plugin, ConcurrentHashMap.newKeySet());
 	}
 	
 	public void add(DelayedAction action) {
@@ -39,7 +42,7 @@ public class DelayedActionThread extends PausableThread {
 	public void run() {
 		while(isRunning()) {
 			pauseCheck();
-			BukkitThreads.sync(action);
+			BukkitTaskManager.start(action, plugin);
 			Threads.sleep(50);
 		}
 		clear();

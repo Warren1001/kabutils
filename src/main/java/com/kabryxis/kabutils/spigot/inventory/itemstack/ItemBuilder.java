@@ -129,16 +129,16 @@ public class ItemBuilder implements Cloneable {
 	}
 	
 	public ItemBuilder(ConfigSection section) {
-		this(section.get("type", Material.class), section.get("amount", Integer.class, 1));
-		String name = section.get("name", String.class);
+		this(section.get("type"), section.getInt("amount", 1));
+		String name = section.get("name");
 		if(name != null) name(name);
 		List<String> lore = section.getList("lore", String.class);
 		if(lore != null) lore(lore, true);
-		ConfigSection enchantsSection = section.get("enchants", ConfigSection.class);
-		if(enchantsSection != null) enchantsSection.getValues(false).forEach((enchantName, o) -> enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
-		ConfigSection customSection = section.get("custom", ConfigSection.class);
-		if(customSection != null) customSection.getValues(false).forEach(this::custom);
-		String uid = section.get("uuid", String.class);
+		ConfigSection enchantsSection = section.get("enchants");
+		if(enchantsSection != null) enchantsSection.forEach((enchantName, o) -> enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
+		ConfigSection customSection = section.get("custom");
+		if(customSection != null) customSection.forEach(this::custom);
+		String uid = section.get("uuid");
 		if(uid != null) uid(uid);
 	}
 	

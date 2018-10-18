@@ -1,8 +1,22 @@
 package com.kabryxis.kabutils.concurrent.thread;
 
-import com.kabryxis.kabutils.concurrent.Threads;
+import org.bukkit.craftbukkit.libs.jline.internal.ShutdownHooks;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class QuittableThread extends Thread {
+	
+	static {
+		ShutdownHooks.add(QuittableThread::stopAllThreads);
+	}
+	
+	private static final Set<QuittableThread> QUITTABLE_THREADS = new HashSet<>();
+	
+	public static void stopAllThreads() {
+		QUITTABLE_THREADS.forEach(QuittableThread::quit);
+		QUITTABLE_THREADS.clear();
+	}
 	
 	private boolean stop = true;
 	
@@ -28,7 +42,7 @@ public abstract class QuittableThread extends Thread {
 	}
 	
 	private void register() {
-		Threads.registerQuittable(this);
+		QUITTABLE_THREADS.add(this);
 	}
 	
 	public void quit() {

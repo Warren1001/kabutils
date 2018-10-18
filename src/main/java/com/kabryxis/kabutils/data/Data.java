@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
+@Deprecated
 public class Data {
 	
 	private static ActionThread thread;

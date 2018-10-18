@@ -23,7 +23,7 @@ public class Locations {
 		World world = Bukkit.getWorld(args[0]);
 		if(world == null) {
 			if(worldLoader == null) throw new IllegalArgumentException("'" + args[0] + "' world was not found. Perhaps it's not loaded?");
-			world = worldLoader.loadWorld(args[0]);
+			world = worldLoader.getWorld(args[0]);
 		}
 		double x = Double.parseDouble(args[1]);
 		double y = Double.parseDouble(args[2]);

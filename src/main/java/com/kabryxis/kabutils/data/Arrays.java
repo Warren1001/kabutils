@@ -11,13 +11,6 @@ public class Arrays {
 		return false;
 	}
 	
-	public static boolean containsInt(int[] array, int i) {
-		for(int a : array) {
-			if(a == i) return true;
-		}
-		return false;
-	}
-	
 	public static <T> T[] splitArray(T[] originalArray, int start) {
 		return java.util.Arrays.copyOfRange(originalArray, start, originalArray.length - 1);
 	}

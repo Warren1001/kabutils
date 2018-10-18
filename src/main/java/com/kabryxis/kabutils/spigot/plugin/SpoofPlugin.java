@@ -1,7 +1,6 @@
 package com.kabryxis.kabutils.spigot.plugin;
 
 import com.avaje.ebean.EbeanServer;
-import com.kabryxis.kabutils.concurrent.Threads;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.command.Command;
@@ -22,12 +21,7 @@ import java.util.regex.Pattern;
 
 public class SpoofPlugin implements Plugin {
 	
-	private static Plugin plugin;
-	
-	public static Plugin get() {
-		if(plugin == null) plugin = new SpoofPlugin();
-		return plugin;
-	}
+	public static final Plugin INSTANCE = new SpoofPlugin();
 	
 	private final String name;
 	private final Server server;
@@ -40,7 +34,7 @@ public class SpoofPlugin implements Plugin {
 		this.server = Bukkit.getServer();
 		this.pdf = new PluginDescriptionFile("Spoof", "1", getClass().getPackage().getName() + "." + getClass().getName());
 		this.loader = new SpoofPluginLoader();
-		this.logger = Logger.getLogger("SpoofPlugin");
+		this.logger = Logger.getLogger("Spoof");
 		server.getPluginManager().enablePlugin(this);
 	}
 	
@@ -51,9 +45,7 @@ public class SpoofPlugin implements Plugin {
 	public void onEnable() {}
 	
 	@Override
-	public void onDisable() {
-		Threads.stopThreads();
-	}
+	public void onDisable() {}
 	
 	@Override
 	public String getName() {
