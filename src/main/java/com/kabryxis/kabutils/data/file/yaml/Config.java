@@ -10,6 +10,7 @@ import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.Yaml;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -64,6 +65,7 @@ public class Config extends ConfigSection {
 		return file;
 	}
 	
+	@Nonnull
 	@Override
 	public String getName() {
 		return name;

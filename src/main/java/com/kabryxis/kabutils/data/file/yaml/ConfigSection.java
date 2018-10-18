@@ -6,6 +6,7 @@ import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.data.Objects;
 import org.apache.commons.lang3.Validate;
 
+import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		putAll(map);
 	}
 	
+	@Nullable
 	public String getName() {
 		return name;
 	}
