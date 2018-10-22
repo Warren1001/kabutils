@@ -4,7 +4,6 @@ import com.kabryxis.kabutils.data.Lists;
 import com.kabryxis.kabutils.data.Maps;
 import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.data.Objects;
-import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -38,6 +37,10 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		map.forEach(this::put);
 	}
 	
+	public void putAll(ConfigSection section) {
+		super.putAll(section);
+	}
+	
 	public Map<String, Object> getDeepValues() {
 		Map<String, Object> map = new HashMap<>(this);
 		for(Entry<String, Object> entry : map.entrySet()) {
@@ -62,6 +65,11 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 	public Object put(String path, Object value) {
 		return getCorrectSection(path, true).put0(getCorrectKey(path),
 				value instanceof Map && !(value instanceof ConfigSection) ? new ConfigSection(Maps.convert((Map<?, ?>)value, Object::toString, o -> o)) : value);
+	}
+	
+	public ConfigSection builderPut(String path, Object value) {
+		put(path, value);
+		return this;
 	}
 	
 	@Override
@@ -146,6 +154,11 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		return NumberConversions.toByte(get(path));
 	}
 	
+	public boolean getBoolean(String path) {
+		Boolean bool = get(path);
+		return bool != null && bool;
+	}
+	
 	public int getInt(String path, int def) {
 		return NumberConversions.toInt(get(path), def);
 	}
@@ -168,6 +181,11 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 	
 	public byte getByte(String path, byte def) {
 		return NumberConversions.toByte(get(path), def);
+	}
+	
+	public boolean getBoolean(String path, boolean def) {
+		Boolean bool = get(path);
+		return bool == null ? def : bool;
 	}
 	
 	public int computeIntIfAbsent(String path, int def) {
@@ -204,6 +222,13 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		byte b = getByte(path, def);
 		if(b == def) put(path, b);
 		return b;
+	}
+	
+	public boolean computeBooleanIfAbsent(String path, boolean def) {
+		Boolean bool = get(path);
+		if(bool != null) return bool;
+		put(path, def);
+		return def;
 	}
 	
 	public ConfigSection computeSectionIfAbsent(String path) {
@@ -288,11 +313,6 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		return t;
 	}
 	
-	public <T> List<T> getList(String path) {
-		Object obj = get(path);
-		return obj instanceof List ? Lists.tryCast((List<?>)obj) : null;
-	}
-	
 	public <T> List<T> getList(String path, Class<T> clazz) {
 		Object obj = get(path);
 		return obj instanceof List ? Lists.convert((List<?>)obj, clazz) : null;
@@ -308,10 +328,6 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		return obj instanceof List ? Lists.convert((List<?>)obj, clazz, converter) : null;
 	}
 	
-	public <T> List<T> getList(String path, List<T> def) {
-		return Objects.getFirstNonnull(getList(path), def);
-	}
-	
 	public <T> List<T> getList(String path, Class<T> clazz, List<T> def) {
 		return Objects.getFirstNonnull(getList(path, clazz), def);
 	}
@@ -322,12 +338,6 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 	
 	public <T> List<T> getList(String path, Class<T> clazz, Function<Object, T> converter, List<T> def) {
 		return Objects.getFirstNonnull(getList(path, clazz, converter), def);
-	}
-	
-	public <T> List<T> computeListIfAbsent(String path, List<T> def) {
-		List<T> list = getList(path, def);
-		if(list == def) put(path, list);
-		return list;
 	}
 	
 	public <T> List<T> computeListIfAbsent(String path, Class<T> clazz, List<T> def) {
@@ -350,8 +360,7 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 	
 	@Override
 	public void set(ConfigSection section, String key) {
-		Validate.isTrue(name == null, "this section is already set somewhere, remove it from there first");
-		name = key;
+		if(name == null) name = key;
 	}
 	
 	@Override

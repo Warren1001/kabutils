@@ -22,7 +22,7 @@ public class Items {
 		ItemStack[] cloned = new ItemStack[items.length];
 		for(int i = 0; i < items.length; i++) {
 			ItemStack item = items[i];
-			cloned[i] = item == null ? null : items[i].clone();
+			if(item != null) cloned[i] = item.clone();
 		}
 		return cloned;
 	}
@@ -35,7 +35,7 @@ public class Items {
 	}
 	
 	public static <T> T getTagData(ItemStack item, String key, Class<T> clazz) {
-		if(item == null) return null;
+		if(!Items.exists(item)) return null;
 		WRAPPED_ITEM_STACK.setHandle(item);
 		WrappedNBTTagCompound tag = WRAPPED_ITEM_STACK.getTag(false);
 		if(tag == null) return null;

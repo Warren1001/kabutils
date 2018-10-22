@@ -111,12 +111,11 @@ public class Config extends ConfigSection {
 				e.printStackTrace();
 				return null;
 			}
+			if(clazz.isInstance(obj)) return clazz.cast(obj);
 			if(loadConfigIfDefault) {
-				if(clazz.isInstance(obj)) return clazz.cast(obj);
 				if(obj instanceof ConfigSection) putAll((ConfigSection)obj);
 				else if(obj instanceof Map) putAll(Maps.convert((Map<?, ?>)obj, Object::toString, o -> o));
 			}
-			else if(clazz.isInstance(obj)) return clazz.cast(obj);
 		}
 		return null;
 	}
@@ -137,5 +136,10 @@ public class Config extends ConfigSection {
 		return file.exists();
 	}
 	
+	@Override
+	public Config builderPut(String path, Object value) {
+		put(path, value);
+		return this;
+	}
 	
 }

@@ -17,7 +17,7 @@ public class Lists {
 	
 	public static <T> List<T> convert(List<?> list, Class<T> clazz) {
 		if(list == null) return null;
-		List<T> newList = tryCast(list);
+		List<T> newList = tryCast(list, clazz);
 		if(newList != null) return newList;
 		if(list.isEmpty()) return new ArrayList<>();
 		newList = new ArrayList<>(list.size());
@@ -30,27 +30,21 @@ public class Lists {
 	
 	public static <T> List<T> convert(List<?> list, Function<Object, T> converter) {
 		if(list == null) return null;
-		List<T> newList = tryCast(list);
-		if(newList != null) return newList;
 		if(list.isEmpty()) return new ArrayList<>();
-		return list.stream().map(converter::apply).collect(Collectors.toList());
+		return list.stream().map(converter).collect(Collectors.toList());
 	}
 	
 	public static <T> List<T> convert(List<?> list, Class<T> clazz, Function<Object, T> converter) {
 		if(list == null) return null;
-		List<T> newList = tryCast(list);
+		List<T> newList = tryCast(list, clazz);
 		if(newList != null) return newList;
 		if(list.isEmpty()) return new ArrayList<>();
 		return list.stream().map(obj -> clazz.isInstance(obj) ? clazz.cast(obj) : converter.apply(obj)).collect(Collectors.toList());
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static <T> List<T> tryCast(List<?> list) {
-		List<T> newList = null;
-		try {
-			newList = (List<T>)list;
-		} catch(ClassCastException ignore) {}
-		return newList;
+	public static <T> List<T> tryCast(List<?> list, Class<T> clazz) {
+		return list.stream().allMatch(clazz::isInstance) ? (List<T>)list : null;
 	}
 	
 }

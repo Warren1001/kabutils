@@ -17,11 +17,12 @@ public class ItemBuilder implements Cloneable {
 	
 	private static long UID_COUNTER = 1L;
 	
-	public static final ItemBuilder DEFAULT = new ItemBuilder(true).amount(1).prefix("").name("");
 	/**
-	 * This can only be used in ItemBuilder#reset(ItemBuilder) method or ItemStack#clone. Using any standard methods will have no effect.
+	 * This can only be used in #new(ItemBuilder) method or #reset(ItemBuilder) on a different ItemBuilder object.
+	 * Using any standard methods will have no effect.
+	 * Using #clone or #build will throw UnsupportedOperationException.
 	 */
-	public static final ItemBuilder EMPTY = new ItemBuilder(true) {
+	public static final ItemBuilder EMPTY = new ItemBuilder((ItemBuilder)null) {
 		
 		@Override
 		public ItemBuilder type(Material type) {
@@ -64,7 +65,7 @@ public class ItemBuilder implements Cloneable {
 		}
 		
 		@Override
-		public ItemBuilder lore(List<String> lines) {
+		public ItemBuilder lore(Iterable<String> lines) {
 			return this;
 		}
 		
@@ -74,7 +75,7 @@ public class ItemBuilder implements Cloneable {
 		}
 		
 		@Override
-		public ItemBuilder lore(List<String> lines, boolean append) {
+		public ItemBuilder lore(Iterable<String> lines, boolean append) {
 			return this;
 		}
 		
@@ -104,18 +105,24 @@ public class ItemBuilder implements Cloneable {
 		}
 		
 		@Override
+		public ItemBuilder clone() {
+			throw new UnsupportedOperationException("cannot clone empty ItemBuilder");
+		}
+		
+		@Override
 		public ItemStack build() {
-			throw new UnsupportedOperationException("Cannot generate ItemStack from designated empty ItemBuilder");
+			throw new UnsupportedOperationException("cannot generate ItemStack from empty ItemBuilder");
 		}
 		
 	};
+	public static final ItemBuilder DEFAULT = new ItemBuilder(EMPTY).amount(1).prefix("").name("");
 	
-	public ItemBuilder(boolean empty) {
-		if(!empty) reset();
+	public ItemBuilder(ItemBuilder base) {
+		if(base != null) reset(base);
 	}
 	
 	public ItemBuilder() {
-		this(false);
+		this(DEFAULT);
 	}
 	
 	public ItemBuilder(Material type) {
@@ -129,7 +136,7 @@ public class ItemBuilder implements Cloneable {
 	}
 	
 	public ItemBuilder(ConfigSection section) {
-		this(section.get("type"), section.getInt("amount", 1));
+		this(section.getEnum("type", Material.class), section.getInt("amount", 1));
 		String name = section.get("name");
 		if(name != null) name(name);
 		List<String> lore = section.getList("lore", String.class);
@@ -204,12 +211,12 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
-	public ItemBuilder lore(List<String> lines) {
+	public ItemBuilder lore(Iterable<String> lines) {
 		return lore(lines, false);
 	}
 	
-	public ItemBuilder lore(List<String> lines, boolean append) {
-		if(lore == null) lore = new ArrayList<>(lines.size());
+	public ItemBuilder lore(Iterable<String> lines, boolean append) {
+		if(lore == null) lore = new ArrayList<>();
 		else if(!append) lore.clear();
 		lines.forEach(line -> lore.add(ChatColor.translateAlternateColorCodes('&', line)));
 		return this;
@@ -317,45 +324,52 @@ public class ItemBuilder implements Cloneable {
 		} catch(CloneNotSupportedException e) {
 			throw new RuntimeException(e);
 		}
-		newBuilder.type = type;
-		newBuilder.amount = amount;
-		newBuilder.data = data;
-		newBuilder.prefix = prefix;
-		newBuilder.name = name;
 		if(lore != null) newBuilder.lore = new ArrayList<>(lore);
 		if(enchants != null) newBuilder.enchants = new HashMap<>(enchants);
 		if(flags != null) newBuilder.flags = new HashSet<>(flags);
 		if(custom != null) newBuilder.custom = new HashMap<>(custom);
-		newBuilder.uidKey = uidKey;
 		return newBuilder;
 	}
 	
 	public boolean isOf(ItemStack itemStack, ItemCompareFlag... flags) {
 		for(ItemCompareFlag compareFlag : flags) {
-			switch(compareFlag) {
-				case TYPE:
-					if(type != itemStack.getType()) return false;
-					break;
-				case DATA:
-					if(data != itemStack.getData().getData()) return false;
-					break;
-				case NAME:
-					if(!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() ||
-							!itemStack.getItemMeta().getDisplayName().equals(prefix + name)) return false;
-					break;
-				case COLORLESS_NAME:
-					if(!itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() ||
-							!ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()).equals(ChatColor.stripColor(prefix + name))) return false;
-					break;
-				case AMOUNT:
-					if(amount != itemStack.getAmount()) return false;
-					break;
-				case AMOUNT_MIN:
-					if(itemStack.getAmount() < amount) return false;
-					break;
-			}
+			if(!isOf(itemStack, compareFlag)) return false;
 		}
 		return true;
+	}
+	
+	public boolean isOf(ItemStack itemStack, Iterable<ItemCompareFlag> flags) {
+		for(ItemCompareFlag compareFlag : flags) {
+			if(!isOf(itemStack, compareFlag)) return false;
+		}
+		return true;
+	}
+	
+	public boolean isOf(ItemStack itemStack, ItemCompareFlag compareFlag) {
+		if(!Items.exists(itemStack)) return false;
+		switch(compareFlag) {
+			case TYPE:
+				if(type == itemStack.getType()) return true;
+				break;
+			case DATA:
+				if(data == itemStack.getData().getData()) return true;
+				break;
+			case NAME:
+				if(itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() &&
+						itemStack.getItemMeta().getDisplayName().equals(prefix + name)) return true;
+				break;
+			case COLORLESS_NAME:
+				if(itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() &&
+						ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()).equals(ChatColor.stripColor(prefix + name))) return true;
+				break;
+			case AMOUNT:
+				if(amount == itemStack.getAmount()) return true;
+				break;
+			case AMOUNT_MIN:
+				if(itemStack.getAmount() >= amount) return true;
+				break;
+		}
+		return false;
 	}
 	
 	public enum ItemCompareFlag {
