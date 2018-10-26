@@ -4,6 +4,10 @@ import com.kabryxis.kabutils.data.Lists;
 import com.kabryxis.kabutils.data.Maps;
 import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.data.Objects;
+import com.kabryxis.kabutils.spigot.world.Locations;
+import com.kabryxis.kabutils.spigot.world.WorldLoader;
+import org.bukkit.Location;
+import org.bukkit.World;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -298,6 +302,27 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 		return t;
 	}
 	
+	public Location getLocation(String path) {
+		Object obj = get(path);
+		if(obj instanceof Location) return (Location)obj;
+		if(obj instanceof String) Locations.deserialize((String)obj);
+		return null;
+	}
+	
+	public Location getLocation(String path, WorldLoader worldLoader) {
+		Object obj = get(path);
+		if(obj instanceof Location) return (Location)obj;
+		if(obj instanceof String) return Locations.deserialize((String)obj, worldLoader);
+		return null;
+	}
+	
+	public Location getLocation(String path, World world) {
+		Object obj = get(path);
+		if(obj instanceof Location) return (Location)obj;
+		if(obj instanceof String) return Locations.deserialize((String)obj, world);
+		return null;
+	}
+	
 	public <T> T getCustom(String path, Class<T> clazz) {
 		String string = get(path);
 		return string == null ? null : (DESERIALIZERS.containsKey(clazz) ? clazz.cast(DESERIALIZERS.get(clazz).apply(string)) : null);
@@ -314,8 +339,18 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 	}
 	
 	public <T> List<T> getList(String path, Class<T> clazz) {
-		Object obj = get(path);
-		return obj instanceof List ? Lists.convert((List<?>)obj, clazz) : null;
+		List<?> genericList = get(path);
+		if(genericList != null) {
+			if(DESERIALIZERS.containsKey(clazz)) {
+				List<String> serializedList = Lists.convert(genericList, String.class);
+				if(serializedList != null) {
+					Function<String, ?> deserializer = DESERIALIZERS.get(clazz);
+					return serializedList.stream().map(string -> clazz.cast(deserializer.apply(string))).collect(Collectors.toList());
+				}
+			}
+			return Lists.convert(genericList, clazz);
+		}
+		return null;
 	}
 	
 	public <T> List<T> getList(String path, Function<Object, T> converter) {
@@ -355,6 +390,33 @@ public class ConfigSection extends HashMap<String, Object> implements SetListene
 	public <T> List<T> computeListIfAbsent(String path, Class<T> clazz, Function<Object, T> converter, List<T> def) {
 		List<T> list = getList(path, clazz, converter, def);
 		if(list == def) put(path, list);
+		return list;
+	}
+	
+	public List<Location> getLocationList(String path) {
+		List<Location> list = getList(path, Location.class);
+		if(list == null) {
+			List<String> serializedList = getList(path, String.class);
+			if(serializedList != null) return serializedList.stream().map(Locations::deserialize).collect(Collectors.toList());
+		}
+		return list;
+	}
+	
+	public List<Location> getLocationList(String path, WorldLoader worldLoader) {
+		List<Location> list = getList(path, Location.class);
+		if(list == null) {
+			List<String> serializedList = getList(path, String.class);
+			if(serializedList != null) return serializedList.stream().map(string -> Locations.deserialize(string, worldLoader)).collect(Collectors.toList());
+		}
+		return list;
+	}
+	
+	public List<Location> getLocationList(String path, World world) {
+		List<Location> list = getList(path, Location.class);
+		if(list == null) {
+			List<String> serializedList = getList(path, String.class);
+			if(serializedList != null) return serializedList.stream().map(string -> Locations.deserialize(string, world)).collect(Collectors.toList());
+		}
 		return list;
 	}
 	

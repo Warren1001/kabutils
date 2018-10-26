@@ -26,6 +26,13 @@ public class RandomArrayList<E> implements Collection<E> {
 		this.currNoRepeat = 0;
 	}
 	
+	public RandomArrayList(int noRepeat, List<E> list) {
+		this.list = new ArrayList<>(list);
+		this.used = new ArrayList<>();
+		this.noRepeat = noRepeat;
+		update();
+	}
+	
 	public int getCurrNoRepeat() {
 		return currNoRepeat;
 	}

@@ -14,4 +14,9 @@ public class Files {
 		}
 	}
 	
+	public static String getSimpleName(File file) {
+		String fileName = file.getName();
+		return fileName.substring(0, fileName.lastIndexOf('.'));
+	}
+	
 }
