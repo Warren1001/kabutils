@@ -3,13 +3,14 @@ package com.kabryxis.kabutils.spigot.serialization;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.kabutils.data.file.yaml.serialization.ConfigSectionSerializer;
+import com.kabryxis.kabutils.data.file.yaml.serialization.SerializationType;
+import com.kabryxis.kabutils.data.file.yaml.serialization.Serializer;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
 import org.bukkit.generator.ChunkGenerator;
 
-public class WorldCreatorSerializer implements ConfigSectionSerializer {
+public class WorldCreatorSerializer implements Serializer {
 	
 	private static final BiMap<String, ChunkGenerator> chunkGenerators = HashBiMap.create();
 	
@@ -20,12 +21,17 @@ public class WorldCreatorSerializer implements ConfigSectionSerializer {
 	protected Class<?>[] classes = { WorldCreator.class };
 	
 	@Override
-	public String prefix() {
+	public String getPrefix() {
 		return "wc";
 	}
 	
 	@Override
-	public Class<?>[] classes() {
+	public SerializationType getType() {
+		return SerializationType.SECTION;
+	}
+	
+	@Override
+	public Class<?>[] getClasses() {
 		return classes;
 	}
 	
@@ -41,7 +47,8 @@ public class WorldCreatorSerializer implements ConfigSectionSerializer {
 	}
 	
 	@Override
-	public Object deserialize(ConfigSection section) {
+	public WorldCreator deserialize(Object obj) {
+		ConfigSection section = (ConfigSection)obj;
 		WorldCreator worldCreator = new WorldCreator(section.get("world-name"));
 		worldCreator.environment(section.getEnum("environment", World.Environment.class));
 		worldCreator.type(section.getEnum("type", WorldType.class));

@@ -5,39 +5,11 @@ import net.minecraft.server.v1_8_R1.*;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R1.entity.CraftEnderDragon;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-import java.util.Map;
-
 public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMonster, PetDragon {
-	
-	public static boolean isPetDragon(org.bukkit.entity.Entity entity) {
-		return ((CraftEntity)entity).getHandle() instanceof PetDragon;
-	}
-	
-	public static void register() {
-		String name = "EnderDragon";
-		Class<?> clazz = PetDragonv1_8_R1.class;
-		((Map<String, Class<?>>)getPrivateField("c", EntityTypes.class, null)).put(name, clazz);
-		((Map<Class<?>, String>)getPrivateField("d", EntityTypes.class, null)).put(clazz, name);
-		((Map<Class<?>, Integer>)getPrivateField("f", EntityTypes.class, null)).put(clazz, Integer.valueOf(63));
-	}
-	
-	private static Object getPrivateField(String fieldName, Class<?> clazz, Object object) {
-		Object o = null;
-		try {
-			Field field = clazz.getDeclaredField(fieldName);
-			field.setAccessible(true);
-			o = field.get(object);
-		}
-		catch(NoSuchFieldException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
-		return o;
-	}
 	
 	private final Player owner;
 	private final double centerX, centerY, centerZ;
@@ -51,8 +23,8 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	}
 	
 	@Override
-	public CraftEntity getBukkitEntity() {
-		return super.getBukkitEntity();
+	public CraftEnderDragon getBukkitEntity() {
+		return (CraftEnderDragon)super.getBukkitEntity();
 	}
 	
 	public double a;
@@ -366,6 +338,11 @@ public class PetDragonv1_8_R1 extends EntityInsentient implements IComplex, IMon
 	@Override
 	public int getExpReward() {
 		return 0;
+	}
+	
+	@Override
+	public void forceRemove() {
+		super.die();
 	}
 	
 }

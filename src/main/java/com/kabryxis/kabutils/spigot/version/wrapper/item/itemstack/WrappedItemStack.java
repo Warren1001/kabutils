@@ -18,15 +18,15 @@ public interface WrappedItemStack extends Wrappable {
 	Class<WrappedItemStackv1_12_R1> v1_12_R1 = WrappedItemStackv1_12_R1.class;
 	
 	static WrappedItemStack newInstance() {
-		return WrapperFactory.getSupplier(WrappedItemStack.class, Object.class).apply(null);
+		return WrapperFactory.get(WrappedItemStack.class, new Class[] { Object.class }, new Object[1]);
 	}
 	
 	static WrappedItemStack newInstance(ItemStack itemStack) {
-		return WrapperFactory.getSupplier(WrappedItemStack.class, Object.class).apply(itemStack);
+		return WrapperFactory.get(WrappedItemStack.class, new Class[] { Object.class }, new Object[] { itemStack });
 	}
 	
 	static WrappedItemStack newInstance(WrappedNBTTagCompound tag) {
-		return WrapperFactory.getSupplier(WrappedItemStack.class, Object.class).apply(tag);
+		return WrapperFactory.get(WrappedItemStack.class, new Class[] { Object.class }, new Object[] { tag });
 	}
 	
 	boolean isClone();

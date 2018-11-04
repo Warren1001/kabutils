@@ -1,19 +1,19 @@
 package com.kabryxis.kabutils.data.file.yaml.serialization;
 
-public interface Serializer<T> {
+public interface Serializer {
 	
-	String prefix();
+	String getPrefix();
 	
-	default Class<?>[] classes() {
+	SerializationType getType();
+	
+	default Class<?>[] getClasses() {
 		return null;
 	}
 	
-	default T serialize(Object obj) {
-		return null;
-	}
+	Object deserialize(Object obj);
 	
-	default Object deserialize(T obj) {
-		return obj;
+	default Object serialize(Object obj) {
+		return null;
 	}
 	
 }

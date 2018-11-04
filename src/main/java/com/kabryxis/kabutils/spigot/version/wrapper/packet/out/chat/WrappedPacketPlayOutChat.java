@@ -13,7 +13,7 @@ public interface WrappedPacketPlayOutChat extends WrappedPacket {
 	WrappedPacketPlayOutChat EMPTY = newInstance("");
 	
 	static WrappedPacketPlayOutChat newInstance(String message) {
-		return WrapperFactory.getSupplier(WrappedPacketPlayOutChat.class, Object.class).apply(message);
+		return WrapperFactory.get(WrappedPacketPlayOutChat.class, new Class[] { Object.class }, new Object[] { message });
 	}
 	
 	static WrappedPacketPlayOutChat newInstance() {

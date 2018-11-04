@@ -44,8 +44,7 @@ public class Data {
 		public void run() {
 			try {
 				Files.write(path, data);
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}
@@ -66,8 +65,7 @@ public class Data {
 		public void run() {
 			try {
 				future.accept(Files.readAllBytes(path));
-			}
-			catch(IOException e) {
+			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}

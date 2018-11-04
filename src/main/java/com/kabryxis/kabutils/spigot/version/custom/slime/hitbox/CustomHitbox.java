@@ -1,43 +1,35 @@
 package com.kabryxis.kabutils.spigot.version.custom.slime.hitbox;
 
+import com.kabryxis.kabutils.spigot.version.custom.CustomEntity;
 import com.kabryxis.kabutils.spigot.version.custom.CustomEntityRegistry;
-import net.minecraft.server.v1_8_R3.Entity;
-import net.minecraft.server.v1_8_R3.EntitySlime;
-import net.minecraft.server.v1_8_R3.World;
+import com.kabryxis.kabutils.spigot.version.custom.slime.hitbox.impl.CustomHitboxv1_8_R3;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import org.bukkit.Location;
-import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftSlime;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Slime;
 
-public class CustomHitbox extends EntitySlime {
+public interface CustomHitbox extends CustomEntity {
 	
-	public static void register() {
-		CustomEntityRegistry.registerEntity("Slime", CustomHitbox.class);
+	Class<? extends CustomHitbox> v1_8_R3 = CustomHitboxv1_8_R3.class;
+	Class<? extends CustomHitbox> IMPLEMENTATION = WrapperFactory.getImplementationClass(CustomHitbox.class);
+	
+	static void register() {
+		CustomEntityRegistry.registerEntity("Slime", IMPLEMENTATION);
 	}
 	
-	public CustomHitbox(Location loc) {
-		this(((CraftWorld)loc.getWorld()).getHandle(), loc.getX(), loc.getY(), loc.getZ());
+	static CustomHitbox spawn(Location loc, String ownerName) {
+		return WrapperFactory.get(CustomHitbox.class, new Class[] { Location.class, String.class }, new Object[] { loc, ownerName });
 	}
 	
-	public CustomHitbox(World world, double x, double y, double z) {
-		super(world);
-		setSize(2);
-		setLocation(x, y, z, 0F, 0F);
-		setInvisible(true);
-		setCustomNameVisible(false);
-		setCustomName("Kabryxis");
-		world.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
+	static boolean is(Entity entity) {
+		return WrapperFactory.isInstance(entity, CustomHitbox.class);
 	}
 	
-	@Override // move method
-	public void t_() {}
+	static CustomHitbox cast(Entity entity) {
+		return WrapperFactory.castHandle(entity, CustomHitbox.class);
+	}
 	
 	@Override
-	public void collide(Entity entity) {}
-	
-	@Override
-	public CraftSlime getBukkitEntity() {
-		return (CraftSlime)super.getBukkitEntity();
-	}
+	Slime getBukkitEntity();
 	
 }

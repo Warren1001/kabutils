@@ -63,6 +63,10 @@ public abstract class GamePlayer {
 		Bukkit.getOnlinePlayers().forEach(p -> p.hidePlayer(player));
 	}
 	
+	public void sendMessage(String message, Object... objs) {
+		sendMessage(String.format(message, objs));
+	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		return obj instanceof GamePlayer && ((GamePlayer)obj).uuid.equals(uuid);
@@ -296,6 +300,10 @@ public abstract class GamePlayer {
 		
 	public void damage(double damage) {
 		player.damage(damage);
+	}
+	
+	public void damage(double damage, Entity damager) {
+		player.damage(damage, damager);
 	}
 		
 	public double getHealth() {

@@ -16,7 +16,7 @@ public interface WrappedMerchantRecipe extends Wrappable {
 	Class<WrappedMerchantRecipev1_12_R1> v1_12_R1 = WrappedMerchantRecipev1_12_R1.class;
 	
 	static WrappedMerchantRecipe newInstance(Object buyItem1, Object buyItem2, Object buyItem3, int uses, int maxUses) {
-		return WrapperFactory.getSupplier(WrappedMerchantRecipe.class, Object[].class).apply(new Object[] {buyItem1, buyItem2, buyItem3, uses, maxUses});
+		return WrapperFactory.get(WrappedMerchantRecipe.class, new Class[] { Object[].class }, new Object[] { new Object[] {buyItem1, buyItem2, buyItem3, uses, maxUses} });
 	}
 	
 	Object getBuyingItem1();

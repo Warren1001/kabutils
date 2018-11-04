@@ -42,7 +42,7 @@ public class DelayedActionThread extends PausableThread {
 	public void run() {
 		while(isRunning()) {
 			pauseCheck();
-			BukkitTaskManager.start(action, plugin);
+			BukkitTaskManager.start(plugin, action);
 			Threads.sleep(50);
 		}
 		clear();

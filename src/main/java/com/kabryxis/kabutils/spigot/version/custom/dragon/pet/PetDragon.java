@@ -1,12 +1,40 @@
 package com.kabryxis.kabutils.spigot.version.custom.dragon.pet;
 
+import com.kabryxis.kabutils.spigot.version.custom.CustomEntity;
+import com.kabryxis.kabutils.spigot.version.custom.CustomEntityRegistry;
+import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl.PetDragonv1_8_R1;
+import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl.PetDragonv1_8_R3;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
+import org.bukkit.Location;
+import org.bukkit.entity.EnderDragon;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
-public interface PetDragon {
+public interface PetDragon extends CustomEntity {
+	
+	Class<? extends PetDragon> v1_8_R1 = PetDragonv1_8_R1.class;
+	Class<? extends PetDragon> v1_8_R3 = PetDragonv1_8_R3.class;
+	Class<? extends PetDragon> IMPLEMENTATION_CLASS = WrapperFactory.getImplementationClass(PetDragon.class);
+	
+	static void register() {
+		CustomEntityRegistry.registerEntity("EnderDragon", IMPLEMENTATION_CLASS);
+	}
+	
+	static PetDragon spawn(Location spawn, Player owner, Location center) {
+		return WrapperFactory.get(PetDragon.class, new Class[] { Object[].class }, new Object[] { new Object[] { spawn, owner, center } });
+	}
+	
+	static boolean is(Entity entity) {
+		return WrapperFactory.isInstance(entity, PetDragon.class);
+	}
+	
+	static PetDragon cast(Entity entity) {
+		return WrapperFactory.castHandle(entity, PetDragon.class);
+	}
 	
 	void setTarget(Player player);
 	
-	Entity getBukkitEntity();
+	@Override
+	EnderDragon getBukkitEntity();
 	
 }

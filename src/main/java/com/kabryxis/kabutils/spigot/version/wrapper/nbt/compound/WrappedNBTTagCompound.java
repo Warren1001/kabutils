@@ -19,7 +19,7 @@ public interface WrappedNBTTagCompound extends WrappedNBTBase {
 	Class<WrappedNBTTagCompoundv1_12_R1> v1_12_R1 = WrappedNBTTagCompoundv1_12_R1.class;
 	
 	static WrappedNBTTagCompound newInstance() {
-		return WrapperFactory.getSupplier(WrappedNBTTagCompound.class, Object.class).apply(null);
+		return WrapperFactory.get(WrappedNBTTagCompound.class, new Class[] { Object.class }, new Object[1]);
 	}
 	
 	void savePlayerData(File playerFile);

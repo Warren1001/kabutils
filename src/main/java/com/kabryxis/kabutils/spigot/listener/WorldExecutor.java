@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils.spigot.event;
+package com.kabryxis.kabutils.spigot.listener;
 
 import org.bukkit.World;
 import org.bukkit.event.Event;

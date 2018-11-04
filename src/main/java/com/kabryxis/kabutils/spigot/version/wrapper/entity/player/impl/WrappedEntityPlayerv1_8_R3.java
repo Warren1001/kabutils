@@ -92,4 +92,9 @@ public class WrappedEntityPlayerv1_8_R3 implements WrappedEntityPlayer {
 		return entityPlayer.ping;
 	}
 	
+	@Override
+	public boolean isFireProof() {
+		return entityPlayer.isFireProof();
+	}
+	
 }

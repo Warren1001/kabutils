@@ -14,7 +14,7 @@ public interface WrappedEntityPlayer extends Wrappable {
 	Class<WrappedEntityPlayerv1_8_R3> v1_8_R3 = WrappedEntityPlayerv1_8_R3.class;
 	
 	static WrappedEntityPlayer newInstance(Player player) {
-		return WrapperFactory.get(WrappedEntityPlayer.class, Object.class, player);
+		return WrapperFactory.get(WrappedEntityPlayer.class, new Class[] { Object.class }, new Object[] { player });
 	}
 	
 	static WrappedEntityPlayer newInstance() {
@@ -36,5 +36,7 @@ public interface WrappedEntityPlayer extends Wrappable {
 	double getLocZ();
 	
 	int getPing();
+	
+	boolean isFireProof();
 	
 }

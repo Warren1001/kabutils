@@ -44,4 +44,10 @@ public class Items {
 		return obj;
 	}
 	
+	public static <T> T getTagData(ItemStack item, String key, Class<T> clazz, T def) {
+		T t = getTagData(item, key, clazz);
+		if(t == null) t = def;
+		return t;
+	}
+	
 }

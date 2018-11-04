@@ -21,7 +21,8 @@ public enum ResetFlag {
 	FLIGHT(player -> {
 		player.setAllowFlight(false);
 		player.setFlying(false);
-	});
+	}),
+	FIRE(player -> player.setFireTicks(0));
 	
 	private final Consumer<? super GamePlayer> action;
 	

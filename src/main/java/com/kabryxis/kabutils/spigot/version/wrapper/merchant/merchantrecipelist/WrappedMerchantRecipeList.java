@@ -23,7 +23,7 @@ public interface WrappedMerchantRecipeList extends Wrappable {
 	}
 	
 	static WrappedMerchantRecipeList newInstance(boolean newEmpty) {
-		return WrapperFactory.get(WrappedMerchantRecipeList.class, boolean.class, newEmpty);
+		return WrapperFactory.get(WrappedMerchantRecipeList.class, new Class[] { boolean.class }, new Object[] { newEmpty });
 	}
 	
 	List<WrappedMerchantRecipe> getRecipes();

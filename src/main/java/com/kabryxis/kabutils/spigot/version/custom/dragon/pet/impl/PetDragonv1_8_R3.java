@@ -1,24 +1,15 @@
 package com.kabryxis.kabutils.spigot.version.custom.dragon.pet.impl;
 
-import com.kabryxis.kabutils.spigot.version.custom.CustomEntityRegistry;
 import com.kabryxis.kabutils.spigot.version.custom.dragon.pet.PetDragon;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEnderDragon;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMonster, PetDragon {
-	
-	public static boolean isPetDragon(org.bukkit.entity.Entity entity) {
-		return ((CraftEntity)entity).getHandle() instanceof PetDragon;
-	}
-	
-	public static void register() {
-		CustomEntityRegistry.registerEntity("EnderDragon", PetDragonv1_8_R3.class);
-	}
 	
 	private final Player owner;
 	private final double centerX, centerY, centerZ;
@@ -32,8 +23,8 @@ public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMon
 	}
 	
 	@Override
-	public CraftEntity getBukkitEntity() {
-		return super.getBukkitEntity();
+	public CraftEnderDragon getBukkitEntity() {
+		return (CraftEnderDragon)super.getBukkitEntity();
 	}
 	
 	public double a;
@@ -347,6 +338,11 @@ public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMon
 	@Override
 	public int getExpReward() {
 		return 0;
+	}
+	
+	@Override
+	public void forceRemove() {
+		super.die();
 	}
 	
 }

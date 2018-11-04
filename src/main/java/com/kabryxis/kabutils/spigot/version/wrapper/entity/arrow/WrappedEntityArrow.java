@@ -11,7 +11,7 @@ public interface WrappedEntityArrow extends Wrappable {
 	Class<WrappedEntityArrowv1_8_R3> v1_8_R3 = WrappedEntityArrowv1_8_R3.class;
 	
 	static WrappedEntityArrow newInstance(Arrow arrow) {
-		return WrapperFactory.get(WrappedEntityArrow.class, Arrow.class, arrow);
+		return WrapperFactory.get(WrappedEntityArrow.class, new Class[] { Arrow.class }, new Object[] { arrow });
 	}
 	
 	Block getHitBlock();

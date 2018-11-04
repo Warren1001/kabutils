@@ -1,9 +1,7 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
 import com.kabryxis.kabutils.data.Maps;
-import com.kabryxis.kabutils.data.file.yaml.serialization.ConfigSectionSerializer;
-import com.kabryxis.kabutils.data.file.yaml.serialization.MapSerializer;
-import com.kabryxis.kabutils.data.file.yaml.serialization.StringSerializer;
+import com.kabryxis.kabutils.data.file.yaml.serialization.Serializer;
 import org.yaml.snakeyaml.constructor.SafeConstructor;
 import org.yaml.snakeyaml.error.YAMLException;
 import org.yaml.snakeyaml.nodes.Node;
@@ -22,27 +20,29 @@ public class KabYamlConstructor extends SafeConstructor {
 		yamlConstructors.put(Tag.MAP, configSectionConstructor);
 	}
 	
-	public void registerSerializer(StringSerializer serializer) {
-		stringConstructor.stringConstructors.put(String.format("%s%s", serializer.prefix(), Config.CUSTOM_INDICATOR), serializer);
-	}
-	
-	public void registerSerializer(MapSerializer serializer) {
-		configSectionConstructor.mapConstructors.put(serializer.prefix(), serializer);
-	}
-	
-	public void registerSerializer(ConfigSectionSerializer serializer) {
-		configSectionConstructor.configSectionConstructors.put(serializer.prefix(), serializer);
+	public void registerSerializer(Serializer serializer) {
+		switch(serializer.getType()) {
+			case STRING:
+				stringConstructor.stringConstructors.put(String.format("%s%s", serializer.getPrefix(), Config.CUSTOM_INDICATOR), serializer);
+				break;
+			case MAP:
+				configSectionConstructor.mapConstructors.put(serializer.getPrefix(), serializer);
+				break;
+			case SECTION:
+				configSectionConstructor.configSectionConstructors.put(serializer.getPrefix(), serializer);
+				break;
+		}
 	}
 	
 	protected class ConstructCustomString extends ConstructYamlStr {
 		
-		protected Map<String, StringSerializer> stringConstructors = new HashMap<>();
+		protected Map<String, Serializer> stringConstructors = new HashMap<>();
 		
 		@Override
 		public Object construct(Node node) {
 			if(node.isTwoStepsConstruction()) throw new YAMLException(String.format("Unexpected referential mapping structure. Node: %s", node));
 			String string = (String)super.construct(node);
-			for(Map.Entry<String, StringSerializer> entry : stringConstructors.entrySet()) {
+			for(Map.Entry<String, Serializer> entry : stringConstructors.entrySet()) {
 				if(string.startsWith(entry.getKey())) {
 					Object obj;
 					try {
@@ -66,7 +66,7 @@ public class KabYamlConstructor extends SafeConstructor {
 	
 	protected class ConstructCustomMap extends ConstructYamlMap {
 		
-		protected Map<String, MapSerializer> mapConstructors = new HashMap<>();
+		protected Map<String, Serializer> mapConstructors = new HashMap<>();
 		
 		@Override
 		public Object construct(Node node) {
@@ -74,7 +74,7 @@ public class KabYamlConstructor extends SafeConstructor {
 			Map<String, Object> map = Maps.convert((Map<?, ?>)super.construct(node), Object::toString, o -> o);
 			Object key = map.get(Config.CUSTOM_INDICATOR);
 			if(key instanceof String) {
-				MapSerializer constructor = mapConstructors.get(key);
+				Serializer constructor = mapConstructors.get(key);
 				if(constructor != null) {
 					Object removed = map.remove(Config.CUSTOM_INDICATOR);
 					Object obj = null;
@@ -99,7 +99,7 @@ public class KabYamlConstructor extends SafeConstructor {
 	
 	protected class ConstructCustomConfigSection extends ConstructCustomMap {
 		
-		protected Map<String, ConfigSectionSerializer> configSectionConstructors = new HashMap<>();
+		protected Map<String, Serializer> configSectionConstructors = new HashMap<>();
 		
 		@Override
 		public Object construct(Node node) {
@@ -109,7 +109,7 @@ public class KabYamlConstructor extends SafeConstructor {
 				ConfigSection section = (ConfigSection)obj;
 				Object key = section.get(Config.CUSTOM_INDICATOR);
 				if(key instanceof String) {
-					ConfigSectionSerializer constructor = configSectionConstructors.get(key);
+					Serializer constructor = configSectionConstructors.get(key);
 					if(constructor != null) {
 						Object removed = section.remove(Config.CUSTOM_INDICATOR);
 						Object serialized = null;

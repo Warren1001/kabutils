@@ -1,8 +1,11 @@
 package com.kabryxis.kabutils.spigot.version.custom;
 
 import com.kabryxis.kabutils.spigot.version.Version;
+import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
 import com.kabryxis.kabutils.utility.ReflectionHelper;
+import org.bukkit.entity.Entity;
 
+import java.util.Collection;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
@@ -24,6 +27,14 @@ public class CustomEntityRegistry {
 		classByName.put(entityName, entityClass);
 		nameByClass.put(entityClass, entityName);
 		idByClass.put(entityClass, idByClass.get(oldClass));
+	}
+	
+	public static void removeAll(Collection<Entity> entities) {
+		for(Entity entity : entities) {
+			CustomEntity customEntity = WrapperFactory.castHandle(entity, CustomEntity.class);
+			if(customEntity != null) customEntity.forceRemove();
+			else entity.remove();
+		}
 	}
 	
 }

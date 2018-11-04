@@ -30,13 +30,12 @@ public class NumberConversions {
 	
 	public static int toInt(Object obj, int def) {
 		if(obj instanceof Number) return ((Number)obj).intValue();
-		else {
+		else if(obj != null) {
 			try {
 				return Integer.valueOf(obj.toString());
-			} catch(NumberFormatException | NullPointerException ignore) {
-				return def;
-			}
+			} catch(NumberFormatException ignore) {}
 		}
+		return def;
 	}
 	
 	public static int toInt(Object obj) {
@@ -45,13 +44,12 @@ public class NumberConversions {
 	
 	public static float toFloat(Object obj, float def) {
 		if(obj instanceof Number) return ((Number)obj).floatValue();
-		else {
+		else if(obj != null) {
 			try {
 				return Float.valueOf(obj.toString());
-			} catch(NumberFormatException | NullPointerException ignore) {
-				return def;
-			}
+			} catch(NumberFormatException ignore) {}
 		}
+		return def;
 	}
 	
 	public static float toFloat(Object obj) {
@@ -60,13 +58,12 @@ public class NumberConversions {
 	
 	public static double toDouble(Object obj, double def) {
 		if(obj instanceof Number) return ((Number)obj).doubleValue();
-		else {
+		else if(obj != null) {
 			try {
 				return Double.valueOf(obj.toString());
-			} catch(NumberFormatException | NullPointerException ignore) {
-				return def;
-			}
+			} catch(NumberFormatException ignore) {}
 		}
+		return def;
 	}
 	
 	public static double toDouble(Object obj) {
@@ -75,13 +72,12 @@ public class NumberConversions {
 	
 	public static long toLong(Object obj, long def) {
 		if(obj instanceof Number) return ((Number)obj).longValue();
-		else {
+		else if(obj != null) {
 			try {
 				return Long.valueOf(obj.toString());
-			} catch(NumberFormatException | NullPointerException ignore) {
-				return def;
-			}
+			} catch(NumberFormatException ignore) {}
 		}
+		return def;
 	}
 	
 	public static long toLong(Object obj) {
@@ -90,13 +86,12 @@ public class NumberConversions {
 	
 	public static short toShort(Object obj, short def) {
 		if(obj instanceof Number) return ((Number)obj).shortValue();
-		else {
+		else if(obj != null) {
 			try {
 				return Short.valueOf(obj.toString());
-			} catch(NumberFormatException | NullPointerException ignore) {
-				return def;
-			}
+			} catch(NumberFormatException ignore) {}
 		}
+		return def;
 	}
 	
 	public static short toShort(Object obj) {
@@ -105,13 +100,12 @@ public class NumberConversions {
 	
 	public static byte toByte(Object obj, byte def) {
 		if(obj instanceof Number) return ((Number)obj).byteValue();
-		else {
+		else if(obj != null) {
 			try {
 				return Byte.valueOf(obj.toString());
-			} catch(NumberFormatException | NullPointerException var1) {
-				return def;
-			}
+			} catch(NumberFormatException ignore) {}
 		}
+		return def;
 	}
 	
 	public static byte toByte(Object obj) {

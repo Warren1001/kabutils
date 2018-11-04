@@ -32,7 +32,7 @@ public class BulkActionThread<T> extends PausableThread {
 	public void run() {
 		while(isRunning()) {
 			pauseCheck();
-			BukkitTaskManager.start(this::clear, plugin);
+			BukkitTaskManager.start(plugin, this::clear);
 			Threads.sleep(interval);
 		}
 		clear();

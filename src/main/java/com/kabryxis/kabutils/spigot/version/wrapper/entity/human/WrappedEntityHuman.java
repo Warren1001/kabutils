@@ -11,7 +11,7 @@ public interface WrappedEntityHuman extends Wrappable {
 	Class<WrappedEntityHumanv1_8_R3> v1_8_R3 = WrappedEntityHumanv1_8_R3.class;
 	
 	static WrappedEntityHuman newCloneInstance(Player player) {
-		return WrapperFactory.get(WrappedEntityHuman.class, Player.class, player);
+		return WrapperFactory.get(WrappedEntityHuman.class, new Class[] { Player.class }, new Object[] { player });
 	}
 	
 	Object getDataWatcher();
