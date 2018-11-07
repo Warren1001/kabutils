@@ -21,7 +21,7 @@ public interface WrappedNBTTagList extends WrappedNBTBase {
 	}
 	
 	static WrappedNBTTagList newInstance(boolean newEmpty) {
-		return WrapperFactory.get(WrappedNBTTagList.class, new Class[] { Object.class }, new Object[] { newEmpty });
+		return WrapperFactory.getSupplier(WrappedNBTTagList.class, Object.class).apply(newEmpty);
 	}
 	
 	void add(WrappedNBTTagCompound tag);

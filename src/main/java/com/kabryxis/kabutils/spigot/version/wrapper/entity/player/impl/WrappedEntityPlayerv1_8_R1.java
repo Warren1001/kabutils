@@ -44,6 +44,11 @@ public class WrappedEntityPlayerv1_8_R1 implements WrappedEntityPlayer {
 	}
 	
 	@Override
+	public void clear() {
+		entityPlayer = null;
+	}
+	
+	@Override
 	public void sendPacket(WrappedPacket packet) {
 		packet.send(entityPlayer.getBukkitEntity());
 	}

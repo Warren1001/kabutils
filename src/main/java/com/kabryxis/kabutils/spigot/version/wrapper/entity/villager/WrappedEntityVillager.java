@@ -18,7 +18,7 @@ public interface WrappedEntityVillager extends Wrappable {
 	Class<WrappedEntityVillagerv1_12_R1> v1_12_R1 = WrappedEntityVillagerv1_12_R1.class;
 	
 	static WrappedEntityVillager newInstance(Villager villager) {
-		return WrapperFactory.get(WrappedEntityVillager.class, new Class[] { Villager.class }, new Object[] { villager });
+		return WrapperFactory.getSupplier(WrappedEntityVillager.class, Villager.class).apply(villager);
 	}
 	
 	WrappedMerchantRecipeList getOffers();

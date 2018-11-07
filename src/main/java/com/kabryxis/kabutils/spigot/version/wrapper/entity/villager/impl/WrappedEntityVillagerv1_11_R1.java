@@ -26,6 +26,11 @@ public class WrappedEntityVillagerv1_11_R1 implements WrappedEntityVillager {
 	}
 	
 	@Override
+	public void clear() {
+		entityVillager = null;
+	}
+	
+	@Override
 	public WrappedMerchantRecipeListv1_11_R1 getOffers() {
 		return new WrappedMerchantRecipeListv1_11_R1(entityVillager.getOffers(null));
 	}

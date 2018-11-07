@@ -39,6 +39,11 @@ public class WrappedEntityHumanv1_8_R3 implements WrappedEntityHuman {
 	}
 	
 	@Override
+	public void clear() {
+		handle = null;
+	}
+	
+	@Override
 	public DataWatcher getDataWatcher() {
 		return handle.getDataWatcher();
 	}

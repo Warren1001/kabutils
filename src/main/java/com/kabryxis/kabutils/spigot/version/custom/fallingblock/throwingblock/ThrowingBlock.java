@@ -11,7 +11,7 @@ import org.bukkit.entity.FallingBlock;
 
 public interface ThrowingBlock extends CustomEntity {
 	
-	Class<? extends ThrowingBlock> v1_8_R3 = ThrowingBlockv1_8_R3.class;
+	Class<ThrowingBlockv1_8_R3> v1_8_R3 = ThrowingBlockv1_8_R3.class;
 	Class<? extends ThrowingBlock> IMPLEMENTATION_CLASS = WrapperFactory.getImplementationClass(ThrowingBlock.class);
 	
 	static void register() {
@@ -19,7 +19,7 @@ public interface ThrowingBlock extends CustomEntity {
 	}
 	
 	static ThrowingBlock spawn(Location loc, Material type, byte data, long aliveTime) {
-		return WrapperFactory.get(ThrowingBlock.class, new Class[] { Location.class, Material.class, byte.class, long.class }, new Object[] { loc, type, data, aliveTime });
+		return WrapperFactory.getSupplier(ThrowingBlock.class, Location.class, Material.class, byte.class, long.class).apply(loc, type, data, aliveTime);
 	}
 	
 	static boolean is(Entity entity) {

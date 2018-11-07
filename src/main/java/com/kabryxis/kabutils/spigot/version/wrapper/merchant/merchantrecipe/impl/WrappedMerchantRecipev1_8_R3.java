@@ -1,7 +1,6 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.impl;
 
 import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipe.WrappedMerchantRecipe;
-
 import net.minecraft.server.v1_8_R3.ItemStack;
 import net.minecraft.server.v1_8_R3.MerchantRecipe;
 
@@ -9,8 +8,12 @@ public class WrappedMerchantRecipev1_8_R3 implements WrappedMerchantRecipe {
 	
 	private MerchantRecipe merchantRecipe;
 	
-	public WrappedMerchantRecipev1_8_R3(Object[] objects) {
-		setHandle(objects);
+	public WrappedMerchantRecipev1_8_R3(ItemStack buyItem1, ItemStack sellingItem, int uses, int maxUses) {
+		this(buyItem1, null, sellingItem, uses, maxUses);
+	}
+	
+	public WrappedMerchantRecipev1_8_R3(ItemStack buyItem1, ItemStack buyItem2, ItemStack sellingItem, int uses, int maxUses) {
+		this(new MerchantRecipe(buyItem1, buyItem2, sellingItem, uses, maxUses));
 	}
 	
 	public WrappedMerchantRecipev1_8_R3(MerchantRecipe merchantRecipe) {
@@ -20,16 +23,16 @@ public class WrappedMerchantRecipev1_8_R3 implements WrappedMerchantRecipe {
 	@Override
 	public void setHandle(Object obj) {
 		if(obj instanceof MerchantRecipe) merchantRecipe = (MerchantRecipe)obj;
-		else if(obj instanceof Object[]) {
-			Object[] objects = (Object[])obj;
-			Object buyItem2 = objects[1];
-			merchantRecipe = new MerchantRecipe((ItemStack)objects[0], buyItem2 != null ? (ItemStack)buyItem2 : null, (ItemStack)objects[2], (Integer)objects[3], (Integer)objects[4]);
-		}
 	}
 	
 	@Override
 	public MerchantRecipe getHandle() {
 		return merchantRecipe;
+	}
+	
+	@Override
+	public void clear() {
+		merchantRecipe = null;
 	}
 	
 	@Override

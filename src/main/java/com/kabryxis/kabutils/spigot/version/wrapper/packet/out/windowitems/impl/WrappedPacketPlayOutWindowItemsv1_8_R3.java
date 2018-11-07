@@ -14,29 +14,27 @@ public class WrappedPacketPlayOutWindowItemsv1_8_R3 implements WrappedPacketPlay
 	
 	private PacketPlayOutWindowItems packet;
 	
-	public WrappedPacketPlayOutWindowItemsv1_8_R3(Object[] objs) {
-		setHandle(objs);
+	public WrappedPacketPlayOutWindowItemsv1_8_R3(int windowId, List<org.bukkit.inventory.ItemStack> bukkitItems) {
+		List<ItemStack> items = new ArrayList<>(bukkitItems.size());
+		for(org.bukkit.inventory.ItemStack bukkitItem : bukkitItems) {
+			items.add(CraftItemStack.asNMSCopy(bukkitItem));
+		}
+		packet = new PacketPlayOutWindowItems(windowId, items);
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public void setHandle(Object obj) {
 		if(obj instanceof PacketPlayOutWindowItems) packet = (PacketPlayOutWindowItems)obj;
-		else if(obj instanceof Object[]) {
-			Object[] objs = (Object[])obj;
-			int windowId = (Integer)objs[0];
-			List<org.bukkit.inventory.ItemStack> bukkitItems = (List<org.bukkit.inventory.ItemStack>)objs[1];
-			List<ItemStack> items = new ArrayList<>(bukkitItems.size());
-			for(org.bukkit.inventory.ItemStack bukkitItem : bukkitItems) {
-				items.add(CraftItemStack.asNMSCopy(bukkitItem));
-			}
-			packet = new PacketPlayOutWindowItems(windowId, items);
-		}
 	}
 	
 	@Override
 	public PacketPlayOutWindowItems getHandle() {
 		return packet;
+	}
+	
+	@Override
+	public void clear() {
+		packet = null;
 	}
 	
 	@Override

@@ -14,7 +14,7 @@ public interface WrappedEntityPlayer extends Wrappable {
 	Class<WrappedEntityPlayerv1_8_R3> v1_8_R3 = WrappedEntityPlayerv1_8_R3.class;
 	
 	static WrappedEntityPlayer newInstance(Player player) {
-		return WrapperFactory.get(WrappedEntityPlayer.class, new Class[] { Object.class }, new Object[] { player });
+		return WrapperFactory.getSupplier(WrappedEntityPlayer.class, Object.class).apply(player);
 	}
 	
 	static WrappedEntityPlayer newInstance() {

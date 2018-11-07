@@ -17,9 +17,9 @@ public class CustomEntityRegistry {
 	
 	static {
 		Class<?> entityTypesClass = Version.getNMSClass("EntityTypes");
-		classByName = (Map<String, Class<?>>)ReflectionHelper.getObjectInStaticField(ReflectionHelper.getField(entityTypesClass, "c"));
-		nameByClass = (Map<Class<?>, String>)ReflectionHelper.getObjectInStaticField(ReflectionHelper.getField(entityTypesClass, "d"));
-		idByClass = (Map<Class<?>, Integer>)ReflectionHelper.getObjectInStaticField(ReflectionHelper.getField(entityTypesClass, "f"));
+		classByName = (Map<String, Class<?>>)ReflectionHelper.getObjectInStaticField(entityTypesClass, "c");
+		nameByClass = (Map<Class<?>, String>)ReflectionHelper.getObjectInStaticField(entityTypesClass, "d");
+		idByClass = (Map<Class<?>, Integer>)ReflectionHelper.getObjectInStaticField(entityTypesClass, "f");
 	}
 	
 	public static void registerEntity(String entityName, Class<?> entityClass) {

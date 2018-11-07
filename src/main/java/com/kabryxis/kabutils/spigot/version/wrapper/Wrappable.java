@@ -6,4 +6,6 @@ public interface Wrappable {
 	
 	Object getHandle();
 	
+	void clear();
+	
 }

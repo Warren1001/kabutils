@@ -14,6 +14,10 @@ public class ReflectionHelper {
 		}
 	}
 	
+	public static void setObjectInStaticField(Class<?> clazz, String fieldName, Object value) {
+		setObjectInStaticField(getField(clazz, fieldName), value);
+	}
+	
 	public static void setObjectInStaticField(Field field, Object value) {
 		setObjectInField(field, null, value);
 	}
@@ -24,6 +28,10 @@ public class ReflectionHelper {
 		} catch(IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static Object getObjectInStaticField(Class<?> clazz, String fieldName) {
+		return getObjectInStaticField(getField(clazz, fieldName));
 	}
 	
 	public static Object getObjectInStaticField(Field field) {
@@ -38,6 +46,10 @@ public class ReflectionHelper {
 		}
 	}
 	
+	public static void setIntInStaticField(Class<?> clazz, String fieldName, int value) {
+		setIntInStaticField(getField(clazz, fieldName), value);
+	}
+	
 	public static void setIntInStaticField(Field field, int value) {
 		setIntInField(field, null, value);
 	}
@@ -48,6 +60,10 @@ public class ReflectionHelper {
 		} catch(IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
+	}
+	
+	public static int getIntInStaticField(Class<?> clazz, String fieldName) {
+		return getIntInStaticField(getField(clazz, fieldName));
 	}
 	
 	public static int getIntInStaticField(Field field) {

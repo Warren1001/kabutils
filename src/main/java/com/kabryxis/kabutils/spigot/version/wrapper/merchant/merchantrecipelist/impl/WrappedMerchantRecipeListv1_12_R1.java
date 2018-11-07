@@ -33,6 +33,11 @@ public class WrappedMerchantRecipeListv1_12_R1 implements WrappedMerchantRecipeL
 	}
 	
 	@Override
+	public void clear() {
+		merchantRecipeList = null;
+	}
+	
+	@Override
 	public List<WrappedMerchantRecipe> getRecipes() {
 		List<WrappedMerchantRecipe> list = new ArrayList<>(merchantRecipeList.size());
 		for(MerchantRecipe merchantRecipe : merchantRecipeList) {

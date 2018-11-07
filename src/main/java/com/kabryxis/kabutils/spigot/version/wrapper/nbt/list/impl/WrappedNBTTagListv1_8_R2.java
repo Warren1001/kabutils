@@ -28,6 +28,12 @@ public class WrappedNBTTagListv1_8_R2 extends WrappedNBTBasev1_8_R2 implements W
 	}
 	
 	@Override
+	public void clear() {
+		super.clear();
+		list = null;
+	}
+	
+	@Override
 	public void add(WrappedNBTTagCompound tag) {
 		list.add(((WrappedNBTTagCompoundv1_8_R2)tag).getHandle());
 	}

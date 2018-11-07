@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 
 public interface PetDragon extends CustomEntity {
 	
-	Class<? extends PetDragon> v1_8_R1 = PetDragonv1_8_R1.class;
-	Class<? extends PetDragon> v1_8_R3 = PetDragonv1_8_R3.class;
+	Class<PetDragonv1_8_R1> v1_8_R1 = PetDragonv1_8_R1.class;
+	Class<PetDragonv1_8_R3> v1_8_R3 = PetDragonv1_8_R3.class;
 	Class<? extends PetDragon> IMPLEMENTATION_CLASS = WrapperFactory.getImplementationClass(PetDragon.class);
 	
 	static void register() {
@@ -21,7 +21,7 @@ public interface PetDragon extends CustomEntity {
 	}
 	
 	static PetDragon spawn(Location spawn, Player owner, Location center) {
-		return WrapperFactory.get(PetDragon.class, new Class[] { Object[].class }, new Object[] { new Object[] { spawn, owner, center } });
+		return WrapperFactory.getSupplier(PetDragon.class, Location.class, Player.class, Location.class).apply(spawn, owner, center);
 	}
 	
 	static boolean is(Entity entity) {

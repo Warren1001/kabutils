@@ -35,7 +35,7 @@ public class Items {
 	}
 	
 	public static <T> T getTagData(ItemStack item, String key, Class<T> clazz) {
-		if(!Items.exists(item)) return null;
+		if(!Items.exists(item) || !item.hasItemMeta()) return null;
 		WRAPPED_ITEM_STACK.setHandle(item);
 		WrappedNBTTagCompound tag = WRAPPED_ITEM_STACK.getTag(false);
 		if(tag == null) return null;

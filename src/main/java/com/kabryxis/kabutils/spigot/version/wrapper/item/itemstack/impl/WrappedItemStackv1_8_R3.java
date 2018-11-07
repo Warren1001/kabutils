@@ -59,6 +59,12 @@ public class WrappedItemStackv1_8_R3 implements WrappedItemStack {
 	}
 	
 	@Override
+	public void clear() {
+		itemStack = null;
+		clone = false;
+	}
+	
+	@Override
 	public boolean isClone() {
 		return clone;
 	}

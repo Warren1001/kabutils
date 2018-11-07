@@ -1,19 +1,21 @@
 package com.kabryxis.kabutils.spigot.version.custom.player.impl;
 
-import com.kabryxis.kabutils.spigot.version.custom.player.ItemStackForwarder;
+import com.kabryxis.kabutils.spigot.version.custom.player.WrappedInventory;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Consumer;
 
-public class WrappedPlayerInventoryv1_8_R3 extends PlayerInventory {
+public class WrappedInventoryv1_8_R3 extends PlayerInventory implements WrappedInventory {
 	
-	private final ItemStackForwarder forwarder;
+	private final Consumer<Collection<org.bukkit.inventory.ItemStack>> forwarder;
 	
-	public WrappedPlayerInventoryv1_8_R3(Player player, ItemStackForwarder forwarder) {
+	public WrappedInventoryv1_8_R3(Player player, Consumer<Collection<org.bukkit.inventory.ItemStack>> forwarder) {
 		super(((CraftHumanEntity)player).getHandle());
 		CraftHumanEntity craftHumanEntity = ((CraftHumanEntity)player);
 		EntityHuman entityHuman = craftHumanEntity.getHandle();
@@ -106,7 +108,7 @@ public class WrappedPlayerInventoryv1_8_R3 extends PlayerInventory {
 		for(ItemStack item : armor) {
 			if(item != null && Item.getId(item.getItem()) != 0) itemsToForward.add(CraftItemStack.asCraftMirror(item));
 		}
-		forwarder.forward(itemsToForward);
+		forwarder.accept(itemsToForward);
 	}
 	
 	public int firstPartial(ItemStack item) {

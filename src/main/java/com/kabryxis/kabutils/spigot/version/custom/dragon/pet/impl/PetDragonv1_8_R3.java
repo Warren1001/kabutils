@@ -46,10 +46,6 @@ public class PetDragonv1_8_R3 extends EntityInsentient implements IComplex, IMon
 	public boolean bv;
 	public int bw;
 	
-	public PetDragonv1_8_R3(Object[] objs) {
-		this((Location)objs[0], (Player)objs[1], (Location)objs[2]);
-	}
-	
 	public PetDragonv1_8_R3(Location loc, Player owner, Location center) {
 		super(((CraftWorld)loc.getWorld()).getHandle());
 		this.owner = owner;

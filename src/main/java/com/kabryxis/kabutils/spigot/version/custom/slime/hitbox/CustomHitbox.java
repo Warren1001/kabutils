@@ -10,7 +10,7 @@ import org.bukkit.entity.Slime;
 
 public interface CustomHitbox extends CustomEntity {
 	
-	Class<? extends CustomHitbox> v1_8_R3 = CustomHitboxv1_8_R3.class;
+	Class<CustomHitboxv1_8_R3> v1_8_R3 = CustomHitboxv1_8_R3.class;
 	Class<? extends CustomHitbox> IMPLEMENTATION = WrapperFactory.getImplementationClass(CustomHitbox.class);
 	
 	static void register() {
@@ -18,7 +18,7 @@ public interface CustomHitbox extends CustomEntity {
 	}
 	
 	static CustomHitbox spawn(Location loc, String ownerName) {
-		return WrapperFactory.get(CustomHitbox.class, new Class[] { Location.class, String.class }, new Object[] { loc, ownerName });
+		return WrapperFactory.getSupplier(CustomHitbox.class, Location.class, String.class).apply(loc, ownerName);
 	}
 	
 	static boolean is(Entity entity) {

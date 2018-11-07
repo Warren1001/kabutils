@@ -26,6 +26,11 @@ public class WrappedPacketPlayOutChatv1_8_R3 implements WrappedPacketPlayOutChat
 	}
 	
 	@Override
+	public void clear() {
+		packet = null;
+	}
+	
+	@Override
 	public void send(Player player) {
 		((CraftPlayer)player).getHandle().playerConnection.sendPacket(packet);
 	}

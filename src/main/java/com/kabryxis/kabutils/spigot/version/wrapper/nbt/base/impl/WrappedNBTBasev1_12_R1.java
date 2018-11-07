@@ -23,4 +23,9 @@ public class WrappedNBTBasev1_12_R1 implements WrappedNBTBase {
 		return handle;
 	}
 	
+	@Override
+	public void clear() {
+		handle = null;
+	}
+	
 }

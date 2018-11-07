@@ -43,6 +43,11 @@ public class WrappedEntityArrowv1_8_R3 implements WrappedEntityArrow {
 	}
 	
 	@Override
+	public void clear() {
+		entityArrow = null;
+	}
+	
+	@Override
 	public Block getHitBlock() {
 		try {
 			int y = fieldY.getInt(entityArrow);

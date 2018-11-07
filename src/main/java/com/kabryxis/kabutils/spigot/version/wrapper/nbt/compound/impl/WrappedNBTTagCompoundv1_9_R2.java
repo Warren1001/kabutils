@@ -41,6 +41,12 @@ public class WrappedNBTTagCompoundv1_9_R2 extends WrappedNBTBasev1_9_R2 implemen
 	}
 	
 	@Override
+	public void clear() {
+		super.clear();
+		tag = null;
+	}
+	
+	@Override
 	public void savePlayerData(File playerFile) {
 		try {
 			NBTCompressedStreamTools.a(tag, new FileOutputStream(playerFile));

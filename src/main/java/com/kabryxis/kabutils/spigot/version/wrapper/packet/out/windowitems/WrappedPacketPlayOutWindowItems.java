@@ -12,7 +12,7 @@ public interface WrappedPacketPlayOutWindowItems extends WrappedPacket {
 	Class<WrappedPacketPlayOutWindowItemsv1_8_R3> v1_8_R3 = WrappedPacketPlayOutWindowItemsv1_8_R3.class;
 	
 	static WrappedPacketPlayOutWindowItems newInstance(int id, List<ItemStack> items) {
-		return WrapperFactory.get(WrappedPacketPlayOutWindowItems.class, new Class[] { Object[].class }, new Object[] { new Object[] { id, items } });
+		return WrapperFactory.getSupplier(WrappedPacketPlayOutWindowItems.class, int.class, List.class).apply(id, items);
 	}
 	
 }
