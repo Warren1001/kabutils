@@ -1,26 +1,20 @@
 package com.kabryxis.kabutils.data;
 
+import org.apache.commons.lang3.Validate;
+
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class Arrays {
 	
 	public static <T> boolean contains(T[] array, T obj) {
-		if(obj == null) {
-			for(T t : array) {
-				if(t == null) return true;
-			}
-		}
-		else {
-			for(T t : array) {
-				if(obj.equals(t)) return true;
-			}
-		}
-		return false;
+		return Stream.of(array).anyMatch(o -> Objects.equals(o, obj));
 	}
 	
 	public static <T> T[] splitArray(T[] originalArray, int start) {
-		return java.util.Arrays.copyOfRange(originalArray, start, originalArray.length - 1);
+		return java.util.Arrays.copyOfRange(originalArray, start, originalArray.length);
 	}
 	
 	public static <T> T computeIfAbsent(T[] array, int index, Supplier<T> supplier) {
@@ -30,8 +24,11 @@ public class Arrays {
 	}
 	
 	public static <T> void forEach(T[] array, Consumer<? super T> action) {
-		for(T t : array) {
-			action.accept(t);
+		Validate.notNull(action, "action cannot be null");
+		if(array != null && array.length != 0) {
+			for(T t : array) {
+				action.accept(t);
+			}
 		}
 	}
 	

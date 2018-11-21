@@ -14,8 +14,9 @@ public class WrappedNBTBasev1_8_R3 implements WrappedNBTBase {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedNBTBasev1_8_R3 setHandle(Object obj) {
 		if(obj instanceof NBTBase) handle = (NBTBase)obj;
+		return this;
 	}
 	
 	@Override

@@ -5,6 +5,9 @@ import org.bukkit.entity.Player;
 
 public interface WrappedPacket extends Wrappable {
 	
+	@Override
+	WrappedPacket setHandle(Object obj);
+	
 	void send(Player player);
 	
 }

@@ -22,9 +22,10 @@ public class WrappedMerchantRecipeListv1_8_R1 implements WrappedMerchantRecipeLi
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedMerchantRecipeListv1_8_R1 setHandle(Object obj) {
 		if(obj instanceof MerchantRecipeList) merchantRecipeList = (MerchantRecipeList)obj;
 		else if(obj instanceof Boolean) if((Boolean)obj) merchantRecipeList = new MerchantRecipeList();
+		return this;
 	}
 	
 	@Override

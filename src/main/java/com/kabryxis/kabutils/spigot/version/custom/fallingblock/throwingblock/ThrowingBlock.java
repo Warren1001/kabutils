@@ -1,15 +1,19 @@
 package com.kabryxis.kabutils.spigot.version.custom.fallingblock.throwingblock;
 
+import com.kabryxis.kabutils.AutoRemovable;
 import com.kabryxis.kabutils.spigot.version.custom.CustomEntity;
 import com.kabryxis.kabutils.spigot.version.custom.CustomEntityRegistry;
 import com.kabryxis.kabutils.spigot.version.custom.fallingblock.throwingblock.impl.ThrowingBlockv1_8_R3;
 import com.kabryxis.kabutils.spigot.version.wrapper.WrapperFactory;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import com.kabryxis.kabutils.spigot.world.BlockStateManager;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
+import org.bukkit.util.Vector;
 
-public interface ThrowingBlock extends CustomEntity {
+import java.util.function.Predicate;
+
+public interface ThrowingBlock extends CustomEntity, AutoRemovable {
 	
 	Class<ThrowingBlockv1_8_R3> v1_8_R3 = ThrowingBlockv1_8_R3.class;
 	Class<? extends ThrowingBlock> IMPLEMENTATION_CLASS = WrapperFactory.getImplementationClass(ThrowingBlock.class);
@@ -18,21 +22,18 @@ public interface ThrowingBlock extends CustomEntity {
 		CustomEntityRegistry.registerEntity("FallingSand", IMPLEMENTATION_CLASS);
 	}
 	
-	static ThrowingBlock spawn(Location loc, Material type, byte data, long aliveTime) {
-		return WrapperFactory.getSupplier(ThrowingBlock.class, Location.class, Material.class, byte.class, long.class).apply(loc, type, data, aliveTime);
+	static ThrowingBlock spawn(BlockStateManager blockStateManager, Block block, Vector velocity, long aliveTime, Predicate<Block> protectedPredicate) {
+		return WrapperFactory.getSupplier(ThrowingBlock.class, BlockStateManager.class, Block.class, Vector.class, long.class, Predicate.class).apply
+				(blockStateManager, block, velocity, aliveTime, protectedPredicate);
 	}
 	
 	static boolean is(Entity entity) {
-		return WrapperFactory.isInstance(entity, ThrowingBlock.class);
+		return WrapperFactory.isHandleInstance(entity, ThrowingBlock.class);
 	}
 	
 	static ThrowingBlock cast(Entity entity) {
 		return WrapperFactory.castHandle(entity, ThrowingBlock.class);
 	}
-	
-	long getUniqueId();
-	
-	boolean canBePlaced();
 	
 	@Override
 	FallingBlock getBukkitEntity();

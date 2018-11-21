@@ -26,6 +26,9 @@ public interface WrappedMerchantRecipeList extends Wrappable {
 		return WrapperFactory.getSupplier(WrappedMerchantRecipeList.class, boolean.class).apply(newEmpty);
 	}
 	
+	@Override
+	WrappedMerchantRecipeList setHandle(Object obj);
+	
 	List<WrappedMerchantRecipe> getRecipes();
 	
 	void setRecipes(List<WrappedMerchantRecipe> recipes);

@@ -22,13 +22,44 @@ public interface WrappedNBTTagCompound extends WrappedNBTBase {
 		return WrapperFactory.getSupplier(WrappedNBTTagCompound.class, Object.class).apply((Object)null);
 	}
 	
+	@Override
+	WrappedNBTTagCompound setHandle(Object obj);
+	
 	void savePlayerData(File playerFile);
 	
 	void set(String key, Object obj);
 	
-	<T> T get(String key, Class<T> clazz);
+	Object getBaseRaw(String key);
+	
+	Object getCompoundRaw(String key);
+	
+	WrappedNBTTagCompound getCompound(String key, WrappedNBTTagCompound wrappedTag);
+	
+	WrappedNBTTagCompound getCompound(String key);
+	
+	WrappedNBTTagList getList(String key, int i, WrappedNBTTagList list);
 	
 	WrappedNBTTagList getList(String key, int i);
+	
+	String getString(String key);
+	
+	int getInt(String key);
+	
+	double getDouble(String key);
+	
+	float getFloat(String key);
+	
+	boolean getBoolean(String key);
+	
+	byte getByte(String key);
+	
+	long getLong(String key);
+	
+	short getShort(String key);
+	
+	int[] getIntArray(String key);
+	
+	byte[] getByteArray(String key);
 	
 	void remove(String key);
 	

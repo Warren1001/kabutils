@@ -11,15 +11,17 @@ public class WrappedNBTTagListv1_11_R1 extends WrappedNBTBasev1_11_R1 implements
 	
 	private NBTTagList list;
 	
+	public WrappedNBTTagListv1_11_R1() {}
+	
 	public WrappedNBTTagListv1_11_R1(Object obj) {
 		setHandle(obj);
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
-		super.setHandle(obj);
+	public WrappedNBTTagListv1_11_R1 setHandle(Object obj) {
 		if(obj instanceof NBTTagList) list = (NBTTagList)obj;
-		else if(obj instanceof Boolean) if((Boolean)obj) list = new NBTTagList();
+		else if(obj instanceof Boolean && (Boolean)obj) list = new NBTTagList();
+		return this;
 	}
 	
 	@Override
@@ -29,7 +31,6 @@ public class WrappedNBTTagListv1_11_R1 extends WrappedNBTBasev1_11_R1 implements
 	
 	@Override
 	public void clear() {
-		super.clear();
 		list = null;
 	}
 	

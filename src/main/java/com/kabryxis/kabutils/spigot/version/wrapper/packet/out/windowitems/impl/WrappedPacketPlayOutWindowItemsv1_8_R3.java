@@ -23,8 +23,9 @@ public class WrappedPacketPlayOutWindowItemsv1_8_R3 implements WrappedPacketPlay
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedPacketPlayOutWindowItemsv1_8_R3 setHandle(Object obj) {
 		if(obj instanceof PacketPlayOutWindowItems) packet = (PacketPlayOutWindowItems)obj;
+		return this;
 	}
 	
 	@Override

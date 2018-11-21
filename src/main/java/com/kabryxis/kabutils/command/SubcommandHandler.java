@@ -55,9 +55,7 @@ public class SubcommandHandler implements CommandData, CommandDataManager {
 	
 	@Override
 	public void registerListeners(Object... listeners) {
-		for(Object listener : listeners) {
-			registerListener(listener);
-		}
+		Arrays.forEach(listeners, this::registerListener);
 	}
 	
 	@Override

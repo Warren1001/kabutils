@@ -7,6 +7,7 @@ import org.bukkit.plugin.EventExecutor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredListener;
 
+import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -55,7 +56,7 @@ public class Listeners {
 		return registerListener(listener, plugin, EventPriority.NORMAL, executor);
 	}
 	
-	public static <T extends Listener> T registerListener(T listener, Plugin plugin, EventPriority priority, EventExecutor executor) {
+	public static <T extends Listener> T registerListener(T listener, Plugin plugin, EventPriority priority, @Nullable EventExecutor executor) {
 		plugin.getServer().getPluginManager().registerEvents(listener, plugin);
 		if(listener instanceof GlobalListener) {
 			RegisteredListener registeredListener = new RegisteredListener(listener, executor, priority, plugin, false);

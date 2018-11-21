@@ -24,6 +24,9 @@ public interface WrappedNBTTagList extends WrappedNBTBase {
 		return WrapperFactory.getSupplier(WrappedNBTTagList.class, Object.class).apply(newEmpty);
 	}
 	
+	@Override
+	WrappedNBTTagList setHandle(Object obj);
+	
 	void add(WrappedNBTTagCompound tag);
 	
 	Object get(int index);

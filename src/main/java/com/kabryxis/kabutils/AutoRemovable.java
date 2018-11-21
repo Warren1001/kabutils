@@ -2,6 +2,6 @@ package com.kabryxis.kabutils;
 
 public interface AutoRemovable {
 	
-	void remove();
+	void remove(boolean silent);
 	
 }

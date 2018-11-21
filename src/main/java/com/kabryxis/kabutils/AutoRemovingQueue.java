@@ -11,6 +11,7 @@ public class AutoRemovingQueue<E extends AutoRemovable> extends AbstractQueue<E>
 	private final Object[] elements;
 	
 	private int tailIndex = 0;
+	private boolean silent = false;
 	
 	public AutoRemovingQueue(int capacity) {
 		elements = new Object[capacity];
@@ -41,13 +42,20 @@ public class AutoRemovingQueue<E extends AutoRemovable> extends AbstractQueue<E>
 		if(size() > 1) System.arraycopy(elements, 1, elements, 0, tailIndex - 1);
 		tailIndex--;
 		elements[tailIndex] = null;
-		if(e != null) e.remove();
+		if(e != null) e.remove(silent);
 		return e;
 	}
 	
 	@Override
 	public E peek() {
 		return get(0);
+	}
+	
+	@Override
+	public void clear() {
+		silent = true;
+		super.clear();
+		silent = false;
 	}
 	
 	@SuppressWarnings("unchecked")

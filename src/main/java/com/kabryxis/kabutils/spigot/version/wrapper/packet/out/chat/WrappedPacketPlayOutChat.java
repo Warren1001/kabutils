@@ -20,4 +20,7 @@ public interface WrappedPacketPlayOutChat extends WrappedPacket {
 		return newInstance(null);
 	}
 	
+	@Override
+	WrappedPacketPlayOutChat setHandle(Object obj);
+	
 }

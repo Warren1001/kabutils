@@ -15,9 +15,10 @@ public class WrappedEntityVillagerv1_8_R3 implements WrappedEntityVillager {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedEntityVillagerv1_8_R3 setHandle(Object obj) {
 		if(obj instanceof EntityVillager) entityVillager = (EntityVillager)obj;
 		else if(obj instanceof Villager) entityVillager = ((CraftVillager)obj).getHandle();
+		return this;
 	}
 	
 	@Override

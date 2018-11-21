@@ -1,5 +1,8 @@
 package com.kabryxis.kabutils.spigot.inventory.itemstack;
 
+import com.kabryxis.kabutils.data.Arrays;
+import com.kabryxis.kabutils.data.Lists;
+import com.kabryxis.kabutils.data.Maps;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
@@ -12,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ItemBuilder implements Cloneable {
 	
@@ -75,7 +80,7 @@ public class ItemBuilder implements Cloneable {
 		}
 		
 		@Override
-		public ItemBuilder lore(Iterable<String> lines, boolean append) {
+		public ItemBuilder lore(boolean append, Iterable<String> line) {
 			return this;
 		}
 		
@@ -114,6 +119,31 @@ public class ItemBuilder implements Cloneable {
 			throw new UnsupportedOperationException("cannot generate ItemStack from empty ItemBuilder");
 		}
 		
+		@Override
+		public ItemStack build(ItemStack base) {
+			throw new UnsupportedOperationException("cannot generate ItemStack from empty ItemBuilder");
+		}
+		
+		@Override
+		public ConfigSection serialize() {
+			return null;
+		}
+		
+		@Override
+		public boolean isOf(ItemStack itemStack, ItemCompareFlag... flags) {
+			return false;
+		}
+		
+		@Override
+		public boolean isOf(ItemStack itemStack, Collection<ItemCompareFlag> flags) {
+			return false;
+		}
+		
+		@Override
+		public boolean isOf(ItemStack itemStack, ItemCompareFlag compareFlag) {
+			return false;
+		}
+		
 	};
 	public static final ItemBuilder DEFAULT = new ItemBuilder(EMPTY).amount(1).prefix("").name("");
 	
@@ -137,15 +167,21 @@ public class ItemBuilder implements Cloneable {
 	
 	public ItemBuilder(ConfigSection section) {
 		this(section.getEnum("type", Material.class), section.getInt("amount", 1));
+		int data = section.getInt("data", -1);
+		if(data != -1) data(data);
+		String prefix = section.get("prefix");
+		if(prefix != null) prefix(prefix);
 		String name = section.get("name");
 		if(name != null) name(name);
 		List<String> lore = section.getList("lore", String.class);
-		if(lore != null) lore(lore, true);
+		if(lore != null) lore(true, lore);
 		ConfigSection enchantsSection = section.get("enchants");
 		if(enchantsSection != null) enchantsSection.forEach((enchantName, o) -> enchant(Enchantment.getByName(enchantName.toUpperCase()), (Integer)o));
+		List<ItemFlag> flags = section.getList("flags", o -> ItemFlag.valueOf(o.toString().toUpperCase().replace(' ', '_')));
+		if(flags != null) flags.forEach(this::flag);
 		ConfigSection customSection = section.get("custom");
 		if(customSection != null) customSection.forEach(this::custom);
-		String uid = section.get("uuid");
+		String uid = section.get("uid");
 		if(uid != null) uid(uid);
 	}
 	
@@ -167,7 +203,7 @@ public class ItemBuilder implements Cloneable {
 		return this;
 	}
 	
-	private byte data;
+	private byte data = -1;
 	
 	public ItemBuilder data(byte data) {
 		this.data = data;
@@ -181,14 +217,14 @@ public class ItemBuilder implements Cloneable {
 	private String prefix;
 	
 	public ItemBuilder prefix(String prefix) {
-		this.prefix = ChatColor.translateAlternateColorCodes('&', prefix);
+		this.prefix = prefix;
 		return this;
 	}
 	
 	private String name;
 	
 	public ItemBuilder name(String name) {
-		this.name = ChatColor.translateAlternateColorCodes('&', name);
+		this.name = name;
 		return this;
 	}
 	
@@ -205,20 +241,18 @@ public class ItemBuilder implements Cloneable {
 	public ItemBuilder lore(boolean append, String... lines) {
 		if(lore == null) lore = new ArrayList<>(lines.length);
 		else if(!append) lore.clear();
-		for(String line : lines) {
-			lore.add(ChatColor.translateAlternateColorCodes('&', line));
-		}
+		Arrays.forEach(lines, lore::add);
 		return this;
 	}
 	
 	public ItemBuilder lore(Iterable<String> lines) {
-		return lore(lines, false);
+		return lore(false, lines);
 	}
 	
-	public ItemBuilder lore(Iterable<String> lines, boolean append) {
+	public ItemBuilder lore(boolean append, Iterable<String> lines) {
 		if(lore == null) lore = new ArrayList<>();
 		else if(!append) lore.clear();
-		lines.forEach(line -> lore.add(ChatColor.translateAlternateColorCodes('&', line)));
+		lines.forEach(lore::add);
 		return this;
 	}
 	
@@ -297,11 +331,11 @@ public class ItemBuilder implements Cloneable {
 	
 	public ItemStack build() {
 		Validate.notNull(type, "Cannot build an ItemStack without a Material type");
-		ItemStack item = new ItemStack(type, amount, data);
+		ItemStack item = new ItemStack(type, amount, (byte)Math.max(data, 0));
 		if(name != null || lore != null || enchants != null || flags != null) {
 			ItemMeta meta = item.getItemMeta();
-			if(!prefix.isEmpty() || !name.isEmpty()) meta.setDisplayName(prefix + name);
-			if(lore != null) meta.setLore(lore);
+			if(!prefix.isEmpty() || !name.isEmpty()) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', prefix + name));
+			if(lore != null) meta.setLore(lore.stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
 			if(enchants != null) enchants.forEach((key, value) -> meta.addEnchant(key, value, true));
 			if(flags != null) flags.forEach(meta::addItemFlags);
 			item.setItemMeta(meta);
@@ -314,6 +348,40 @@ public class ItemBuilder implements Cloneable {
 			if(uidKey != null) tag.set(uidKey, UID_COUNTER++);
 		}
 		return item;
+	}
+	
+	public ItemStack build(ItemStack base) {
+		Validate.notNull(base, "Cannot build onto a null ItemStack");
+		if(type != null) {
+			// TODO
+		}
+		if(amount != 0) base.setAmount(amount);
+		if(data != -1) {
+			// TODO
+		}
+		if(name != null || lore != null || enchants != null || flags != null) {
+			ItemMeta meta = base.getItemMeta();
+			if(!prefix.isEmpty() || !name.isEmpty()) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', prefix + name));
+			if(lore != null) {
+				if(meta.hasLore()) {
+					List<String> lore = meta.getLore();
+					this.lore.forEach(s -> lore.add(ChatColor.translateAlternateColorCodes('&', s)));
+					meta.setLore(lore);
+				}
+				else meta.setLore(lore.stream().map(s -> ChatColor.translateAlternateColorCodes('&', s)).collect(Collectors.toList()));
+			}
+			if(enchants != null) enchants.forEach((key, value) -> meta.addEnchant(key, value, true));
+			if(flags != null) flags.forEach(meta::addItemFlags);
+			base.setItemMeta(meta);
+		}
+		if(custom != null || uidKey != null) {
+			WrappedItemStack wrappedItemStack = WrappedItemStack.newInstance(base);
+			base = wrappedItemStack.getBukkitItemStack();
+			WrappedNBTTagCompound tag = wrappedItemStack.getTag(true);
+			if(custom != null) custom.forEach(tag::set);
+			if(uidKey != null) tag.set(uidKey, UID_COUNTER++);
+		}
+		return base;
 	}
 	
 	@Override
@@ -332,49 +400,51 @@ public class ItemBuilder implements Cloneable {
 	}
 	
 	public boolean isOf(ItemStack itemStack, ItemCompareFlag... flags) {
-		for(ItemCompareFlag compareFlag : flags) {
-			if(!isOf(itemStack, compareFlag)) return false;
-		}
-		return true;
+		return Stream.of(flags).allMatch(flag -> isOf(itemStack, flag));
 	}
 	
-	public boolean isOf(ItemStack itemStack, Iterable<ItemCompareFlag> flags) {
-		for(ItemCompareFlag compareFlag : flags) {
-			if(!isOf(itemStack, compareFlag)) return false;
-		}
-		return true;
+	public boolean isOf(ItemStack itemStack, Collection<ItemCompareFlag> flags) {
+		return flags.stream().allMatch(flag -> isOf(itemStack, flag));
 	}
 	
 	public boolean isOf(ItemStack itemStack, ItemCompareFlag compareFlag) {
-		if(!Items.exists(itemStack)) return false;
-		switch(compareFlag) {
+		if(itemStack == null) return false;
+		switch(Validate.notNull(compareFlag, "compareFlag cannot be null")) {
 			case TYPE:
-				if(type == itemStack.getType()) return true;
-				break;
+				return type == null || type == itemStack.getType();
 			case DATA:
-				if(data == itemStack.getData().getData()) return true;
-				break;
+				return data == itemStack.getData().getData();
 			case NAME:
-				if(itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() &&
-						itemStack.getItemMeta().getDisplayName().equals(prefix + name)) return true;
-				break;
-			case COLORLESS_NAME:
-				if(itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() &&
-						ChatColor.stripColor(itemStack.getItemMeta().getDisplayName()).equals(ChatColor.stripColor(prefix + name))) return true;
-				break;
+				String fullName = ChatColor.translateAlternateColorCodes('&', (prefix != null ? prefix : "") + (name != null ? name : ""));
+				return fullName.isEmpty() ? !itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().getDisplayName().equals(fullName)
+						: itemStack.hasItemMeta() && itemStack.getItemMeta().hasDisplayName() && itemStack.getItemMeta().getDisplayName().equals(fullName);
 			case AMOUNT:
-				if(amount == itemStack.getAmount()) return true;
-				break;
+				return amount == itemStack.getAmount();
 			case AMOUNT_MIN:
-				if(itemStack.getAmount() >= amount) return true;
-				break;
+				return itemStack.getAmount() >= amount;
+			default:
+				throw new RuntimeException(String.format("ItemCompareFlag.%s has not been implemented in %s#isOf(ItemStack, ItemCompareFlag)", compareFlag.name(), getClass().getName()));
 		}
-		return false;
+	}
+	
+	public ConfigSection serialize() {
+		ConfigSection section = new ConfigSection();
+		if(type != null) section.put("type", type);
+		if(amount != 1) section.put("amount", amount);
+		if(data != 0) section.put("data", data);
+		if(prefix != null && !prefix.isEmpty()) section.put("prefix", prefix);
+		if(name != null && !name.isEmpty()) section.put("name", name);
+		if(lore != null && !lore.isEmpty()) section.put("lore", lore);
+		if(enchants != null && !enchants.isEmpty()) section.put("enchants", new ConfigSection(Maps.convert(enchants, e -> e.getName().toLowerCase(), i -> i)));
+		if(flags != null && !flags.isEmpty()) section.put("flags", Lists.convert(new ArrayList<>(flags), o -> ((ItemFlag)o).name()));
+		if(custom != null && !custom.isEmpty()) section.put("custom", new ConfigSection(custom));
+		if(uidKey != null && !uidKey.isEmpty()) section.put("uid", uidKey);
+		return section;
 	}
 	
 	public enum ItemCompareFlag {
 		
-		TYPE, DATA, AMOUNT, AMOUNT_MIN, NAME, COLORLESS_NAME
+		TYPE, DATA, AMOUNT, AMOUNT_MIN, NAME
 		
 	}
 	

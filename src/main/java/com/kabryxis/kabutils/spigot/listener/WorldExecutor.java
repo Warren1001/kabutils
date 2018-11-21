@@ -12,6 +12,8 @@ import org.bukkit.event.world.ChunkEvent;
 import org.bukkit.event.world.WorldEvent;
 import org.bukkit.plugin.EventExecutor;
 
+import java.util.stream.Stream;
+
 public class WorldExecutor implements EventExecutor {
 	
 	private final World[] worlds;
@@ -39,10 +41,7 @@ public class WorldExecutor implements EventExecutor {
 	}
 	
 	public boolean isWorldMonitored(World world) {
-		for(World w : worlds) {
-			if(w.getName().equals(world.getName())) return true;
-		}
-		return false;
+		return Stream.of(worlds).anyMatch(world::equals);
 	}
 	
 }

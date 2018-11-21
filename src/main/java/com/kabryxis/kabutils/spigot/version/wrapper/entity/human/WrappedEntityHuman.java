@@ -14,6 +14,9 @@ public interface WrappedEntityHuman extends Wrappable {
 		return WrapperFactory.getSupplier(WrappedEntityHuman.class, Player.class).apply(player);
 	}
 	
+	@Override
+	WrappedEntityHuman setHandle(Object obj);
+	
 	Object getDataWatcher();
 	
 	HumanEntity getBukkitEntity();

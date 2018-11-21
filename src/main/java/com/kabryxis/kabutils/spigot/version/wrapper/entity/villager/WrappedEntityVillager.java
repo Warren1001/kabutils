@@ -21,6 +21,9 @@ public interface WrappedEntityVillager extends Wrappable {
 		return WrapperFactory.getSupplier(WrappedEntityVillager.class, Villager.class).apply(villager);
 	}
 	
+	@Override
+	WrappedEntityVillager setHandle(Object obj);
+	
 	WrappedMerchantRecipeList getOffers();
 	
 }

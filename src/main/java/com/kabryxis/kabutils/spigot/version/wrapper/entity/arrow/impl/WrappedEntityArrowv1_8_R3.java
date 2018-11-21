@@ -6,24 +6,7 @@ import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftArrow;
 import org.bukkit.entity.Arrow;
 
-import java.lang.reflect.Field;
-
 public class WrappedEntityArrowv1_8_R3 implements WrappedEntityArrow {
-	
-	private static Field fieldX, fieldY, fieldZ;
-	
-	static {
-		try {
-			fieldX = EntityArrow.class.getDeclaredField("d");
-			fieldY = EntityArrow.class.getDeclaredField("e");
-			fieldZ = EntityArrow.class.getDeclaredField("f");
-			fieldX.setAccessible(true);
-			fieldY.setAccessible(true);
-			fieldZ.setAccessible(true);
-		} catch(NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-	}
 	
 	private EntityArrow entityArrow;
 	
@@ -32,9 +15,10 @@ public class WrappedEntityArrowv1_8_R3 implements WrappedEntityArrow {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedEntityArrowv1_8_R3 setHandle(Object obj) {
 		if(obj instanceof EntityArrow) entityArrow = (EntityArrow)obj;
 		else if(obj instanceof Arrow) entityArrow = ((CraftArrow)obj).getHandle();
+		return this;
 	}
 	
 	@Override
@@ -50,9 +34,9 @@ public class WrappedEntityArrowv1_8_R3 implements WrappedEntityArrow {
 	@Override
 	public Block getHitBlock() {
 		try {
-			int y = fieldY.getInt(entityArrow);
+			int y = WrappedEntityArrow.FIELD_Y.getInt(entityArrow);
 			if(y == -1) return null;
-			return entityArrow.world.getWorld().getBlockAt(fieldX.getInt(entityArrow), y, fieldZ.getInt(entityArrow));
+			return entityArrow.world.getWorld().getBlockAt(WrappedEntityArrow.FIELD_X.getInt(entityArrow), y, WrappedEntityArrow.FIELD_Z.getInt(entityArrow));
 		} catch(IllegalAccessException e) {
 			e.printStackTrace();
 			return null;

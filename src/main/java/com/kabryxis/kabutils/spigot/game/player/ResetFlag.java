@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 public enum ResetFlag {
 	
 	HEALTH(GamePlayer::resetMaxHealth),
-	INVENTORY(GamePlayer::clearInventory),
+	INVENTORY(player -> player.getInventory().clear()),
 	EXPERIENCE(player -> {
 		player.setLevel(0);
 		player.setExp(0.0F);

@@ -84,7 +84,7 @@ public class WrapperFactory {
 	}
 	
 	public static Class<?>[] fillClasses(Class<?>[] classes, Object... objs) {
-		for(int i = 0; i < classes.length; i++) {
+		for(int i = 0; i < Math.min(classes.length, objs.length); i++) {
 			if(classes[i] == null && objs[i] != null) classes[i] = objs[i].getClass();
 		}
 		return classes;
@@ -131,7 +131,7 @@ public class WrapperFactory {
 		}).apply(obj);
 	}
 	
-	public static boolean isInstance(Object obj, Class<?> clazz) {
+	public static boolean isHandleInstance(Object obj, Class<?> clazz) {
 		return clazz.isInstance(getHandle(obj));
 	}
 	

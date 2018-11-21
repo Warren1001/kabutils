@@ -15,9 +15,10 @@ public class WrappedPacketPlayOutChatv1_8_R3 implements WrappedPacketPlayOutChat
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedPacketPlayOutChatv1_8_R3 setHandle(Object obj) {
 		if(obj instanceof PacketPlayOutChat) packet = (PacketPlayOutChat)obj;
 		else if(obj instanceof String) packet = new PacketPlayOutChat(new ChatComponentText((String)obj), (byte)2);
+		return this;
 	}
 	
 	@Override

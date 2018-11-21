@@ -10,6 +10,7 @@ public class SpigotSerialization {
 	public static void registerSerializers() {
 		Config.registerSerializer(new LocationSerializer());
 		Config.registerSerializer(new WorldCreatorSerializer());
+		Config.registerSerializer(new ItemBuilderSerializer());
 		ConfigSection.addDeserializer(Location.class, Locations::deserialize);
 	}
 	

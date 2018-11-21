@@ -15,4 +15,7 @@ public interface WrappedPacketPlayOutWindowItems extends WrappedPacket {
 		return WrapperFactory.getSupplier(WrappedPacketPlayOutWindowItems.class, int.class, List.class).apply(id, items);
 	}
 	
+	@Override
+	WrappedPacketPlayOutWindowItems setHandle(Object obj);
+	
 }

@@ -9,22 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_8_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
-import java.lang.reflect.Field;
-
 public class WrappedEntityPlayerv1_8_R1 implements WrappedEntityPlayer {
-	
-	private static final Field containerCounter;
-	
-	static {
-		Field localContainerCounter = null;
-		try {
-			localContainerCounter = EntityPlayer.class.getDeclaredField("containerCounter");
-			localContainerCounter.setAccessible(true);
-		} catch(NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-		containerCounter = localContainerCounter;
-	}
 	
 	private EntityPlayer entityPlayer;
 	
@@ -33,9 +18,10 @@ public class WrappedEntityPlayerv1_8_R1 implements WrappedEntityPlayer {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedEntityPlayerv1_8_R1 setHandle(Object obj) {
 		if(obj instanceof EntityPlayer) entityPlayer = (EntityPlayer)obj;
 		else if(obj instanceof Player) entityPlayer = ((CraftPlayer)obj).getHandle();
+		return this;
 	}
 	
 	@Override
@@ -66,7 +52,7 @@ public class WrappedEntityPlayerv1_8_R1 implements WrappedEntityPlayer {
 	@Override
 	public int getCurrentContainerCounter() {
 		try {
-			return containerCounter.getInt(entityPlayer) % 100;
+			return WrappedEntityPlayer.FIELD_CONTAINER_COUNTER.getInt(entityPlayer) % 100;
 		} catch(IllegalAccessException e) {
 			e.printStackTrace();
 			return -1;

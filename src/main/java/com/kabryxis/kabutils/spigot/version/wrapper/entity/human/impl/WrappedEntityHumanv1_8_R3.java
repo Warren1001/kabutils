@@ -4,6 +4,7 @@ import com.kabryxis.kabutils.spigot.version.wrapper.entity.human.WrappedEntityHu
 import net.minecraft.server.v1_8_R3.DataWatcher;
 import net.minecraft.server.v1_8_R3.EntityHuman;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftHumanEntity;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class WrappedEntityHumanv1_8_R3 implements WrappedEntityHuman {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedEntityHumanv1_8_R3 setHandle(Object obj) {
 		if(obj instanceof EntityHuman) handle = (EntityHuman)obj;
 		else if(obj instanceof Player) {
 			CraftPlayer craftPlayer = (CraftPlayer)obj;
@@ -31,6 +32,8 @@ public class WrappedEntityHumanv1_8_R3 implements WrappedEntityHuman {
 			};
 			handle.getDataWatcher().watch(10, craftPlayer.getHandle().getDataWatcher().getByte(10));
 		}
+		else if(obj instanceof HumanEntity) handle = ((CraftHumanEntity)obj).getHandle();
+		return this;
 	}
 	
 	@Override

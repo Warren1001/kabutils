@@ -1,6 +1,5 @@
 package com.kabryxis.kabutils.time;
 
-import com.kabryxis.kabutils.Worker;
 import com.kabryxis.kabutils.utility.BiIntConsumer;
 
 import java.util.HashMap;
@@ -12,7 +11,7 @@ public class CountdownManager {
 	private final Map<Thread, Countdown> currentlyActive = new HashMap<>();
 	private Countdown lastActivated = null;
 	
-	public Countdown constructNewCountdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction, Worker zeroAction) {
+	public Countdown constructNewCountdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction, Runnable zeroAction) {
 		return countdowns.computeIfAbsent(name, s -> new Countdown(s, interval, repeat, timerAction, zeroAction));
 	}
 	
@@ -20,7 +19,7 @@ public class CountdownManager {
 		return constructNewCountdown(name, interval, repeat, timerAction, null);
 	}
 	
-	public Countdown constructNewCountdown(String name, long interval, BiIntConsumer<TimeLeft> timerAction, Worker zeroAction) {
+	public Countdown constructNewCountdown(String name, long interval, BiIntConsumer<TimeLeft> timerAction, Runnable zeroAction) {
 		return constructNewCountdown(name, interval, false, timerAction, zeroAction);
 	}
 	

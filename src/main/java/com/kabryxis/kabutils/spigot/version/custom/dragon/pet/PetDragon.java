@@ -25,7 +25,7 @@ public interface PetDragon extends CustomEntity {
 	}
 	
 	static boolean is(Entity entity) {
-		return WrapperFactory.isInstance(entity, PetDragon.class);
+		return WrapperFactory.isHandleInstance(entity, PetDragon.class);
 	}
 	
 	static PetDragon cast(Entity entity) {

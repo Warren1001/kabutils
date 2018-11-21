@@ -43,6 +43,10 @@ public class BukkitTaskManager {
 	public static BukkitTask start(Plugin plugin, BukkitRunnable runnable, long delay, long interval) {
 		return runnable.runTaskTimer(plugin, delay, interval);
 	}
+
+	public static boolean isRunning(BukkitTask task) {
+		return SCHEDULER.isCurrentlyRunning(task.getTaskId()) || SCHEDULER.isQueued(task.getTaskId());
+	}
 	
 	private final Plugin plugin;
 	

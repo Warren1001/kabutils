@@ -1,13 +1,15 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl;
 
-import com.kabryxis.kabutils.spigot.version.wrapper.nbt.base.WrappedNBTBase;
+import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.base.impl.WrappedNBTBasev1_12_R1;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl.WrappedNBTTagListv1_12_R1;
+import net.minecraft.server.v1_12_R1.ItemStack;
 import net.minecraft.server.v1_12_R1.NBTBase;
 import net.minecraft.server.v1_12_R1.NBTCompressedStreamTools;
 import net.minecraft.server.v1_12_R1.NBTTagCompound;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,13 +20,16 @@ public class WrappedNBTTagCompoundv1_12_R1 extends WrappedNBTBasev1_12_R1 implem
 	
 	private NBTTagCompound tag;
 	
+	public WrappedNBTTagCompoundv1_12_R1() {
+		tag = null;
+	}
+	
 	public WrappedNBTTagCompoundv1_12_R1(Object obj) {
 		setHandle(obj);
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
-		super.setHandle(obj);
+	public WrappedNBTTagCompoundv1_12_R1 setHandle(Object obj) {
 		if(obj instanceof NBTTagCompound) tag = (NBTTagCompound)obj;
 		else if(obj instanceof File) {
 			try {
@@ -33,6 +38,14 @@ public class WrappedNBTTagCompoundv1_12_R1 extends WrappedNBTBasev1_12_R1 implem
 				throw new RuntimeException(e);
 			}
 		}
+		else if(obj instanceof CraftItemStack) {
+			try {
+				tag = ((ItemStack)WrappedItemStack.FIELD_HANDLE.get(obj)).getTag();
+			} catch(IllegalAccessException e) {
+				e.printStackTrace();
+			}
+		}
+		return this;
 	}
 	
 	@Override
@@ -42,7 +55,6 @@ public class WrappedNBTTagCompoundv1_12_R1 extends WrappedNBTBasev1_12_R1 implem
 	
 	@Override
 	public void clear() {
-		super.clear();
 		tag = null;
 	}
 	
@@ -50,8 +62,7 @@ public class WrappedNBTTagCompoundv1_12_R1 extends WrappedNBTBasev1_12_R1 implem
 	public void savePlayerData(File playerFile) {
 		try {
 			NBTCompressedStreamTools.a(tag, new FileOutputStream(playerFile));
-		}
-		catch(IOException e) {
+		} catch(IOException e) {
 			e.printStackTrace();
 		}
 	}
@@ -74,30 +85,84 @@ public class WrappedNBTTagCompoundv1_12_R1 extends WrappedNBTBasev1_12_R1 implem
 		else throw new IllegalArgumentException("NBTTagCompound cannot hold " + obj.getClass().getSimpleName() + " types.");
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
-	public <T> T get(String key, Class<T> clazz) {
-		Object o;
-		if(clazz == WrappedNBTTagList.class) throw new IllegalArgumentException("WrappedNBTTagCompound#getList must be called for retrieving NBTTagLists.");
-		else if(clazz == WrappedNBTTagCompound.class) o = new WrappedNBTTagCompoundv1_8_R1(tag.getCompound(key));
-		else if(clazz == WrappedNBTBase.class) o = new WrappedNBTBasev1_12_R1(tag.get(key));
-		else if(clazz == String.class) o = tag.getString(key);
-		else if(clazz == Integer.class || clazz == int.class) o = tag.getInt(key);
-		else if(clazz == Boolean.class || clazz == boolean.class) o = tag.getBoolean(key);
-		else if(clazz == Byte.class || clazz == byte.class) o = tag.getByte(key);
-		else if(clazz == byte[].class) o = tag.getByteArray(key);
-		else if(clazz == Double.class || clazz == double.class) o = tag.getDouble(key);
-		else if(clazz == Float.class || clazz == float.class) o = tag.getFloat(key);
-		else if(clazz == int[].class) o = tag.getIntArray(key);
-		else if(clazz == Long.class || clazz == long.class) o = tag.getLong(key);
-		else if(clazz == Short.class || clazz == short.class) o = tag.getShort(key);
-		else throw new IllegalArgumentException("NBTTagCompound cannot hold " + clazz.getSimpleName() + " types.");
-		return (T)o;
+	public NBTBase getBaseRaw(String key) {
+		return tag.get(key);
+	}
+	
+	@Override
+	public NBTTagCompound getCompoundRaw(String key) {
+		return tag.getCompound(key);
+	}
+	
+	@Override
+	public WrappedNBTTagCompoundv1_12_R1 getCompound(String key, WrappedNBTTagCompound wrappedTag) {
+		return ((WrappedNBTTagCompoundv1_12_R1)wrappedTag).setHandle(tag.getCompound(key));
+	}
+	
+	@Override
+	public WrappedNBTTagCompoundv1_12_R1 getCompound(String key) {
+		return getCompound(key, new WrappedNBTTagCompoundv1_12_R1());
+	}
+	
+	@Override
+	public WrappedNBTTagListv1_12_R1 getList(String key, int i, WrappedNBTTagList list) {
+		return ((WrappedNBTTagListv1_12_R1)list).setHandle(tag.getList(key, i));
 	}
 	
 	@Override
 	public WrappedNBTTagListv1_12_R1 getList(String key, int i) {
 		return new WrappedNBTTagListv1_12_R1(tag.getList(key, i));
+	}
+	
+	@Override
+	public String getString(String key) {
+		return tag.getString(key);
+	}
+	
+	@Override
+	public int getInt(String key) {
+		return tag.getInt(key);
+	}
+	
+	@Override
+	public double getDouble(String key) {
+		return tag.getDouble(key);
+	}
+	
+	@Override
+	public float getFloat(String key) {
+		return tag.getFloat(key);
+	}
+	
+	@Override
+	public boolean getBoolean(String key) {
+		return tag.getBoolean(key);
+	}
+	
+	@Override
+	public byte getByte(String key) {
+		return tag.getByte(key);
+	}
+	
+	@Override
+	public long getLong(String key) {
+		return tag.getLong(key);
+	}
+	
+	@Override
+	public short getShort(String key) {
+		return tag.getShort(key);
+	}
+	
+	@Override
+	public int[] getIntArray(String key) {
+		return tag.getIntArray(key);
+	}
+	
+	@Override
+	public byte[] getByteArray(String key) {
+		return tag.getByteArray(key);
 	}
 	
 	@Override

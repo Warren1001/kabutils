@@ -23,7 +23,7 @@ public class KabYamlConstructor extends SafeConstructor {
 	public void registerSerializer(Serializer serializer) {
 		switch(serializer.getType()) {
 			case STRING:
-				stringConstructor.stringConstructors.put(String.format("%s%s", serializer.getPrefix(), Config.CUSTOM_INDICATOR), serializer);
+				stringConstructor.stringConstructors.put(serializer.getPrefix() + Config.CUSTOM_INDICATOR, serializer);
 				break;
 			case MAP:
 				configSectionConstructor.mapConstructors.put(serializer.getPrefix(), serializer);

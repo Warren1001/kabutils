@@ -27,7 +27,6 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 		putAll(map);
 	}
 	
-	@Nullable
 	public String getName() {
 		return name;
 	}

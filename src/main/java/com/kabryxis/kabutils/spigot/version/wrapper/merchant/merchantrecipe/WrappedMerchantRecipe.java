@@ -21,6 +21,9 @@ public interface WrappedMerchantRecipe extends Wrappable {
 		return WrapperFactory.getSupplier(WrappedMerchantRecipe.class, NMS_ITEMSTACK, NMS_ITEMSTACK, NMS_ITEMSTACK, int.class, int.class).apply(buyItem1, buyItem2, sellingItem, uses, maxUses);
 	}
 	
+	@Override
+	WrappedMerchantRecipe setHandle(Object obj);
+	
 	Object getBuyingItem1();
 	
 	Object getBuyingItem2();

@@ -1,6 +1,5 @@
 package com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.impl;
 
-import com.kabryxis.kabutils.spigot.version.Version;
 import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.impl.WrappedNBTTagCompoundv1_11_R1;
@@ -8,36 +7,21 @@ import net.minecraft.server.v1_11_R1.ItemStack;
 import net.minecraft.server.v1_11_R1.NBTTagCompound;
 import org.bukkit.craftbukkit.v1_11_R1.inventory.CraftItemStack;
 
-import java.lang.reflect.Field;
-
 public class WrappedItemStackv1_11_R1 implements WrappedItemStack {
-	
-	private static final Field field;
-	
-	static {
-		Field localField = null;
-		try {
-			localField = Version.getOBCClass("inventory.CraftItemStack").getDeclaredField("handle");
-			localField.setAccessible(true);
-		} catch(NoSuchFieldException e) {
-			e.printStackTrace();
-		}
-		field = localField;
-	}
 	
 	private ItemStack itemStack;
 	private boolean clone = false;
 	
 	public WrappedItemStackv1_11_R1(Object obj) {
-		if(obj != null) setHandle(obj);
+		setHandle(obj);
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedItemStackv1_11_R1 setHandle(Object obj) {
 		if(obj instanceof ItemStack) this.itemStack = (ItemStack)obj;
 		else if(obj instanceof CraftItemStack) {
 			try {
-				this.itemStack = (ItemStack)field.get(obj);
+				this.itemStack = (ItemStack)WrappedItemStack.FIELD_HANDLE.get(obj);
 			} catch(IllegalAccessException e) {
 				e.printStackTrace();
 			}
@@ -50,7 +34,7 @@ public class WrappedItemStackv1_11_R1 implements WrappedItemStack {
 			clone = true;
 			this.itemStack = new ItemStack(((WrappedNBTTagCompoundv1_11_R1)obj).getHandle());
 		}
-		else if(obj == null) itemStack = null;
+		return this;
 	}
 	
 	@Override

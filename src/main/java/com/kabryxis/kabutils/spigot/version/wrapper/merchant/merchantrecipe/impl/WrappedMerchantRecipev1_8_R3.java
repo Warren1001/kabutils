@@ -21,8 +21,9 @@ public class WrappedMerchantRecipev1_8_R3 implements WrappedMerchantRecipe {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedMerchantRecipev1_8_R3 setHandle(Object obj) {
 		if(obj instanceof MerchantRecipe) merchantRecipe = (MerchantRecipe)obj;
+		return this;
 	}
 	
 	@Override

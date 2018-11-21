@@ -22,7 +22,7 @@ public interface CustomHitbox extends CustomEntity {
 	}
 	
 	static boolean is(Entity entity) {
-		return WrapperFactory.isInstance(entity, CustomHitbox.class);
+		return WrapperFactory.isHandleInstance(entity, CustomHitbox.class);
 	}
 	
 	static CustomHitbox cast(Entity entity) {

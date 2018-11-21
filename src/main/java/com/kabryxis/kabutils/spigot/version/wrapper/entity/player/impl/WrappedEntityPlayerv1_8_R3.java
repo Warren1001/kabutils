@@ -14,7 +14,7 @@ import java.util.Set;
 
 public class WrappedEntityPlayerv1_8_R3 implements WrappedEntityPlayer {
 	
-	private static final Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> teleportFlags = EnumSet.of(PacketPlayOutPosition.EnumPlayerTeleportFlags.X, PacketPlayOutPosition.EnumPlayerTeleportFlags.Y,
+	private static final Set<PacketPlayOutPosition.EnumPlayerTeleportFlags> TELEPORT_FLAGS = EnumSet.of(PacketPlayOutPosition.EnumPlayerTeleportFlags.X, PacketPlayOutPosition.EnumPlayerTeleportFlags.Y,
 			PacketPlayOutPosition.EnumPlayerTeleportFlags.Z);
 	
 	private static final Field containerCounter;
@@ -37,9 +37,10 @@ public class WrappedEntityPlayerv1_8_R3 implements WrappedEntityPlayer {
 	}
 	
 	@Override
-	public void setHandle(Object obj) {
+	public WrappedEntityPlayerv1_8_R3 setHandle(Object obj) {
 		if(obj instanceof EntityPlayer) entityPlayer = (EntityPlayer)obj;
 		else if(obj instanceof Player) entityPlayer = ((CraftPlayer)obj).getHandle();
+		return this;
 	}
 	
 	@Override
@@ -59,7 +60,7 @@ public class WrappedEntityPlayerv1_8_R3 implements WrappedEntityPlayer {
 	
 	@Override
 	public void teleportRelative(Location location) {
-		entityPlayer.playerConnection.sendPacket(new PacketPlayOutPosition(location.getX(), location.getY(), location.getZ(), 0F, 0F, teleportFlags));
+		entityPlayer.playerConnection.sendPacket(new PacketPlayOutPosition(location.getX(), location.getY(), location.getZ(), 0F, 0F, TELEPORT_FLAGS));
 	}
 	
 	@Override

@@ -1,6 +1,5 @@
 package com.kabryxis.kabutils.time;
 
-import com.kabryxis.kabutils.Worker;
 import com.kabryxis.kabutils.concurrent.Threads;
 import com.kabryxis.kabutils.utility.BiIntConsumer;
 
@@ -10,13 +9,13 @@ public class Countdown {
 	private long interval;
 	private boolean repeat;
 	private BiIntConsumer<TimeLeft> timerAction;
-	private Worker zeroAction;
+	private Runnable zeroAction;
 	
 	private Thread currThread;
 	private int time = -1, maxTime = -1;
 	private boolean wait = false, stop = false;
 	
-	public Countdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction, Worker zeroAction) {
+	public Countdown(String name, long interval, boolean repeat, BiIntConsumer<TimeLeft> timerAction, Runnable zeroAction) {
 		this.name = name;
 		this.interval = interval;
 		this.repeat = repeat;
@@ -37,7 +36,7 @@ public class Countdown {
 			timerAction.accept(time, getTimeLeft());
 			Threads.sleep(interval);
 		}
-		if(!stop && zeroAction != null) zeroAction.work();
+		if(!stop && zeroAction != null) zeroAction.run();
 		currThread = null;
 		time = -1;
 		stop = false;
