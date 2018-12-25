@@ -17,6 +17,7 @@ public interface WrappedNBTTagCompound extends WrappedNBTBase {
 	Class<WrappedNBTTagCompoundv1_10_R1> v1_10_R1 = WrappedNBTTagCompoundv1_10_R1.class;
 	Class<WrappedNBTTagCompoundv1_11_R1> v1_11_R1 = WrappedNBTTagCompoundv1_11_R1.class;
 	Class<WrappedNBTTagCompoundv1_12_R1> v1_12_R1 = WrappedNBTTagCompoundv1_12_R1.class;
+	Class<WrappedNBTTagCompoundv1_13_R2> v1_13_R2 = WrappedNBTTagCompoundv1_13_R2.class;
 	
 	static WrappedNBTTagCompound newInstance() {
 		return WrapperFactory.getSupplier(WrappedNBTTagCompound.class, Object.class).apply((Object)null);

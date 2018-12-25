@@ -1,6 +1,8 @@
 package com.kabryxis.kabutils.utility;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 public class ReflectionHelper {
 	
@@ -74,6 +76,16 @@ public class ReflectionHelper {
 		try {
 			return field.getInt(instance);
 		} catch(IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
+	public static Object getObjectFromStaticGetter(Class<?> clazz, String methodName) {
+		try {
+			Method method = clazz.getDeclaredMethod(methodName);
+			method.setAccessible(true);
+			return method.invoke(null);
+		} catch(NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
 	}

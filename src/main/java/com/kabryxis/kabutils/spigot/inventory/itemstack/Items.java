@@ -1,12 +1,67 @@
 package com.kabryxis.kabutils.spigot.inventory.itemstack;
 
+import com.kabryxis.kabutils.spigot.listener.Listeners;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.WrappedNBTTagList;
 import org.apache.commons.lang3.Validate;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Item;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 public class Items {
+	
+	private static int ITEM_SPAWN_AMOUNT = 0;
+	private static boolean ITEM_SPAWN_SETUP = false;
+	private static boolean CAN_DROP_ITEMS = false;
+	
+	public static void allowNextItemSpawn() {
+		if(!ITEM_SPAWN_SETUP) throw new IllegalStateException("allowNextItemSpawn has yet to be setup.");
+		ITEM_SPAWN_AMOUNT++;
+	}
+	
+	public static void setupAllowNextItemSpawn(Plugin plugin) {
+		if(!ITEM_SPAWN_SETUP) {
+			Listeners.registerListener(new Listener() {
+				
+				@EventHandler(priority = EventPriority.HIGHEST)
+				public void onItemSpawn(EntitySpawnEvent event) {
+					if(event.isCancelled() && ITEM_SPAWN_AMOUNT > 0 && event.getEntityType() == EntityType.DROPPED_ITEM) {
+						ITEM_SPAWN_AMOUNT--;
+						event.setCancelled(false);
+					}
+				}
+				
+				@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+				public void onPlayerDropItem(PlayerDropItemEvent event) {
+					if(CAN_DROP_ITEMS) ITEM_SPAWN_AMOUNT++;
+				}
+				
+			}, plugin);
+			ITEM_SPAWN_SETUP = true;
+		}
+	}
+	
+	public static void setCanDropItems(boolean canDropItems) {
+		CAN_DROP_ITEMS = canDropItems;
+	}
+	
+	public static Item dropItem(Location loc, ItemStack item) {
+		if(ITEM_SPAWN_SETUP) ITEM_SPAWN_AMOUNT++;
+		return loc.getWorld().dropItem(loc, item);
+	}
+	
+	public static Item dropItemNaturally(Location loc, ItemStack item) {
+		if(ITEM_SPAWN_SETUP) ITEM_SPAWN_AMOUNT++;
+		return loc.getWorld().dropItemNaturally(loc, item);
+	}
 	
 	public static boolean exists(ItemStack item) {
 		return item != null && item.getType() != Material.AIR;

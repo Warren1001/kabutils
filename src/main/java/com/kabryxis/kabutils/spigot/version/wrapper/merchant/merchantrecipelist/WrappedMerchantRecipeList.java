@@ -17,6 +17,7 @@ public interface WrappedMerchantRecipeList extends Wrappable {
 	Class<WrappedMerchantRecipeListv1_10_R1> v1_10_R1 = WrappedMerchantRecipeListv1_10_R1.class;
 	Class<WrappedMerchantRecipeListv1_11_R1> v1_11_R1 = WrappedMerchantRecipeListv1_11_R1.class;
 	Class<WrappedMerchantRecipeListv1_12_R1> v1_12_R1 = WrappedMerchantRecipeListv1_12_R1.class;
+	Class<WrappedMerchantRecipeListv1_13_R2> v1_13_R2 = WrappedMerchantRecipeListv1_13_R2.class;
 	
 	static WrappedMerchantRecipeList newInstance() {
 		return newInstance(true);

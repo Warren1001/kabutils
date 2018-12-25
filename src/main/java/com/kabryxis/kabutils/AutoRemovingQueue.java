@@ -4,9 +4,8 @@ import javax.annotation.Nonnull;
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.Queue;
 
-public class AutoRemovingQueue<E extends AutoRemovable> extends AbstractQueue<E> implements Queue<E> {
+public class AutoRemovingQueue<E extends AutoRemovable> extends AbstractQueue<E> {
 	
 	private final Object[] elements;
 	

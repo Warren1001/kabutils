@@ -13,7 +13,8 @@ public enum Version {
 	v1_9_R2(4, "v1_9_R2", "1.9.4"),
 	v1_10_R1(5, "v1_10_R1", "1.10"),
 	v1_11_R1(6, "v1_11_R1", "1.11"),
-	v1_12_R1(7, "v1_12_R1", "1.12");
+	v1_12_R1(7, "v1_12_R1", "1.12"),
+	v1_13_R2(8, "v1_13_R2", "1.13.2");
 	
 	public static final Version VERSION = Version.getByName(Version.UNKNOWN.getImplementationNamespace());
 	public static final String NMS_PACKAGE = "net.minecraft.server";

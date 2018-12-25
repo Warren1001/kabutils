@@ -205,7 +205,7 @@ public class MultiRandomArrayList<K, V> {
 		return entry;
 	}
 	
-	public class ListEntry {
+	protected class ListEntry {
 		
 		private V obj;
 		private List<V> belongingList;

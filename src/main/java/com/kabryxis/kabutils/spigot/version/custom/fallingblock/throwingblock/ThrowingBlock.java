@@ -23,8 +23,8 @@ public interface ThrowingBlock extends CustomEntity, AutoRemovable {
 	}
 	
 	static ThrowingBlock spawn(BlockStateManager blockStateManager, Block block, Vector velocity, long aliveTime, Predicate<Block> protectedPredicate) {
-		return WrapperFactory.getSupplier(ThrowingBlock.class, BlockStateManager.class, Block.class, Vector.class, long.class, Predicate.class).apply
-				(blockStateManager, block, velocity, aliveTime, protectedPredicate);
+		return WrapperFactory.getSupplier(ThrowingBlock.class, BlockStateManager.class, Block.class, Vector.class, long.class, Predicate.class)
+				.apply(blockStateManager, block, velocity, aliveTime, protectedPredicate);
 	}
 	
 	static boolean is(Entity entity) {
