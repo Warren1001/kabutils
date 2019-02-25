@@ -5,7 +5,6 @@ import com.kabryxis.kabutils.data.Maps;
 import com.kabryxis.kabutils.data.NumberConversions;
 import com.kabryxis.kabutils.data.Objects;
 
-import javax.annotation.Nullable;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -20,6 +19,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 	}
 	
 	private String name;
+	private ConfigSection parent = null;
 	
 	public ConfigSection() {}
 	
@@ -233,54 +233,6 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 		return computeIfAbsent(path, ignore -> new ConfigSection());
 	}
 	
-	/*@SuppressWarnings("unchecked")
-	public <T> T get(String path, Class<T> clazz) {
-		Object obj = get(path);
-		if(obj == null) return null;
-		boolean forceCast = false;
-		if(obj instanceof Number) {
-			if(clazz == Float.class || clazz == float.class) {
-				obj = NumberConversions.toFloat(obj);
-				forceCast = true;
-			}
-			else if(clazz == Byte.class || clazz == byte.class) {
-				obj = NumberConversions.toByte(obj);
-				forceCast = true;
-			}
-			else if(clazz == Long.class || clazz == long.class) {
-				obj = NumberConversions.toLong(obj);
-				forceCast = true;
-			}
-			else if(clazz == Short.class || clazz == short.class) {
-				obj = NumberConversions.toShort(obj);
-				forceCast = true;
-			}
-			else if(clazz == Integer.class || clazz == int.class) {
-				obj = NumberConversions.toInt(obj);
-				forceCast = true;
-			}
-			else if(clazz == Double.class || clazz == double.class) {
-				obj = NumberConversions.toDouble(obj);
-				forceCast = true;
-			}
-		}
-		else if(obj instanceof String) {
-			if(clazz.isEnum()) obj = Enum.valueOf((Class<? extends Enum>)clazz, obj.toString().toUpperCase().replace(' ', '_'));
-			else if(DESERIALIZERS.containsKey(clazz)) obj = DESERIALIZERS.get(clazz).apply(obj.toString());
-		}
-		return forceCast || clazz.isInstance(obj) ? (T)obj : null;
-	}
-	
-	public <T> T get(String path, Class<T> clazz, T def) {
-		return Objects.getFirstNonnull(get(path, clazz), def);
-	}
-	
-	public <T> T computeIfAbsent(String path, Class<T> clazz, T def) {
-		T t = get(path, clazz, def);
-		if(t == def) put(path, t);
-		return t;
-	}*/
-	
 	public <T extends Enum<T>> T getEnum(String path, Class<T> clazz) {
 		String string = get(path);
 		return string == null ? null : Enum.valueOf(clazz, string.toUpperCase().replace(' ', '_'));
@@ -368,12 +320,20 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 	
 	@Override
 	public void set(ConfigSection section, String key) {
-		if(name == null) name = key;
+		if(parent == null) {
+			parent = section;
+			name = key;
+		}
+		//else throw new IllegalStateException("ConfigSections cannot be in more than one other ConfigSections");
 	}
 	
 	@Override
 	public void removed(ConfigSection section, String key) {
-		name = null;
+		if(section == parent) {
+			name = null;
+			parent = null;
+		}
+		//else throw new IllegalStateException("Tried to remove " + this + " from " + section + " when it already belongs to " + parent);
 	}
 	
 	protected Object put0(String key, Object value) {
@@ -397,8 +357,10 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 			String[] args = path.split(PERIOD);
 			for(int i = 0; i < args.length - 1; i++) {
 				ConfigSection newSection = section.get(args[i]);
-				if(newSection == null && create) section.put(args[1], (newSection = new ConfigSection()));
-				if(newSection == null) return null;
+				if(newSection == null) {
+					if(create) section.put(args[i], (newSection = new ConfigSection()));
+					else return null;
+				}
 				section = newSection;
 			}
 		}
@@ -411,6 +373,52 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 	
 	public Collection<ConfigSection> getChildren() {
 		return values().stream().filter(ConfigSection.class::isInstance).map(ConfigSection.class::cast).collect(Collectors.toSet());
+	}
+	
+	public Map<String, Object> serialize() {
+		Map<String, Object> map = new LinkedHashMap<>(this);
+		for(Iterator<Map.Entry<String, Object>> iterator = map.entrySet().iterator(); iterator.hasNext();) {
+			Map.Entry<String, Object> entry = iterator.next();
+			Object value = entry.getValue();
+			if(value instanceof Map) {
+				if(((Map)value).isEmpty()) iterator.remove();
+				else if(value instanceof ConfigSection) {
+					Map<String, Object> serialized = ((ConfigSection)value).serialize();
+					if(serialized.isEmpty()) iterator.remove();
+					else entry.setValue(serialized);
+				}
+			}
+		}
+		return map;
+	}
+	
+	public String getPath() {
+		if(parent != null) {
+			String path = parent.getPath();
+			if(path != null) return path + "." + name;
+		}
+		return name;
+	}
+	
+	@Override
+	public String toString() {
+		return "ConfigSection[name=" + name + ",parent=" + parent + "]";
+	}
+	
+	public void requestSave() {
+		if(parent != null) {
+			if(parent instanceof Config) ((Config)parent).save();
+			else parent.requestSave();
+		}
+	}
+	
+	@Override
+	public boolean containsKey(Object obj) {
+		if(!(obj instanceof String)) return false;
+		String string = (String)obj;
+		ConfigSection section = getCorrectSection(string, false);
+		String key = getCorrectKey(string);
+		return section.get0(key) != null;
 	}
 	
 }

@@ -13,6 +13,13 @@ public class Arrays {
 		return Stream.of(array).anyMatch(o -> Objects.equals(o, obj));
 	}
 	
+	public static boolean containsInt(int[] array, int i) {
+		for(int i1 : array) {
+			if(i1 == i) return true;
+		}
+		return false;
+	}
+	
 	public static <T> T[] splitArray(T[] originalArray, int start) {
 		return java.util.Arrays.copyOfRange(originalArray, start, originalArray.length);
 	}

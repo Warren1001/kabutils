@@ -11,18 +11,28 @@ import java.io.FilenameFilter;
  */
 public class FileEndingFilter implements FilenameFilter {
 	
-	private final String fileExtension;
+	private final String[] extensions;
 	
 	/**
-	 * @param fileExtension The file extension string (ex: ".txt")
+	 * @param extension The file extension string (ex: ".txt")
 	 */
-	public FileEndingFilter(String fileExtension) {
-		this.fileExtension = fileExtension;
+	public FileEndingFilter(String extension) {
+		extensions = new String[] { extension };
+	}
+	
+	/**
+	 * @param extensions The file extension strings (ex: ".mkv", ".mp4")
+	 */
+	public FileEndingFilter(String... extensions) {
+		this.extensions = extensions;
 	}
 	
 	@Override
 	public boolean accept(File file, String name) {
-		return name.endsWith(fileExtension);
+		for(String extension : extensions) {
+			if(name.endsWith(extension)) return true;
+		}
+		return false;
 	}
 	
 }

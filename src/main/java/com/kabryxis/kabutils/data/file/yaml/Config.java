@@ -13,6 +13,7 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class Config extends ConfigSection {
 	
@@ -31,6 +32,10 @@ public class Config extends ConfigSection {
 	public static void registerSerializer(Serializer serializer) {
 		YAML_CONSTRUCTOR.registerSerializer(serializer);
 		YAML_REPRESENTER.registerSerializer(serializer);
+	}
+	
+	public static void forEachConfig(File folder, Consumer<? super Config> action) {
+		Files.forEachFileWithEnding(folder, EXTENSION, file -> action.accept(new Config(file, true)));
 	}
 	
 	private final File file;
@@ -94,7 +99,7 @@ public class Config extends ConfigSection {
 	
 	public void save() {
 		try(FileWriter writer = new FileWriter(file)) {
-			YAML_INSTANCE.dump(this, writer);
+			YAML_INSTANCE.dump(serialize(), writer);
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -108,6 +113,11 @@ public class Config extends ConfigSection {
 	public Config builderPut(String path, Object value) {
 		put(path, value);
 		return this;
+	}
+	
+	@Override
+	public String toString() {
+		return "Config[file=" + file + ",data=\n" + super.toString() + "]";
 	}
 	
 }

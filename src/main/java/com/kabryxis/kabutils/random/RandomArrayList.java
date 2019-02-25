@@ -88,7 +88,7 @@ public class RandomArrayList<E> implements Collection<E> {
 	}
 	
 	public E random() {
-		if(currNoRepeat == -1) return null;
+		if(currNoRepeat == -1) return list.get(new Random().nextInt(list.size()));
 		E value = currNoRepeat == 0 ? list.get(0) : list.remove(new Random().nextInt(list.size()));
 		if(currNoRepeat != 0) used.add(value);
 		if(used.size() == currNoRepeat + 1) list.add(used.remove(0));

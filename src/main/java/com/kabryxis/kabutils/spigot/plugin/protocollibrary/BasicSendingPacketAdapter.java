@@ -40,4 +40,7 @@ public class BasicSendingPacketAdapter extends PacketAdapter {
 		action.accept(event);
 	}
 	
+	@Override
+	public void onPacketReceiving(PacketEvent event) {}
+	
 }
