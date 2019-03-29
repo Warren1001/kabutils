@@ -54,8 +54,7 @@ public class BlockStateManager {
 	}
 	
 	public void revertState(Block block) {
-		BlockState state = getState(block);
-		setBlock(block, state.getType(), state.getRawData());
+		getState(block).update(true, false);
 	}
 	
 	public void revertState(double x, double y, double z) {
