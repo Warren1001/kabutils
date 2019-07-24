@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils;
+package com.kabryxis.kabutils.utility.predicate;
 
 @FunctionalInterface
 public interface NoArgPredicate {

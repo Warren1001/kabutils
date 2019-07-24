@@ -1,6 +1,6 @@
 package com.kabryxis.kabutils.spigot.listener;
 
-import com.kabryxis.kabutils.NoArgPredicate;
+import com.kabryxis.kabutils.utility.predicate.NoArgPredicate;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventPriority;
 import org.bukkit.plugin.Plugin;

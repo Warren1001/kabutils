@@ -4,7 +4,9 @@ import org.apache.commons.lang3.Validate;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.IntConsumer;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class Arrays {
@@ -13,11 +15,8 @@ public class Arrays {
 		return Stream.of(array).anyMatch(o -> Objects.equals(o, obj));
 	}
 	
-	public static boolean containsInt(int[] array, int i) {
-		for(int i1 : array) {
-			if(i1 == i) return true;
-		}
-		return false;
+	public static boolean contains(int[] array, int i) {
+		return IntStream.of(array).anyMatch(a -> a == i);
 	}
 	
 	public static <T> T[] splitArray(T[] originalArray, int start) {
@@ -35,6 +34,15 @@ public class Arrays {
 		if(array != null && array.length != 0) {
 			for(T t : array) {
 				action.accept(t);
+			}
+		}
+	}
+	
+	public static void forEach(int[] array, IntConsumer action) {
+		Validate.notNull(action, "action cannot be null");
+		if(array != null && array.length != 0) {
+			for(int i : array) {
+				action.accept(i);
 			}
 		}
 	}

@@ -1,6 +1,6 @@
 package com.kabryxis.kabutils.spigot.world;
 
-import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.kabutils.data.Maths;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -70,7 +70,7 @@ public class BlockStateManager {
 	}
 
 	protected Block getBlock(double x, double y, double z) {
-		return world.getBlockAt(NumberConversions.floor(x), NumberConversions.floor(y), NumberConversions.floor(z));
+		return world.getBlockAt(Maths.floor(x), Maths.floor(y), Maths.floor(z));
 	}
 
 }

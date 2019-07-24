@@ -1,6 +1,10 @@
 package com.kabryxis.kabutils.data;
 
-public class NumberConversions {
+import org.apache.commons.lang3.Validate;
+
+import java.util.stream.IntStream;
+
+public class Maths {
 	
 	public static int floor(double num) {
 		int floor = (int)num;
@@ -110,6 +114,11 @@ public class NumberConversions {
 	
 	public static byte toByte(Object obj) {
 		return toByte(obj, (byte)0);
+	}
+	
+	public static double average(int... ints) {
+		Validate.notNull(ints, "ints cannot be null");
+		return IntStream.of(ints).average().orElse(0.0);
 	}
 	
 }

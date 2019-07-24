@@ -2,7 +2,7 @@ package com.kabryxis.kabutils.data.file.yaml;
 
 import com.kabryxis.kabutils.data.Lists;
 import com.kabryxis.kabutils.data.Maps;
-import com.kabryxis.kabutils.data.NumberConversions;
+import com.kabryxis.kabutils.data.Maths;
 import com.kabryxis.kabutils.data.Objects;
 
 import java.util.*;
@@ -89,7 +89,8 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 		Object obj = section.get0(getCorrectKey(path));
 		try {
 			return (T)obj;
-		} catch(ClassCastException ignore) {
+		} catch(ClassCastException e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
@@ -129,27 +130,27 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 	}
 	
 	public int getInt(String path) {
-		return NumberConversions.toInt(get(path));
+		return Maths.toInt(get(path));
 	}
 	
 	public float getFloat(String path) {
-		return NumberConversions.toFloat(get(path));
+		return Maths.toFloat(get(path));
 	}
 	
 	public double getDouble(String path) {
-		return NumberConversions.toDouble(get(path));
+		return Maths.toDouble(get(path));
 	}
 	
 	public short getShort(String path) {
-		return NumberConversions.toShort(get(path));
+		return Maths.toShort(get(path));
 	}
 	
 	public long getLong(String path) {
-		return NumberConversions.toLong(get(path));
+		return Maths.toLong(get(path));
 	}
 	
 	public byte getByte(String path) {
-		return NumberConversions.toByte(get(path));
+		return Maths.toByte(get(path));
 	}
 	
 	public boolean getBoolean(String path) {
@@ -158,27 +159,27 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 	}
 	
 	public int getInt(String path, int def) {
-		return NumberConversions.toInt(get(path), def);
+		return Maths.toInt(get(path), def);
 	}
 	
 	public float getFloat(String path, float def) {
-		return NumberConversions.toFloat(get(path), def);
+		return Maths.toFloat(get(path), def);
 	}
 	
 	public double getDouble(String path, double def) {
-		return NumberConversions.toDouble(get(path), def);
+		return Maths.toDouble(get(path), def);
 	}
 	
 	public short getShort(String path, short def) {
-		return NumberConversions.toShort(get(path), def);
+		return Maths.toShort(get(path), def);
 	}
 	
 	public long getLong(String path, long def) {
-		return NumberConversions.toLong(get(path), def);
+		return Maths.toLong(get(path), def);
 	}
 	
 	public byte getByte(String path, byte def) {
-		return NumberConversions.toByte(get(path), def);
+		return Maths.toByte(get(path), def);
 	}
 	
 	public boolean getBoolean(String path, boolean def) {
@@ -235,7 +236,7 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 	
 	public <T extends Enum<T>> T getEnum(String path, Class<T> clazz) {
 		String string = get(path);
-		return string == null ? null : Enum.valueOf(clazz, string.toUpperCase().replace(' ', '_'));
+		return string == null ? null : Enum.valueOf(clazz, string.trim().toUpperCase().replace(' ', '_'));
 	}
 	
 	public <T extends Enum<T>> T getEnum(String path, Class<T> clazz, T def) {

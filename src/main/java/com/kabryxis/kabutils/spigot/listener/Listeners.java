@@ -1,6 +1,6 @@
 package com.kabryxis.kabutils.spigot.listener;
 
-import com.kabryxis.kabutils.NoArgPredicate;
+import com.kabryxis.kabutils.utility.predicate.NoArgPredicate;
 import com.kabryxis.kabutils.utility.ReflectionHelper;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.event.*;

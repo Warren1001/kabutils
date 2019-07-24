@@ -1,8 +1,11 @@
 package com.kabryxis.kabutils.data.file;
 
 import com.kabryxis.kabutils.data.Arrays;
+import com.kabryxis.kabutils.string.Strings;
+import org.apache.commons.lang3.Validate;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.function.Consumer;
 
 public class Files {
@@ -35,6 +38,15 @@ public class Files {
 	
 	public static void forEachDirectory(File folder, Consumer<? super File> action) {
 		Arrays.forEach(getDirectories(folder), action);
+	}
+	
+	public static int countWords(File file) {
+		Validate.isTrue(file != null && file.exists(), "file is null or does not exist");
+		try {
+			return Strings.split(String.join(" ", java.nio.file.Files.readAllLines(file.toPath())).trim(), " ").length;
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
 	}
 	
 }

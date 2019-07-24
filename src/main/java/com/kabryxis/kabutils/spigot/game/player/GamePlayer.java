@@ -2,6 +2,8 @@ package com.kabryxis.kabutils.spigot.game.player;
 
 import com.google.common.collect.Sets;
 import com.kabryxis.kabutils.data.Arrays;
+import com.kabryxis.kabutils.spigot.plugin.Plugins;
+import com.kabryxis.kabutils.spigot.plugin.protocollibrary.ProtocolLibGamePlayerAdapter;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.conversations.Conversation;
@@ -29,9 +31,11 @@ public class GamePlayer implements Player {
 	public static final Set<Material> IGNORED_TARGET_BLOCK_MATERIALS = Sets.newHashSet(Material.AIR, Material.CARPET);
 	
 	protected final UUID uuid;
+	protected final ProtocolLibGamePlayerAdapter protocolLibAdapter;
 	
 	public GamePlayer(UUID uuid) {
 		this.uuid = uuid;
+		protocolLibAdapter = Plugins.isInstalled(Plugins.ProtocolLib) ? new ProtocolLibGamePlayerAdapter(this) : null;
 	}
 	
 	protected Player player;
@@ -97,6 +101,11 @@ public class GamePlayer implements Player {
 	
 	public void setHealthToMax() {
 		setHealth(getMaxHealth());
+	}
+	
+	public ProtocolLibGamePlayerAdapter getProtocolLibAdapter() {
+		if(protocolLibAdapter == null) throw new UnsupportedOperationException("This method requires ProtocolLib to be installed to be used");
+		return protocolLibAdapter;
 	}
 	
 	@Override
@@ -1125,7 +1134,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public boolean hasLineOfSight(Entity entity) {
-		return player.hasLineOfSight(entity);
+		return player.hasLineOfSight(entity instanceof Player ? ((Player)entity).getPlayer() : entity);
 	}
 	
 	@Override

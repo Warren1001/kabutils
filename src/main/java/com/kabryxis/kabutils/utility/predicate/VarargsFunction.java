@@ -1,4 +1,4 @@
-package com.kabryxis.kabutils.data;
+package com.kabryxis.kabutils.utility.predicate;
 
 public interface VarargsFunction<T> {
 	

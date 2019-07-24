@@ -1,5 +1,6 @@
 package com.kabryxis.kabutils.string;
 
+import java.util.Collection;
 import java.util.regex.Pattern;
 
 public class Strings {
@@ -22,6 +23,10 @@ public class Strings {
 			if(ch == c) count++;
 		}
 		return count;
+	}
+	
+	public static boolean containsIgnoreCase(Collection<String> collection, String obj) {
+		return collection.stream().anyMatch(obj::equalsIgnoreCase);
 	}
 	
 }

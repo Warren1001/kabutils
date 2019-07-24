@@ -1,6 +1,6 @@
 package com.kabryxis.kabutils.spigot.version.wrapper;
 
-import com.kabryxis.kabutils.data.VarargsFunction;
+import com.kabryxis.kabutils.utility.predicate.VarargsFunction;
 import com.kabryxis.kabutils.spigot.version.Version;
 import org.apache.commons.lang3.Validate;
 
