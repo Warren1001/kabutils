@@ -422,4 +422,9 @@ public class ConfigSection extends LinkedHashMap<String, Object> implements SetL
 		return section.get0(key) != null;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		return obj == this;
+	}
+	
 }

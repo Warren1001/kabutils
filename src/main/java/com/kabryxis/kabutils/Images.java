@@ -12,25 +12,54 @@ import java.util.Objects;
 public class Images {
 	
 	/**
-	 * Maintains aspect ratio, scales dimensions up or down equally until both dimensions
-	 * are under their respective maxes, one of which being at the specified max.
+	 * Maintains aspect ratio, scales dimensions down equally until both dimensions
+	 * are under or equal to their respective maximums.
 	 *
 	 * @param image The image to resize.
 	 * @param maxWidth The maximum width the new image can have.
 	 * @param maxHeight The maximum height the new image can have.
-	 * @return The new resized image.
+	 * @return The new resized image, or a copy of the image if it was already smaller than the given dimensions.
 	 */
-	public static BufferedImage resize(Image image, int maxWidth, int maxHeight) {
+	public static BufferedImage downscale(Image image, int maxWidth, int maxHeight) {
 		int iw = image.getWidth(null);
 		int ih = image.getHeight(null);
+		if(iw <= maxWidth && ih <= maxHeight) return Images.copy(image);
 		int resizeWidth, resizeHeight;
 		double ratio = (double)iw / maxWidth;
-		resizeHeight = (int)(ih / ratio);
-		if(resizeHeight >= maxHeight) {
+		resizeHeight = Maths.floor(ih / ratio);
+		if(resizeHeight > maxHeight) {
 			ratio = (double)ih / maxHeight;
 			resizeHeight = (int)(ih / ratio);
 		}
 		resizeWidth = (int)(iw / ratio);
+		BufferedImage result = new BufferedImage(resizeWidth, resizeHeight, 2);
+		Graphics2D graphics = result.createGraphics();
+		graphics.drawImage(image, 0, 0, resizeWidth, resizeHeight, null);
+		graphics.dispose();
+		return result;
+	}
+	
+	/**
+	 * Maintains aspect ratio, scales dimensions up equally until both dimensions
+	 * are above or equal to their respective minimums.
+	 *
+	 * @param image The image to resize.
+	 * @param minWidth The minimum width the new image can have.
+	 * @param minHeight The minimum height the new image can have.
+	 * @return The new resized image, or a copy of the image if it was already bigger than the given dimensions.
+	 */
+	public static BufferedImage upscale(Image image, int minWidth, int minHeight) {
+		int iw = image.getWidth(null);
+		int ih = image.getHeight(null);
+		if(iw >= minWidth && ih >= minHeight) return Images.copy(image);
+		int resizeWidth, resizeHeight;
+		double ratio = (double)minWidth / iw;
+		resizeHeight = Maths.ceil(ih * ratio);
+		if(resizeHeight < minHeight) {
+			ratio = (double)minHeight / ih;
+			resizeHeight = (int)(ih * ratio);
+		}
+		resizeWidth = Maths.ceil(iw * ratio);
 		BufferedImage result = new BufferedImage(resizeWidth, resizeHeight, 2);
 		Graphics2D graphics = result.createGraphics();
 		graphics.drawImage(image, 0, 0, resizeWidth, resizeHeight, null);
@@ -52,20 +81,6 @@ public class Images {
 		int[] pixels = new int[width * height];
 		bufferedImage.getRGB(0, 0, width, height, pixels, 0, width);
 		return pixels;
-	}
-	
-	public static boolean imageColorsEqual(int[] colors1, int[] colors2, double margin) {
-		double max = colors1.length;
-		int pass = 0;
-		for(int i = 0; i < max; i++) {
-			int c1 = colors1[i];
-			int c2 = colors2[i];
-			if(Math.abs(c1 - c2) <= 5) { // TODO
-				pass++;
-				if(pass >= max * margin) return true;
-			}
-		}
-		return false;
 	}
 	
 	public static BufferedImage copy(Image image) {

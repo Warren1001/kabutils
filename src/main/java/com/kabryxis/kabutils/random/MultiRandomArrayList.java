@@ -7,6 +7,8 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MultiRandomArrayList<K, V> {
 	
@@ -179,19 +181,11 @@ public class MultiRandomArrayList<K, V> {
 	}
 	
 	public List<V> random(K[][] keysArray) {
-		List<V> list = new ArrayList<>(keysArray.length);
-		for(K[] keys : keysArray) {
-			list.add(random(keys));
-		}
-		return list;
+		return Stream.of(keysArray).map(this::random).collect(Collectors.toList());
 	}
 	
 	public List<V> random(Collection<? extends K[]> collection) {
-		List<V> list = new ArrayList<>(collection.size());
-		for(K[] keys : collection) {
-			list.add(random(keys));
-		}
-		return list;
+		return collection.stream().map(this::random).collect(Collectors.toList());
 	}
 	
 	public void forEachValue(Consumer<? super V> action) {
@@ -200,9 +194,7 @@ public class MultiRandomArrayList<K, V> {
 	}
 	
 	protected ListEntry getListEntry(V obj, List<V> belongingList) {
-		ListEntry entry = cache.isEmpty() ? new ListEntry() : cache.poll();
-		entry.reuse(obj, belongingList);
-		return entry;
+		return (cache.isEmpty() ? new ListEntry() : cache.poll()).reuse(obj, belongingList);
 	}
 	
 	protected class ListEntry {
@@ -210,9 +202,10 @@ public class MultiRandomArrayList<K, V> {
 		private V obj;
 		private List<V> belongingList;
 		
-		public void reuse(V obj, List<V> belongingList) {
+		public ListEntry reuse(V obj, List<V> belongingList) {
 			this.obj = obj;
 			this.belongingList = belongingList;
+			return this;
 		}
 		
 		public V getObject() {

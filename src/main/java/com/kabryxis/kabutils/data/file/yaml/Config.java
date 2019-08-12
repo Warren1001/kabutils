@@ -1,7 +1,7 @@
 package com.kabryxis.kabutils.data.file.yaml;
 
 import com.kabryxis.kabutils.data.Maps;
-import com.kabryxis.kabutils.data.file.Files;
+import com.kabryxis.kabutils.data.file.KFiles;
 import com.kabryxis.kabutils.data.file.yaml.serialization.Serializer;
 import org.apache.commons.lang3.Validate;
 import org.yaml.snakeyaml.DumperOptions;
@@ -14,6 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 public class Config extends ConfigSection {
 	
@@ -35,7 +36,11 @@ public class Config extends ConfigSection {
 	}
 	
 	public static void forEachConfig(File folder, Consumer<? super Config> action) {
-		Files.forEachFileWithEnding(folder, EXTENSION, file -> action.accept(new Config(file, true)));
+		KFiles.forEachFileWithEnding(folder, EXTENSION, file -> action.accept(new Config(file, true)));
+	}
+	
+	public static Stream<Config> stream(File directory) {
+		return Stream.of(KFiles.getFilesWithEndings(directory, ".yml")).map(file -> new Config(file, true));
 	}
 	
 	private final File file;
@@ -43,7 +48,7 @@ public class Config extends ConfigSection {
 	
 	public Config(File file, boolean load) {
 		this.file = Validate.notNull(file, "file cannot be null");
-		this.name = Files.getSimpleName(file);
+		this.name = KFiles.getSimpleName(file);
 		if(load) load();
 	}
 	
