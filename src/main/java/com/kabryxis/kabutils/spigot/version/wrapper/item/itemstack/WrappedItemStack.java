@@ -22,6 +22,7 @@ public interface WrappedItemStack extends Wrappable {
 	Class<WrappedItemStackv1_12_R1> v1_12_R1 = WrappedItemStackv1_12_R1.class;
 	Class<WrappedItemStackv1_13_R2> v1_13_R2 = WrappedItemStackv1_13_R2.class;
 	Class<WrappedItemStackv1_14_R1> v1_14_R1 = WrappedItemStackv1_14_R1.class;
+	Class<WrappedItemStackv1_15_R1> v1_15_R1 = WrappedItemStackv1_15_R1.class;
 	Field FIELD_HANDLE = ReflectionHelper.getField(Version.getOBCClass("inventory.CraftItemStack"), "handle");
 	
 	static WrappedItemStack newInstance() {
