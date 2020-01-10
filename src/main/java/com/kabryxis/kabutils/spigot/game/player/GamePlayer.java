@@ -5,7 +5,14 @@ import com.kabryxis.kabutils.data.Arrays;
 import com.kabryxis.kabutils.spigot.plugin.Plugins;
 import com.kabryxis.kabutils.spigot.plugin.protocollibrary.ProtocolLibGamePlayerAdapter;
 import org.bukkit.*;
+import org.bukkit.advancement.Advancement;
+import org.bukkit.advancement.AdvancementProgress;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.PistonMoveReaction;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.conversations.Conversation;
 import org.bukkit.conversations.ConversationAbandonedEvent;
 import org.bukkit.entity.*;
@@ -21,6 +28,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import java.net.InetSocketAddress;
@@ -193,6 +202,81 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public void setGlowing(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean isGlowing() {
+		return false;
+	}
+	
+	@Override
+	public void setInvulnerable(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean isInvulnerable() {
+		return false;
+	}
+	
+	@Override
+	public boolean isSilent() {
+		return false;
+	}
+	
+	@Override
+	public void setSilent(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean hasGravity() {
+		return false;
+	}
+	
+	@Override
+	public void setGravity(boolean b) {
+	
+	}
+	
+	@Override
+	public int getPortalCooldown() {
+		return 0;
+	}
+	
+	@Override
+	public void setPortalCooldown(int i) {
+	
+	}
+	
+	@Override
+	public Set<String> getScoreboardTags() {
+		return null;
+	}
+	
+	@Override
+	public boolean addScoreboardTag(String s) {
+		return false;
+	}
+	
+	@Override
+	public boolean removeScoreboardTag(String s) {
+		return false;
+	}
+	
+	@Override
+	public PistonMoveReaction getPistonMoveReaction() {
+		return null;
+	}
+	
+	@Override
+	public BlockFace getFacing() {
+		return null;
+	}
+	
+	@Override
 	public boolean isBanned() {
 		return player.isBanned();
 	}
@@ -231,6 +315,31 @@ public class GamePlayer implements Player {
 	@Override
 	public void setPlayerListName(String s) {
 		player.setPlayerListName(s);
+	}
+	
+	@Override
+	public String getPlayerListHeader() {
+		return null;
+	}
+	
+	@Override
+	public String getPlayerListFooter() {
+		return null;
+	}
+	
+	@Override
+	public void setPlayerListHeader(String s) {
+	
+	}
+	
+	@Override
+	public void setPlayerListFooter(String s) {
+	
+	}
+	
+	@Override
+	public void setPlayerListHeaderFooter(String s, String s1) {
+	
 	}
 	
 	@Override
@@ -355,6 +464,36 @@ public class GamePlayer implements Player {
 		player.playSound(location, s, v, v1);
 	}
 	
+	@Override
+	public void playSound(Location location, Sound sound, SoundCategory category, float v, float v1) {
+	
+	}
+	
+	@Override
+	public void playSound(Location location, String s, SoundCategory category, float v, float v1) {
+	
+	}
+	
+	@Override
+	public void stopSound(Sound sound) {
+	
+	}
+	
+	@Override
+	public void stopSound(String s) {
+	
+	}
+	
+	@Override
+	public void stopSound(Sound sound, SoundCategory category) {
+	
+	}
+	
+	@Override
+	public void stopSound(String s, SoundCategory category) {
+	
+	}
+	
 	@Deprecated
 	@Override
 	public void playEffect(Location location, Effect effect, int i) {
@@ -370,6 +509,11 @@ public class GamePlayer implements Player {
 	@Override
 	public void sendBlockChange(Location location, Material material, byte b) {
 		player.sendBlockChange(location, material, b);
+	}
+	
+	@Override
+	public void sendBlockChange(Location location, BlockData data) {
+	
 	}
 	
 	@Deprecated
@@ -630,6 +774,21 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public boolean sleep(Location location, boolean b) {
+		return false;
+	}
+	
+	@Override
+	public void wakeup(boolean b) {
+	
+	}
+	
+	@Override
+	public Location getBedLocation() {
+		return null;
+	}
+	
+	@Override
 	public boolean isOnline() {
 		return player.isOnline();
 	}
@@ -650,8 +809,18 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public void hidePlayer(Plugin plugin, Player player) {
+	
+	}
+	
+	@Override
 	public void showPlayer(Player player) {
 		player.showPlayer(player);
+	}
+	
+	@Override
+	public void showPlayer(Plugin plugin, Player player) {
+	
 	}
 	
 	@Override
@@ -686,8 +855,28 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public double getHeight() {
+		return 0;
+	}
+	
+	@Override
+	public double getWidth() {
+		return 0;
+	}
+	
+	@Override
+	public BoundingBox getBoundingBox() {
+		return null;
+	}
+	
+	@Override
 	public World getWorld() {
 		return player.getWorld();
+	}
+	
+	@Override
+	public void setRotation(float v, float v1) {
+	
 	}
 	
 	@Override
@@ -756,6 +945,16 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public boolean isPersistent() {
+		return false;
+	}
+	
+	@Override
+	public void setPersistent(boolean b) {
+	
+	}
+	
+	@Override
 	public Entity getPassenger() {
 		return player.getPassenger();
 	}
@@ -763,6 +962,21 @@ public class GamePlayer implements Player {
 	@Override
 	public boolean setPassenger(Entity entity) {
 		return player.setPassenger(entity);
+	}
+	
+	@Override
+	public List<Entity> getPassengers() {
+		return null;
+	}
+	
+	@Override
+	public boolean addPassenger(Entity entity) {
+		return false;
+	}
+	
+	@Override
+	public boolean removePassenger(Entity entity) {
+		return false;
 	}
 	
 	@Override
@@ -847,6 +1061,11 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public void setResourcePack(String s, byte[] bytes) {
+	
+	}
+	
+	@Override
 	public Scoreboard getScoreboard() {
 		return player.getScoreboard();
 	}
@@ -877,6 +1096,111 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public Entity getSpectatorTarget() {
+		return null;
+	}
+	
+	@Override
+	public void setSpectatorTarget(Entity entity) {
+	
+	}
+	
+	@Override
+	public void sendTitle(String s, String s1) {
+	
+	}
+	
+	@Override
+	public void sendTitle(String s, String s1, int i, int i1, int i2) {
+	
+	}
+	
+	@Override
+	public void resetTitle() {
+	
+	}
+	
+	@Override
+	public void spawnParticle(Particle particle, Location location, int i) {
+	
+	}
+	
+	@Override
+	public void spawnParticle(Particle particle, double v, double v1, double v2, int i) {
+	
+	}
+	
+	@Override
+	public <T> void spawnParticle(Particle particle, Location location, int i, T t) {
+	
+	}
+	
+	@Override
+	public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, T t) {
+	
+	}
+	
+	@Override
+	public void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2) {
+	
+	}
+	
+	@Override
+	public void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5) {
+	
+	}
+	
+	@Override
+	public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, T t) {
+	
+	}
+	
+	@Override
+	public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, T t) {
+	
+	}
+	
+	@Override
+	public void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3) {
+	
+	}
+	
+	@Override
+	public void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6) {
+	
+	}
+	
+	@Override
+	public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3, T t) {
+	
+	}
+	
+	@Override
+	public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6, T t) {
+	
+	}
+	
+	@Override
+	public AdvancementProgress getAdvancementProgress(Advancement advancement) {
+		return null;
+	}
+	
+	@Override
+	public int getClientViewDistance() {
+		return 0;
+	}
+	
+	@Override
+	public String getLocale() {
+		return null;
+	}
+	
+	@Override
+	public void updateCommands() {
+	
+	}
+	
+	@Override
 	public Spigot spigot() {
 		return player.spigot();
 	}
@@ -894,6 +1218,11 @@ public class GamePlayer implements Player {
 	@Override
 	public Inventory getEnderChest() {
 		return player.getEnderChest();
+	}
+	
+	@Override
+	public MainHand getMainHand() {
+		return null;
 	}
 	
 	@Override
@@ -927,6 +1256,16 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public InventoryView openMerchant(Villager villager, boolean b) {
+		return null;
+	}
+	
+	@Override
+	public InventoryView openMerchant(Merchant merchant, boolean b) {
+		return null;
+	}
+	
+	@Override
 	public void closeInventory() {
 		player.closeInventory();
 	}
@@ -949,6 +1288,21 @@ public class GamePlayer implements Player {
 	@Override
 	public void setItemOnCursor(ItemStack stack) {
 		player.setItemOnCursor(stack);
+	}
+	
+	@Override
+	public boolean hasCooldown(Material material) {
+		return false;
+	}
+	
+	@Override
+	public int getCooldown(Material material) {
+		return 0;
+	}
+	
+	@Override
+	public void setCooldown(Material material, int i) {
+	
 	}
 	
 	@Override
@@ -977,8 +1331,53 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public boolean isHandRaised() {
+		return false;
+	}
+	
+	@Override
 	public int getExpToLevel() {
 		return player.getExpToLevel();
+	}
+	
+	@Override
+	public boolean discoverRecipe(NamespacedKey key) {
+		return false;
+	}
+	
+	@Override
+	public int discoverRecipes(Collection<NamespacedKey> collection) {
+		return 0;
+	}
+	
+	@Override
+	public boolean undiscoverRecipe(NamespacedKey key) {
+		return false;
+	}
+	
+	@Override
+	public int undiscoverRecipes(Collection<NamespacedKey> collection) {
+		return 0;
+	}
+	
+	@Override
+	public Entity getShoulderEntityLeft() {
+		return null;
+	}
+	
+	@Override
+	public void setShoulderEntityLeft(Entity entity) {
+	
+	}
+	
+	@Override
+	public Entity getShoulderEntityRight() {
+		return null;
+	}
+	
+	@Override
+	public void setShoulderEntityRight(Entity entity) {
+	
 	}
 	
 	@Override
@@ -1027,6 +1426,26 @@ public class GamePlayer implements Player {
 	@Override
 	public List<Block> getLastTwoTargetBlocks(Set<Material> set, int i) {
 		return player.getLastTwoTargetBlocks(set, i);
+	}
+	
+	@Override
+	public Block getTargetBlockExact(int i) {
+		return null;
+	}
+	
+	@Override
+	public Block getTargetBlockExact(int i, FluidCollisionMode mode) {
+		return null;
+	}
+	
+	@Override
+	public RayTraceResult rayTraceBlocks(double v) {
+		return null;
+	}
+	
+	@Override
+	public RayTraceResult rayTraceBlocks(double v, FluidCollisionMode mode) {
+		return null;
 	}
 	
 	@Deprecated
@@ -1123,6 +1542,11 @@ public class GamePlayer implements Player {
 	}
 	
 	@Override
+	public PotionEffect getPotionEffect(PotionEffectType type) {
+		return null;
+	}
+	
+	@Override
 	public void removePotionEffect(PotionEffectType type) {
 		player.removePotionEffect(type);
 	}
@@ -1175,6 +1599,51 @@ public class GamePlayer implements Player {
 	@Override
 	public boolean setLeashHolder(Entity entity) {
 		return player.setLeashHolder(entity);
+	}
+	
+	@Override
+	public boolean isGliding() {
+		return false;
+	}
+	
+	@Override
+	public void setGliding(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean isSwimming() {
+		return false;
+	}
+	
+	@Override
+	public void setSwimming(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean isRiptiding() {
+		return false;
+	}
+	
+	@Override
+	public void setAI(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean hasAI() {
+		return false;
+	}
+	
+	@Override
+	public void setCollidable(boolean b) {
+	
+	}
+	
+	@Override
+	public boolean isCollidable() {
+		return false;
 	}
 	
 	@Override
@@ -1322,4 +1791,8 @@ public class GamePlayer implements Player {
 		return player.getListeningPluginChannels();
 	}
 	
+	@Override
+	public AttributeInstance getAttribute(Attribute attribute) {
+		return null;
+	}
 }
