@@ -1,10 +1,10 @@
 package com.kabryxis.kabutils.spigot.world;
 
 import com.kabryxis.kabutils.data.Maths;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -61,8 +61,8 @@ public class BlockStateManager {
 	    revertState(getBlock(x, y, z));
     }
 
-	public void setBlock(Block block, Material type, byte data) {
-		block.setTypeIdAndData(type.getId(), data, false);
+	public void setBlock(Block block, BlockData data) {
+		block.setBlockData(data, false);
 	}
 
 	protected BlockState getTrueBlockState(Block block) {
