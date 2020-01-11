@@ -1,6 +1,5 @@
 package com.kabryxis.kabutils.spigot.game.player;
 
-import com.google.common.collect.Sets;
 import com.kabryxis.kabutils.data.Arrays;
 import com.kabryxis.kabutils.spigot.plugin.Plugins;
 import com.kabryxis.kabutils.spigot.plugin.protocollibrary.ProtocolLibGamePlayerAdapter;
@@ -34,10 +33,12 @@ import org.bukkit.util.Vector;
 
 import java.net.InetSocketAddress;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class GamePlayer implements Player {
 	
-	public static final Set<Material> IGNORED_TARGET_BLOCK_MATERIALS = Sets.newHashSet(Material.AIR, Material.CARPET);
+	public static final Set<Material> IGNORED_TARGET_BLOCK_MATERIALS = Stream.of(Material.values()).filter(material -> material == Material.AIR || material.name().endsWith("CARPET")).collect(Collectors.toSet());
 	
 	protected final UUID uuid;
 	protected final ProtocolLibGamePlayerAdapter protocolLibAdapter;
@@ -203,88 +204,82 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public void setGlowing(boolean b) {
-	
+		player.setGlowing(b);
 	}
 	
 	@Override
 	public boolean isGlowing() {
-		return false;
+		return player.isGlowing();
 	}
 	
 	@Override
 	public void setInvulnerable(boolean b) {
-	
+		player.setInvulnerable(b);
 	}
 	
 	@Override
 	public boolean isInvulnerable() {
-		return false;
+		return player.isInvulnerable();
 	}
 	
 	@Override
 	public boolean isSilent() {
-		return false;
+		return player.isSilent();
 	}
 	
 	@Override
 	public void setSilent(boolean b) {
-	
+		player.setSilent(b);
 	}
 	
 	@Override
 	public boolean hasGravity() {
-		return false;
+		return player.hasGravity();
 	}
 	
 	@Override
 	public void setGravity(boolean b) {
-	
+		player.setGravity(b);
 	}
 	
 	@Override
 	public int getPortalCooldown() {
-		return 0;
+		return player.getPortalCooldown();
 	}
 	
 	@Override
 	public void setPortalCooldown(int i) {
-	
+		player.setPortalCooldown(i);
 	}
 	
 	@Override
 	public Set<String> getScoreboardTags() {
-		return null;
+		return player.getScoreboardTags();
 	}
 	
 	@Override
 	public boolean addScoreboardTag(String s) {
-		return false;
+		return player.addScoreboardTag(s);
 	}
 	
 	@Override
 	public boolean removeScoreboardTag(String s) {
-		return false;
+		return player.removeScoreboardTag(s);
 	}
 	
 	@Override
 	public PistonMoveReaction getPistonMoveReaction() {
-		return null;
+		return player.getPistonMoveReaction();
 	}
 	
 	@Override
 	public BlockFace getFacing() {
-		return null;
+		return player.getFacing();
 	}
 	
 	@Override
 	public boolean isBanned() {
 		return player.isBanned();
-	}
-	
-	@Deprecated
-	@Override
-	public void setBanned(boolean b) {
-		player.setBanned(b);
 	}
 	
 	@Override
@@ -319,27 +314,27 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public String getPlayerListHeader() {
-		return null;
+		return player.getPlayerListHeader();
 	}
 	
 	@Override
 	public String getPlayerListFooter() {
-		return null;
+		return player.getPlayerListFooter();
 	}
 	
 	@Override
 	public void setPlayerListHeader(String s) {
-	
+		player.setPlayerListHeader(s);
 	}
 	
 	@Override
 	public void setPlayerListFooter(String s) {
-	
+		player.setPlayerListFooter(s);
 	}
 	
 	@Override
 	public void setPlayerListHeaderFooter(String s, String s1) {
-	
+		player.setPlayerListHeaderFooter(s, s1);
 	}
 	
 	@Override
@@ -466,32 +461,32 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public void playSound(Location location, Sound sound, SoundCategory category, float v, float v1) {
-	
+		player.playSound(location, sound, category, v, v1);
 	}
 	
 	@Override
 	public void playSound(Location location, String s, SoundCategory category, float v, float v1) {
-	
+		player.playSound(location, s, category, v, v1);
 	}
 	
 	@Override
 	public void stopSound(Sound sound) {
-	
+		player.stopSound(sound);
 	}
 	
 	@Override
 	public void stopSound(String s) {
-	
+		player.stopSound(s);
 	}
 	
 	@Override
 	public void stopSound(Sound sound, SoundCategory category) {
-	
+		player.stopSound(sound, category);
 	}
 	
 	@Override
 	public void stopSound(String s, SoundCategory category) {
-	
+		player.stopSound(s, category);
 	}
 	
 	@Deprecated
@@ -513,19 +508,13 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public void sendBlockChange(Location location, BlockData data) {
-	
+		player.sendBlockChange(location, data);
 	}
 	
 	@Deprecated
 	@Override
 	public boolean sendChunkChange(Location location, int i, int i1, int i2, byte[] bytes) {
 		return player.sendChunkChange(location, i, i1, i2, bytes);
-	}
-	
-	@Deprecated
-	@Override
-	public void sendBlockChange(Location location, int i, byte b) {
-		player.sendBlockChange(location, i, b);
 	}
 	
 	@Override
@@ -543,16 +532,19 @@ public class GamePlayer implements Player {
 		player.updateInventory();
 	}
 	
+	@Deprecated
 	@Override
 	public void awardAchievement(Achievement achievement) {
 		player.awardAchievement(achievement);
 	}
 	
+	@Deprecated
 	@Override
 	public void removeAchievement(Achievement achievement) {
 		player.removeAchievement(achievement);
 	}
 	
+	@Deprecated
 	@Override
 	public boolean hasAchievement(Achievement achievement) {
 		return player.hasAchievement(achievement);
@@ -775,17 +767,17 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public boolean sleep(Location location, boolean b) {
-		return false;
+		return player.sleep(location, b);
 	}
 	
 	@Override
 	public void wakeup(boolean b) {
-	
+		player.wakeup(b);
 	}
 	
 	@Override
 	public Location getBedLocation() {
-		return null;
+		return player.getBedLocation();
 	}
 	
 	@Override
@@ -803,24 +795,26 @@ public class GamePlayer implements Player {
 		player.setAllowFlight(allowFlight);
 	}
 	
+	@Deprecated
 	@Override
 	public void hidePlayer(Player player) {
-		player.hidePlayer(player);
+		this.player.hidePlayer(player);
 	}
 	
 	@Override
 	public void hidePlayer(Plugin plugin, Player player) {
-	
+		this.player.hidePlayer(plugin, player);
 	}
 	
+	@Deprecated
 	@Override
 	public void showPlayer(Player player) {
-		player.showPlayer(player);
+		this.player.showPlayer(player);
 	}
 	
 	@Override
 	public void showPlayer(Plugin plugin, Player player) {
-	
+		this.player.showPlayer(plugin, player);
 	}
 	
 	@Override
@@ -828,7 +822,6 @@ public class GamePlayer implements Player {
 		return player.canSee(player);
 	}
 	
-	@Deprecated
 	@Override
 	public boolean isOnGround() {
 		return player.isOnGround();
@@ -856,17 +849,17 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public double getHeight() {
-		return 0;
+		return player.getHeight();
 	}
 	
 	@Override
 	public double getWidth() {
-		return 0;
+		return player.getWidth();
 	}
 	
 	@Override
 	public BoundingBox getBoundingBox() {
-		return null;
+		return player.getBoundingBox();
 	}
 	
 	@Override
@@ -874,9 +867,10 @@ public class GamePlayer implements Player {
 		return player.getWorld();
 	}
 	
+	@Deprecated
 	@Override
 	public void setRotation(float v, float v1) {
-	
+		player.setRotation(v, v1);
 	}
 	
 	@Override
@@ -944,21 +938,25 @@ public class GamePlayer implements Player {
 		return player.getServer();
 	}
 	
+	@Deprecated
 	@Override
 	public boolean isPersistent() {
-		return false;
+		return player.isPersistent();
 	}
 	
+	@Deprecated
 	@Override
 	public void setPersistent(boolean b) {
-	
+		player.setPersistent(b);
 	}
 	
+	@Deprecated
 	@Override
 	public Entity getPassenger() {
 		return player.getPassenger();
 	}
 	
+	@Deprecated
 	@Override
 	public boolean setPassenger(Entity entity) {
 		return player.setPassenger(entity);
@@ -966,17 +964,17 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public List<Entity> getPassengers() {
-		return null;
+		return player.getPassengers();
 	}
 	
 	@Override
 	public boolean addPassenger(Entity entity) {
-		return false;
+		return player.addPassenger(entity);
 	}
 	
 	@Override
 	public boolean removePassenger(Entity entity) {
-		return false;
+		return player.removePassenger(entity);
 	}
 	
 	@Override
@@ -1062,7 +1060,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public void setResourcePack(String s, byte[] bytes) {
-	
+		player.setResourcePack(s, bytes);
 	}
 	
 	@Override
@@ -1097,107 +1095,108 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public Entity getSpectatorTarget() {
-		return null;
+		return player.getSpectatorTarget();
 	}
 	
 	@Override
 	public void setSpectatorTarget(Entity entity) {
+		player.setSpectatorTarget(entity);
+	}
 	
+	@Deprecated
+	@Override
+	public void sendTitle(String title, String subtitle) {
+		player.sendTitle(title, subtitle);
 	}
 	
 	@Override
-	public void sendTitle(String s, String s1) {
-	
-	}
-	
-	@Override
-	public void sendTitle(String s, String s1, int i, int i1, int i2) {
-	
+	public void sendTitle(String title, String subtitle, int i, int i1, int i2) {
+		player.sendTitle(title, subtitle, i, i1, i2);
 	}
 	
 	@Override
 	public void resetTitle() {
-	
+		player.resetTitle();
 	}
 	
 	@Override
 	public void spawnParticle(Particle particle, Location location, int i) {
-	
+		player.spawnParticle(particle, location, i);
 	}
 	
 	@Override
 	public void spawnParticle(Particle particle, double v, double v1, double v2, int i) {
-	
+	player.spawnParticle(particle, v, v1, v2, i);
 	}
 	
 	@Override
 	public <T> void spawnParticle(Particle particle, Location location, int i, T t) {
-	
+		player.spawnParticle(particle, location, i, t);
 	}
 	
 	@Override
 	public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, T t) {
-	
+		player.spawnParticle(particle, v, v1, v2, i, t);
 	}
 	
 	@Override
 	public void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2) {
-	
+		player.spawnParticle(particle, location, i, v, v1, v2);
 	}
 	
 	@Override
 	public void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5) {
-	
+		player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5);
 	}
 	
 	@Override
 	public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, T t) {
-	
+		player.spawnParticle(particle, location, i, v, v1, v2, t);
 	}
 	
 	@Override
 	public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, T t) {
-	
+		player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, t);
 	}
 	
 	@Override
 	public void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3) {
-	
+		player.spawnParticle(particle, location, i, v, v1, v2, v3);
 	}
 	
 	@Override
 	public void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6) {
-	
+		player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6);
 	}
 	
 	@Override
 	public <T> void spawnParticle(Particle particle, Location location, int i, double v, double v1, double v2, double v3, T t) {
-	
+		player.spawnParticle(particle, location, i, v, v1, v2, v3, t);
 	}
 	
 	@Override
 	public <T> void spawnParticle(Particle particle, double v, double v1, double v2, int i, double v3, double v4, double v5, double v6, T t) {
-	
+		player.spawnParticle(particle, v, v1, v2, i, v3, v4, v5, v6, t);
 	}
 	
 	@Override
 	public AdvancementProgress getAdvancementProgress(Advancement advancement) {
-		return null;
+		return player.getAdvancementProgress(advancement);
 	}
 	
 	@Override
 	public int getClientViewDistance() {
-		return 0;
+		return player.getClientViewDistance();
 	}
 	
 	@Override
 	public String getLocale() {
-		return null;
+		return player.getLocale();
 	}
 	
 	@Override
 	public void updateCommands() {
-	
+		player.updateCommands();
 	}
 	
 	@Override
@@ -1222,7 +1221,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public MainHand getMainHand() {
-		return null;
+		return player.getMainHand();
 	}
 	
 	@Override
@@ -1257,12 +1256,12 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public InventoryView openMerchant(Villager villager, boolean b) {
-		return null;
+		return player.openMerchant(villager, b);
 	}
 	
 	@Override
 	public InventoryView openMerchant(Merchant merchant, boolean b) {
-		return null;
+		return player.openMerchant(merchant, b);
 	}
 	
 	@Override
@@ -1270,11 +1269,13 @@ public class GamePlayer implements Player {
 		player.closeInventory();
 	}
 	
+	@Deprecated
 	@Override
 	public ItemStack getItemInHand() {
 		return player.getItemInHand();
 	}
 	
+	@Deprecated
 	@Override
 	public void setItemInHand(ItemStack stack) {
 		player.setItemInHand(stack);
@@ -1292,17 +1293,17 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public boolean hasCooldown(Material material) {
-		return false;
+		return player.hasCooldown(material);
 	}
 	
 	@Override
 	public int getCooldown(Material material) {
-		return 0;
+		return player.getCooldown(material);
 	}
 	
 	@Override
 	public void setCooldown(Material material, int i) {
-	
+		player.setCooldown(material, i);
 	}
 	
 	@Override
@@ -1332,7 +1333,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public boolean isHandRaised() {
-		return false;
+		return player.isHandRaised();
 	}
 	
 	@Override
@@ -1342,42 +1343,46 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public boolean discoverRecipe(NamespacedKey key) {
-		return false;
+		return player.discoverRecipe(key);
 	}
 	
 	@Override
 	public int discoverRecipes(Collection<NamespacedKey> collection) {
-		return 0;
+		return player.discoverRecipes(collection);
 	}
 	
 	@Override
 	public boolean undiscoverRecipe(NamespacedKey key) {
-		return false;
+		return player.undiscoverRecipe(key);
 	}
 	
 	@Override
 	public int undiscoverRecipes(Collection<NamespacedKey> collection) {
-		return 0;
+		return player.undiscoverRecipes(collection);
 	}
 	
+	@Deprecated
 	@Override
 	public Entity getShoulderEntityLeft() {
-		return null;
+		return player.getShoulderEntityLeft();
 	}
 	
+	@Deprecated
 	@Override
 	public void setShoulderEntityLeft(Entity entity) {
-	
+		player.setShoulderEntityLeft(entity);
 	}
 	
+	@Deprecated
 	@Override
 	public Entity getShoulderEntityRight() {
-		return null;
+		return player.getShoulderEntityRight();
 	}
 	
+	@Deprecated
 	@Override
 	public void setShoulderEntityRight(Entity entity) {
-	
+		player.setShoulderEntityRight(entity);
 	}
 	
 	@Override
@@ -1395,32 +1400,14 @@ public class GamePlayer implements Player {
 		return player.getEyeLocation();
 	}
 	
-	@Deprecated
-	@Override
-	public List<Block> getLineOfSight(HashSet<Byte> set, int i) {
-		return player.getLineOfSight(set, i);
-	}
-	
 	@Override
 	public List<Block> getLineOfSight(Set<Material> set, int i) {
 		return player.getLineOfSight(set, i);
 	}
 	
-	@Deprecated
-	@Override
-	public Block getTargetBlock(HashSet<Byte> set, int i) {
-		return player.getTargetBlock(set, i);
-	}
-	
 	@Override
 	public Block getTargetBlock(Set<Material> set, int i) {
 		return player.getTargetBlock(set, i);
-	}
-	
-	@Deprecated
-	@Override
-	public List<Block> getLastTwoTargetBlocks(HashSet<Byte> set, int i) {
-		return player.getLastTwoTargetBlocks(set, i);
 	}
 	
 	@Override
@@ -1430,40 +1417,22 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public Block getTargetBlockExact(int i) {
-		return null;
+		return player.getTargetBlockExact(i);
 	}
 	
 	@Override
 	public Block getTargetBlockExact(int i, FluidCollisionMode mode) {
-		return null;
+		return player.getTargetBlockExact(i, mode);
 	}
 	
 	@Override
 	public RayTraceResult rayTraceBlocks(double v) {
-		return null;
+		return player.rayTraceBlocks(v);
 	}
 	
 	@Override
 	public RayTraceResult rayTraceBlocks(double v, FluidCollisionMode mode) {
-		return null;
-	}
-	
-	@Deprecated
-	@Override
-	public Egg throwEgg() {
-		return player.throwEgg();
-	}
-	
-	@Deprecated
-	@Override
-	public Snowball throwSnowball() {
-		return player.throwSnowball();
-	}
-	
-	@Deprecated
-	@Override
-	public Arrow shootArrow() {
-		return player.shootArrow();
+		return player.rayTraceBlocks(v, mode);
 	}
 	
 	@Override
@@ -1543,7 +1512,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public PotionEffect getPotionEffect(PotionEffectType type) {
-		return null;
+		return player.getPotionEffect(type);
 	}
 	
 	@Override
@@ -1603,47 +1572,47 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public boolean isGliding() {
-		return false;
+		return player.isGliding();
 	}
 	
 	@Override
 	public void setGliding(boolean b) {
-	
+		player.setGliding(b);
 	}
 	
 	@Override
 	public boolean isSwimming() {
-		return false;
+		return player.isSwimming();
 	}
 	
 	@Override
 	public void setSwimming(boolean b) {
-	
+		player.setSwimming(b);
 	}
 	
 	@Override
 	public boolean isRiptiding() {
-		return false;
+		return player.isRiptiding();
 	}
 	
 	@Override
 	public void setAI(boolean b) {
-	
+		player.setAI(b);
 	}
 	
 	@Override
 	public boolean hasAI() {
-		return false;
+		return player.hasAI();
 	}
 	
 	@Override
 	public void setCollidable(boolean b) {
-	
+		player.setCollidable(b);
 	}
 	
 	@Override
 	public boolean isCollidable() {
-		return false;
+		return player.isCollidable();
 	}
 	
 	@Override
@@ -1666,16 +1635,19 @@ public class GamePlayer implements Player {
 		player.setHealth(health);
 	}
 	
+	@Deprecated
 	@Override
 	public double getMaxHealth() {
 		return player.getMaxHealth();
 	}
 	
+	@Deprecated
 	@Override
 	public void setMaxHealth(double maxHealth) {
 		player.setMaxHealth(maxHealth);
 	}
 	
+	@Deprecated
 	@Override
 	public void resetMaxHealth() {
 		player.resetMaxHealth();
@@ -1733,7 +1705,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-		return null;
+		return player.getEffectivePermissions();
 	}
 	
 	@Override
@@ -1793,6 +1765,7 @@ public class GamePlayer implements Player {
 	
 	@Override
 	public AttributeInstance getAttribute(Attribute attribute) {
-		return null;
+		return player.getAttribute(attribute);
 	}
+	
 }

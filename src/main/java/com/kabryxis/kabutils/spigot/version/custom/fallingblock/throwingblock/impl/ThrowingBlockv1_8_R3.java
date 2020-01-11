@@ -4,15 +4,15 @@ import com.kabryxis.kabutils.spigot.version.custom.fallingblock.throwingblock.Th
 import com.kabryxis.kabutils.spigot.world.BlockStateManager;
 import net.minecraft.server.v1_8_R3.*;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.craftbukkit.v1_8_R3.CraftWorld;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftFallingSand;
 import org.bukkit.craftbukkit.v1_8_R3.event.CraftEventFactory;
 import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
-import org.inventivetalent.particle.ParticleEffect;
 
 import java.util.function.Predicate;
 
@@ -21,7 +21,7 @@ public class ThrowingBlockv1_8_R3 extends EntityFallingBlock implements Throwing
 	private final BlockStateManager blockStateManager;
 	private final BlockState originState;
 	private final long aliveTime;
-	private final ItemStack effectData;
+	private final BlockData effectData;
 	private final long spawnTimestamp;
 	private final Predicate<org.bukkit.block.Block> protectedPredicate;
 
@@ -30,13 +30,13 @@ public class ThrowingBlockv1_8_R3 extends EntityFallingBlock implements Throwing
 	public ThrowingBlockv1_8_R3(BlockStateManager blockStateManager, org.bukkit.block.Block block, Vector velocity, long aliveTime,
 								Predicate<org.bukkit.block.Block> protectedPredicate) {
 		super(((CraftWorld)block.getWorld()).getHandle(), block.getX(), block.getY(), block.getZ(),
-				Block.getById(block.getTypeId()).fromLegacyData(block.getData()));
+				Block.getById(block.getType().getId()).fromLegacyData(block.getData()));
 		this.blockStateManager = blockStateManager;
 		this.protectedPredicate = protectedPredicate;
 		this.aliveTime = aliveTime;
 		originState = blockStateManager.createState(block);
-		effectData = new ItemStack(block.getType(), block.getData());
-		blockStateManager.setBlock(block, org.bukkit.Material.AIR, (byte)0);
+		effectData = block.getType().createBlockData();
+		blockStateManager.setBlock(block, org.bukkit.Material.AIR.createBlockData());
 		playEffect(block.getX(), block.getY(), block.getZ(), effectData);
 		setLocation(block.getX() + 0.5, block.getY() + 0.5, block.getZ() + 0.5, 0F, 0F);
 		world.addEntity(this, CreatureSpawnEvent.SpawnReason.CUSTOM);
@@ -54,10 +54,11 @@ public class ThrowingBlockv1_8_R3 extends EntityFallingBlock implements Throwing
 		return (CraftFallingSand)super.getBukkitEntity();
 	}
 	
-	public void playEffect(int x, int y, int z, ItemStack effectData) {
-		ParticleEffect.BLOCK_DUST.sendData(world.getWorld().getPlayers(), x + 0.5, y + 0.5, z + 0.5,
-				0.5, 0.5, 0.5, 0, 70, effectData);
-		world.getWorld().playSound(new Location(world.getWorld(), x, y, z), Sound.STEP_STONE, 2F, 1F);
+	public void playEffect(int x, int y, int z, BlockData effectData) {
+		/*ParticleEffect.BLOCK_DUST.sendData(world.getWorld().getPlayers(), x + 0.5, y + 0.5, z + 0.5,
+				0.5, 0.5, 0.5, 0, 70, effectData);*/
+		world.getWorld().getPlayers().forEach(player -> player.spawnParticle(Particle.BLOCK_DUST, x + 0.5, y + 0.5, z + 0.5, 70, 0.5, 0.5, 0.5, 0, effectData));
+		world.getWorld().playSound(new Location(world.getWorld(), x, y, z), Sound.BLOCK_STONE_STEP, 2F, 1F);
 	}
 	
 	@Override
@@ -68,7 +69,7 @@ public class ThrowingBlockv1_8_R3 extends EntityFallingBlock implements Throwing
 		}
 		if(landedState != null) {
 			landedState.update(true, false);
-			playEffect(landedState.getX(), landedState.getY(), landedState.getZ(), new ItemStack(landedState.getType(), landedState.getRawData()));
+			playEffect(landedState.getX(), landedState.getY(), landedState.getZ(), landedState.getType().createBlockData());
 		}
 		else if(isAlive()) die();
 		originState.update(true, false);
@@ -110,7 +111,7 @@ public class ThrowingBlockv1_8_R3 extends EntityFallingBlock implements Throwing
 						org.bukkit.block.Block landedBlock = landedState.getBlock();
 						if(!protectedPredicate.test(landedBlock)) {
 							this.landedState = landedState;
-							blockStateManager.setBlock(landedBlock, originState.getType(), originState.getRawData());
+							blockStateManager.setBlock(landedBlock, originState.getBlockData());
 							playEffect(pos.getX(), pos.getY(), pos.getZ(), effectData);
 						}
 					}
