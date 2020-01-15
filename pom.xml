@@ -18,6 +18,10 @@
   </build>
   <repositories>
     <repository>
+      <id>spigot-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
       <id>sonatype-public</id>
       <url>http://oss.sonatype.org/content/groups/public/</url>
     </repository>
@@ -35,43 +39,7 @@
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
-      <artifactId>spigot1_8_1</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot1_8_2</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
       <artifactId>spigot1_8_3</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot1_9_1</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot1_9_2</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot1_10_1</artifactId>
-      <version>1.0.0</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.spigotmc</groupId>
-      <artifactId>spigot1_11_1</artifactId>
       <version>1.0.0</version>
       <scope>provided</scope>
     </dependency>
@@ -101,8 +69,8 @@
     </dependency>
     <dependency>
       <groupId>com.comphenix.protocol</groupId>
-      <artifactId>ProtocolLib-API</artifactId>
-      <version>4.4.0</version>
+      <artifactId>ProtocolLib</artifactId>
+      <version>4.5.0</version>
       <scope>provided</scope>
     </dependency>
     <!--<dependency>
