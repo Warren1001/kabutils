@@ -8,11 +8,8 @@ import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.
 import java.util.List;
 
 public interface WrappedMerchantRecipeList extends Wrappable {
-	
-	Class<WrappedMerchantRecipeListv1_8_R1> v1_8_R1 = WrappedMerchantRecipeListv1_8_R1.class;
-	Class<WrappedMerchantRecipeListv1_8_R2> v1_8_R2 = WrappedMerchantRecipeListv1_8_R2.class;
+
 	Class<WrappedMerchantRecipeListv1_8_R3> v1_8_R3 = WrappedMerchantRecipeListv1_8_R3.class;
-	Class<WrappedMerchantRecipeListv1_9_R1> v1_9_R1 = WrappedMerchantRecipeListv1_9_R1.class;
 	Class<WrappedMerchantRecipeListv1_9_R2> v1_9_R2 = WrappedMerchantRecipeListv1_9_R2.class;
 	Class<WrappedMerchantRecipeListv1_10_R1> v1_10_R1 = WrappedMerchantRecipeListv1_10_R1.class;
 	Class<WrappedMerchantRecipeListv1_11_R1> v1_11_R1 = WrappedMerchantRecipeListv1_11_R1.class;

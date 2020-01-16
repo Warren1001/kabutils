@@ -7,11 +7,8 @@ import com.kabryxis.kabutils.spigot.version.wrapper.merchant.merchantrecipelist.
 import org.bukkit.entity.Villager;
 
 public interface WrappedEntityVillager extends Wrappable {
-	
-	Class<WrappedEntityVillagerv1_8_R1> v1_8_R1 = WrappedEntityVillagerv1_8_R1.class;
-	Class<WrappedEntityVillagerv1_8_R2> v1_8_R2 = WrappedEntityVillagerv1_8_R2.class;
+
 	Class<WrappedEntityVillagerv1_8_R3> v1_8_R3 = WrappedEntityVillagerv1_8_R3.class;
-	Class<WrappedEntityVillagerv1_9_R1> v1_9_R1 = WrappedEntityVillagerv1_9_R1.class;
 	Class<WrappedEntityVillagerv1_9_R2> v1_9_R2 = WrappedEntityVillagerv1_9_R2.class;
 	Class<WrappedEntityVillagerv1_10_R1> v1_10_R1 = WrappedEntityVillagerv1_10_R1.class;
 	Class<WrappedEntityVillagerv1_11_R1> v1_11_R1 = WrappedEntityVillagerv1_11_R1.class;

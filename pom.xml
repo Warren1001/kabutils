@@ -45,6 +45,24 @@
     </dependency>
     <dependency>
       <groupId>org.spigotmc</groupId>
+      <artifactId>spigot1_9_2</artifactId>
+      <version>1.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot1_10_1</artifactId>
+      <version>1.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot1_11_1</artifactId>
+      <version>1.0.0</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
       <artifactId>spigot1_12_1</artifactId>
       <version>1.0.0</version>
       <scope>provided</scope>

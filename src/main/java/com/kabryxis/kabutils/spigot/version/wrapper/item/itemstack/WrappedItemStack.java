@@ -11,11 +11,8 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Field;
 
 public interface WrappedItemStack extends Wrappable {
-	
-	Class<WrappedItemStackv1_8_R1> v1_8_R1 = WrappedItemStackv1_8_R1.class;
-	Class<WrappedItemStackv1_8_R2> v1_8_R2 = WrappedItemStackv1_8_R2.class;
+
 	Class<WrappedItemStackv1_8_R3> v1_8_R3 = WrappedItemStackv1_8_R3.class;
-	Class<WrappedItemStackv1_9_R1> v1_9_R1 = WrappedItemStackv1_9_R1.class;
 	Class<WrappedItemStackv1_9_R2> v1_9_R2 = WrappedItemStackv1_9_R2.class;
 	Class<WrappedItemStackv1_10_R1> v1_10_R1 = WrappedItemStackv1_10_R1.class;
 	Class<WrappedItemStackv1_11_R1> v1_11_R1 = WrappedItemStackv1_11_R1.class;

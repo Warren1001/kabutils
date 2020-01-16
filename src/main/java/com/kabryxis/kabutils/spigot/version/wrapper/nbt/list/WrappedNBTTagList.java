@@ -6,11 +6,8 @@ import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCo
 import com.kabryxis.kabutils.spigot.version.wrapper.nbt.list.impl.*;
 
 public interface WrappedNBTTagList extends WrappedNBTBase {
-	
-	Class<WrappedNBTTagListv1_8_R1> v1_8_R1 = WrappedNBTTagListv1_8_R1.class;
-	Class<WrappedNBTTagListv1_8_R2> v1_8_R2 = WrappedNBTTagListv1_8_R2.class;
+
 	Class<WrappedNBTTagListv1_8_R3> v1_8_R3 = WrappedNBTTagListv1_8_R3.class;
-	Class<WrappedNBTTagListv1_9_R1> v1_9_R1 = WrappedNBTTagListv1_9_R1.class;
 	Class<WrappedNBTTagListv1_9_R2> v1_9_R2 = WrappedNBTTagListv1_9_R2.class;
 	Class<WrappedNBTTagListv1_10_R1> v1_10_R1 = WrappedNBTTagListv1_10_R1.class;
 	Class<WrappedNBTTagListv1_11_R1> v1_11_R1 = WrappedNBTTagListv1_11_R1.class;
