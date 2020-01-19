@@ -5,4 +5,3 @@
 .idea/
 *.iml
 src/test/
-/src/main/java/com/kabryxis/kabutils/WordCounter.java
