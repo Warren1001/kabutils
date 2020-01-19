@@ -18,7 +18,7 @@ public class WrappedPacketPlayOutChatv1_13_R2 implements WrappedPacketPlayOutCha
 	@Override
 	public WrappedPacketPlayOutChatv1_13_R2 setHandle(Object obj) {
 		if(obj instanceof PacketPlayOutChat) packet = (PacketPlayOutChat)obj;
-		else if(obj instanceof String) packet = new PacketPlayOutChat(new ChatComponentText((String)obj), ChatMessageType.SYSTEM);
+		else if(obj instanceof String) packet = new PacketPlayOutChat(new ChatComponentText((String)obj), ChatMessageType.GAME_INFO);
 		return this;
 	}
 	
