@@ -4,8 +4,6 @@ import com.kabryxis.kabutils.data.Arrays;
 import com.kabryxis.kabutils.data.Lists;
 import com.kabryxis.kabutils.data.Maps;
 import com.kabryxis.kabutils.data.file.yaml.ConfigSection;
-import com.kabryxis.kabutils.spigot.version.wrapper.item.itemstack.WrappedItemStack;
-import com.kabryxis.kabutils.spigot.version.wrapper.nbt.compound.WrappedNBTTagCompound;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -27,7 +25,7 @@ public class ItemBuilder implements Cloneable {
 	 * Using any standard methods will have no effect.
 	 * Using #clone or #build will throw UnsupportedOperationException.
 	 */
-	public static final ItemBuilder EMPTY = new ItemBuilder((ItemBuilder)null) {
+	/*public static final ItemBuilder EMPTY = new ItemBuilder((ItemBuilder)null) {
 		
 		@Override
 		public ItemBuilder type(Material type) {
@@ -41,16 +39,6 @@ public class ItemBuilder implements Cloneable {
 		
 		@Override
 		public ItemBuilder custom(String key, Object obj) {
-			return this;
-		}
-		
-		@Override
-		public ItemBuilder data(byte data) {
-			return this;
-		}
-		
-		@Override
-		public ItemBuilder data(int data) {
 			return this;
 		}
 		
@@ -144,15 +132,15 @@ public class ItemBuilder implements Cloneable {
 			return false;
 		}
 		
-	};
-	public static final ItemBuilder DEFAULT = new ItemBuilder(EMPTY).amount(1).prefix("").name("");
+	};*/
+	//public static final ItemBuilder DEFAULT = new ItemBuilder(Material.AIR).amount(1).prefix("").name("");
 	
-	public ItemBuilder(ItemBuilder base) {
+	/*public ItemBuilder(ItemBuilder base) {
 		if(base != null) reset(base);
-	}
+	}*/
 	
 	public ItemBuilder() {
-		this(DEFAULT);
+		//this(DEFAULT);
 	}
 	
 	public ItemBuilder(Material type) {
@@ -166,9 +154,7 @@ public class ItemBuilder implements Cloneable {
 	}
 	
 	public ItemBuilder(ConfigSection section) {
-		this(section.getEnum("type", Material.class), section.getInt("amount", 1));
-		int data = section.getInt("data", -1);
-		if(data != -1) data(data);
+		this(section.getEnum("type", Material.class, Material.AIR), section.getInt("amount", 1));
 		String prefix = section.get("prefix");
 		if(prefix != null) prefix(prefix);
 		String name = section.get("name");
@@ -185,9 +171,10 @@ public class ItemBuilder implements Cloneable {
 		if(uid != null) uid(uid);
 	}
 	
-	private Material type;
+	private Material type = Material.AIR;
 	
 	public ItemBuilder type(Material type) {
+		Validate.isTrue(type != Material.AIR, "type cannot be air");
 		this.type = type;
 		return this;
 	}
@@ -196,22 +183,12 @@ public class ItemBuilder implements Cloneable {
 		return type;
 	}
 	
-	private int amount;
+	private int amount = 1;
 	
 	public ItemBuilder amount(int amount) {
+		Validate.isTrue(amount > 0, "amount must be greater than 0");
 		this.amount = amount;
 		return this;
-	}
-	
-	private byte data = -1;
-	
-	public ItemBuilder data(byte data) {
-		this.data = data;
-		return this;
-	}
-	
-	public ItemBuilder data(int data) {
-		return data((byte)data);
 	}
 	
 	private String prefix;
@@ -310,15 +287,14 @@ public class ItemBuilder implements Cloneable {
 		this.uidKey = key;
 		return this;
 	}
-	
-	public ItemBuilder reset() {
+
+	/*public ItemBuilder reset() {
 		return reset(ItemBuilder.DEFAULT);
 	}
-	
+
 	public ItemBuilder reset(ItemBuilder builder) {
 		this.type = builder.type;
 		this.amount = builder.amount;
-		this.data = builder.data;
 		this.prefix = builder.prefix;
 		this.name = builder.name;
 		if(builder.lore != null) this.lore = new ArrayList<>(builder.lore);
@@ -327,11 +303,11 @@ public class ItemBuilder implements Cloneable {
 		if(builder.custom != null) this.custom = new HashMap<>(builder.custom);
 		this.uidKey = builder.uidKey;
 		return this;
-	}
+	}*/
 	
 	public ItemStack build() {
 		Validate.notNull(type, "Cannot build an ItemStack without a Material type");
-		ItemStack item = new ItemStack(type, amount, (byte)Math.max(data, 0));
+		ItemStack item = new ItemStack(type, amount);
 		if(name != null || lore != null || enchants != null || flags != null) {
 			ItemMeta meta = item.getItemMeta();
 			if(!prefix.isEmpty() || !name.isEmpty()) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', prefix + name));
@@ -340,25 +316,22 @@ public class ItemBuilder implements Cloneable {
 			if(flags != null) flags.forEach(meta::addItemFlags);
 			item.setItemMeta(meta);
 		}
-		if(custom != null || uidKey != null) {
+		/*if(custom != null || uidKey != null) {
 			WrappedItemStack wrappedItemStack = WrappedItemStack.newInstance(item);
 			item = wrappedItemStack.getBukkitItemStack();
 			WrappedNBTTagCompound tag = wrappedItemStack.getTag(true);
 			if(custom != null) custom.forEach(tag::set);
 			if(uidKey != null) tag.set(uidKey, UID_COUNTER++);
-		}
+		}*/
 		return item;
 	}
 	
-	public ItemStack build(ItemStack base) {
+	/*public ItemStack build(ItemStack base) {
 		Validate.notNull(base, "Cannot build onto a null ItemStack");
 		if(type != null) {
 			// TODO
 		}
 		if(amount != 0) base.setAmount(amount);
-		if(data != -1) {
-			// TODO
-		}
 		if(name != null || lore != null || enchants != null || flags != null) {
 			ItemMeta meta = base.getItemMeta();
 			if(!prefix.isEmpty() || !name.isEmpty()) meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', prefix + name));
@@ -382,7 +355,7 @@ public class ItemBuilder implements Cloneable {
 			if(uidKey != null) tag.set(uidKey, UID_COUNTER++);
 		}
 		return base;
-	}
+	}*/
 	
 	@Override
 	public ItemBuilder clone() {
@@ -412,8 +385,6 @@ public class ItemBuilder implements Cloneable {
 		switch(Validate.notNull(compareFlag, "compareFlag cannot be null")) {
 			case TYPE:
 				return type == null || type == itemStack.getType();
-			case DATA:
-				return data == itemStack.getData().getData();
 			case NAME:
 				String fullName = ChatColor.translateAlternateColorCodes('&', (prefix != null ? prefix : "") + (name != null ? name : ""));
 				return fullName.isEmpty() ? !itemStack.hasItemMeta() || !itemStack.getItemMeta().hasDisplayName() || itemStack.getItemMeta().getDisplayName().equals(fullName)
@@ -429,9 +400,8 @@ public class ItemBuilder implements Cloneable {
 	
 	public ConfigSection serialize() {
 		ConfigSection section = new ConfigSection();
-		if(type != null) section.put("type", type);
+		if(type != Material.AIR) section.put("type", type);
 		if(amount != 1) section.put("amount", amount);
-		if(data != 0) section.put("data", data);
 		if(prefix != null && !prefix.isEmpty()) section.put("prefix", prefix);
 		if(name != null && !name.isEmpty()) section.put("name", name);
 		if(lore != null && !lore.isEmpty()) section.put("lore", lore);
@@ -444,7 +414,7 @@ public class ItemBuilder implements Cloneable {
 	
 	public enum ItemCompareFlag {
 		
-		TYPE, DATA, AMOUNT, AMOUNT_MIN, NAME
+		TYPE, AMOUNT, AMOUNT_MIN, NAME
 		
 	}
 	
